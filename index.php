@@ -5,18 +5,8 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<link rel="icon" href="assets/images/studying.png">
 	<link rel="stylesheet" type="text/css" href="website.css">
-	<script type="text/javascript">
-		$(window).resize(function(){
-			if($(window).width() < 768){
-				$("#logo").css("display", "none");
-			}else{
-				$("#logo").css("display", "block");
-			}
-		});
-	</script>
 </head>
 <body>
 	<div class="container-fluid">
@@ -45,7 +35,7 @@
 									<input type="text" name="username" placeholder="Enter your username" class="form-control" style="width: 90%; margin-top: 1rem;">
 									<input type="text" name="password" placeholder="Enter your password" class="form-control" style="width: 90%; margin-top: 1rem;">
 									<button type="submit" class="btn btn-success" style="width: 88%; margin-top: 1rem;">Sign In</button>
-									<p style="margin-top: 0.5rem;">Don't have an account? <a href="https://www.google.com">Sign up here!</a></p>
+									<p style="margin-top: 0.5rem;">Don't have an account? <a href="register.php">Sign up here!</a></p>
 								</div>
 							</div>
 						</div>
@@ -54,5 +44,15 @@
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(window).resize(function(){
+			if($(window).width() < 768){
+				$("#logo").css("display", "none");
+			}else{
+				$("#logo").css("display", "block");
+			}
+		});
+	</script>
 </body>
 </html>
