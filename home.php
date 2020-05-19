@@ -20,8 +20,8 @@
         </div>
         <div class="modal-body form-group">
             <p>Ask your teacher to tell you about the class code</p>
-            <label for="editName">Class Code</label>
-            <input name="editName" class="form-control" placeholder="ex: 8RsrGw64" id="joinClass_text" type="text">
+            <label for="codeClass">Class Code</label>
+            <input name="codeClass" class="form-control" placeholder="ex: 8RsrGw64" id="joinClass_text" type="text">
         </div>
         <div class="modal-footer" style="text-align: right;">
           <button type="button" class="btn" data-dismiss="modal">Cancel</button>
@@ -39,10 +39,10 @@
           <h5 class="modal-title">Create Class</h5>
         </div>
         <div class="modal-body form-group">
-            <label for="editName">Class Name (required)</label>
-            <input name="editName" class="form-control" placeholder="Mathematics D" id="nameClass_text" type="text">
-            <label for="editPrice">Description (optional)</label>
-            <input name="editPrice" class="form-control" placeholder="Mathematics Class of 2019/2020" id="descriptionClass_text" type="text">
+            <label for="nameClass">Class Name (required)</label>
+            <input name="nameClass" class="form-control" placeholder="Mathematics D" id="nameClass_text" type="text">
+            <label for="descClass">Description (optional)</label>
+            <input name="descClass" class="form-control" placeholder="Mathematics Class of 2019/2020" id="descriptionClass_text" type="text">
         </div>
         <div class="modal-footer" style="text-align: right;">
           <button type="button" class="btn" data-dismiss="modal">Cancel</button>
