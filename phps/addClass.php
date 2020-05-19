@@ -8,13 +8,12 @@
         }
         return $randomString;
     }
-
     require_once("connect.php");
-    if(isset($_POST["name"]) && isset($_POST["price"])){
+    if(isset($_POST["name"])){
         $name = $_POST["name"];
         $desc = $_POST["desc"];
         $code = generateRandomString();
-        $query = mysqli_query($conn, "INSERT INTO `class` (0, '" .$name. "', '" . $desc . "', '" . $code . "')");
+        $query = mysqli_query($conn, "INSERT INTO `class` VALUES (0, '" .$name. "', '" . $desc . "', '" . $code . "')");
 
         if($query){
             echo "Class Successfully Created!";
@@ -22,5 +21,8 @@
         else{
             echo "Class Failed to Create";
         }
+    }
+    else{
+      echo "Class name required";
     }
 ?>
