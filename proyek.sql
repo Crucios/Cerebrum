@@ -1,1 +1,0 @@
-CREATE TABLE `proyek`.`users` ( `id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(200) NOT NULL , `password` VARCHAR(200) NOT NULL , `email` VARCHAR(200) NOT NULL , `birthdate` DATE NOT NULL , `nickname` VARCHAR(200) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
