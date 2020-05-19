@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-	<link rel="icon" href="assets/images/studying.png">
+	<link rel="icon" href="assets/images/logo.png">
 	<link rel="stylesheet" type="text/css" href="website.css">
 	<style type="text/css">
 		#error {
@@ -22,7 +22,7 @@ require_once "connect.php";
 $name = $password = $err = "";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-	
+
 	$name = test_input($_POST["username"]);
 	$password = test_input($_POST["password"]);
 
@@ -58,7 +58,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 					</div>
 					<div class="row" align="center" style="margin: 1rem 3.5rem;">
 						<div class="col-md-6" id="logo">
-							<img src="assets/images/studying.png" height="150" width="150" style="margin-top: 3rem; margin-bottom: 6rem;">
+							<img src="assets/images/logo.png" height="150" width="150" style="margin-top: 3rem; margin-bottom: 6rem;">
 						</div>
 						<div class="col-md-6">
 							<div class="row">
