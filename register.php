@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Create your Elgoog Account!</title>
+	<title>Create your Cerebrum Account!</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -20,15 +20,6 @@
 
 require_once "connect.php";
 
-function test_input($data)
-{
-	$data = trim($data);
-	$data = stripslashes($data);
-	$data = htmlspecialchars($data);
-
-	return $data;
-}
-
 $birth = "0000-00-00";
 $name = $email = $password = $passcon = $nick = "";
 $nameErr = $emailErr = $passErr = $conErr = $nickErr = "";
@@ -44,11 +35,29 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$valid = false;
 	}
 
+	$query = mysqli_query($conn, "SELECT * FROM users WHERE username = '$name'");
+
+	$row = mysqli_num_rows($query);
+
+	if($row > 0){
+		$nameErr ="*Username already taken!";
+		$valid = false;
+	}
+
 	$email = test_input($_POST["email"]);
 
 	if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
   		$emailErr = "*Invalid email format!";
   		$valid = false;
+	}
+
+	$query = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email'");
+
+	$row = mysqli_num_rows($query);
+
+	if($row > 0){
+		$emailErr ="*Email already taken!";
+		$valid = false;
 	}
 
 	$birth = $_POST["birth"];
@@ -93,20 +102,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				<div class="card" style="background-color: rgba(245, 245, 245, 0.7); border-radius: 1rem; margin: auto;">
 					<div class="row" align="center" style="margin-top: 2rem;">
 						<div class="col-sm-10 offset-sm-1">
-							<h3><img src="assets/images/studying.png" width="30" height="30">&nbsp;&nbsp;Create Your Elgoog Account</h3>
+							<h3><img src="assets/images/studying.png" width="30" height="30">&nbsp;&nbsp;Create Your Cerebrum Account</h3>
 						</div>
 					</div>
 					<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 						<div class="row" style="margin: 0.5rem 5rem;">
 							<div class="col">
-								<label for="username">Username:&nbsp;&nbsp;&nbsp;<span class="error"><?php echo $nameErr; ?></span></label>
-								<input type="text" name="username" placeholder="Username" value="<?php echo $name; ?>" class="form-control" required>
+								<label for="username">Username:&nbsp;&nbsp;&nbsp;<span class="error" id="usermatch"><?php echo $nameErr; ?></span></label>
+								<input type="text" name="username" placeholder="Username" id="username" value="<?php echo $name; ?>" class="form-control" required>
 							</div>
 						</div>
 						<div class="row" style="margin: 0.3rem 5rem;">
 							<div class="col">
-								<label for="email">Email:&nbsp;&nbsp;&nbsp;<span class="error"><?php echo $emailErr; ?></span></label>
-								<input type="text" name="email" placeholder="Email" value="<?php echo $email; ?>" class="form-control" required>
+								<label for="email">Email:&nbsp;&nbsp;&nbsp;<span class="error" id="emailmatch"><?php echo $emailErr; ?></span></label>
+								<input type="text" name="email" placeholder="Email" id="email" value="<?php echo $email; ?>" class="form-control" required>
 							</div>
 						</div>
 						<div class="row" style="margin: 0.3rem 5rem;">
@@ -161,8 +170,50 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				}
 			}
 
+			function checkUsername(){
+				if($("#username").val() == ""){
+					$("#usermatch").html("");
+				}else{
+					var username = $("#username").val();
+					$.post("checkUsername.php", {
+						user:username
+					}, function(result){
+						if(result == "1"){
+							$("#usermatch").html("*Username already taken!");
+						}else{
+							$("#usermatch").html("")
+						}
+					});
+				}
+			}
+
+			function checkEmail(){
+				if($("#email").val() == ""){
+					$("#emailmatch").html("");
+				}else{
+					var email = $("#email").val();
+					$.post("checkEmail.php", {
+						email:email
+					}, function(result){
+						if(result == "1"){
+							$("#emailmatch").html("*Email already taken!");
+						}else{
+							$("#emailmatch").html("")
+						}
+					});
+				}
+			}
+
 			$("#passcon").on("input", function(){
 				checkMatch();
+			});
+
+			$("#username").on("input", function(){
+				checkUsername();
+			});
+
+			$("#email").on("input", function(){
+				checkEmail();
 			});
 
 			$("#password").on("input", function(){

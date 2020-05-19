@@ -12,4 +12,13 @@ if($conn === false)
 	die("ERROR: Could not conncet. " . msqli_connect_error());
 }
 
+function test_input($data)
+{
+	$data = trim($data);
+	$data = stripslashes($data);
+	$data = htmlspecialchars($data);
+
+	return $data;
+}
+
 ?>
