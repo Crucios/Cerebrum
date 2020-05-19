@@ -6,11 +6,11 @@ body {
   -o-background-size: cover;
 }
 
-.navIcon>img{
+.navIcon > img{
   width:40px;
   height:40px;
 }
 
-.navIcon>span{
+.navIcon > span{
   color: white;
 }

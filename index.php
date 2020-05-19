@@ -17,7 +17,7 @@
 
 <?php
 
-require_once "connect.php";
+require_once "phps/connect.php";
 
 $name = $password = $err = "";
 
@@ -30,9 +30,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 	if(mysqli_num_rows($query) > 0){
 		while($result = mysqli_fetch_assoc($query)){
-			$email = $result["email"];
-			echo "<script type='text/javascript'>alert('$email');</script>";
-			///header("Location: http://www.google.com/");
+			session_start();
+			$_SESSION["username"] = $name;
+			$_SESSION["id"] = $result["id"];
+			$_SESSION["email"] = $result["email"];
+			$_SESSION["nickname"] = $result["nickname"];
+			header("Location: home.php");
 		}
 	}else{
 		$err = "*Username/password incorrect";

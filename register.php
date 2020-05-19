@@ -18,7 +18,7 @@
 
 <?php 
 
-require_once "connect.php";
+require_once "phps/connect.php";
 
 $birth = "0000-00-00";
 $name = $email = $password = $passcon = $nick = "";
@@ -85,7 +85,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$sql = "INSERT INTO users VALUES(0, '$name', '$password', '$email', '$birth', '$nick')";
 
 		if ($conn->query($sql) === TRUE) {
-			echo "<script type='text/javascript'>alert('Success');</script>";
+			$query = mysqli_query($conn, "SELECT * FROM users WHERE username = '$name'");
+
+			if(mysqli_num_rows($query) > 0){
+				while($result = mysqli_fetch_assoc($query)){
+					session_start();
+					$_SESSION["username"] = $name;
+					$_SESSION["id"] = $result["id"];
+					$_SESSION["email"] = $result["email"];
+					$_SESSION["nickname"] = $result["nickname"];
+					header("Location: home.php");
+				}
+			}
 		} else {
 			echo "<script type='text/javascript'>alert('Failed');</script>";
 		}
@@ -175,7 +186,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 					$("#usermatch").html("");
 				}else{
 					var username = $("#username").val();
-					$.post("checkUsername.php", {
+					$.post("phps/checkUsername.php", {
 						user:username
 					}, function(result){
 						if(result == "1"){
@@ -192,7 +203,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 					$("#emailmatch").html("");
 				}else{
 					var email = $("#email").val();
-					$.post("checkEmail.php", {
+					$.post("phps/checkEmail.php", {
 						email:email
 					}, function(result){
 						if(result == "1"){
