@@ -12,7 +12,7 @@ $(document).ready(function(){
     var name = $("#nameClass_text").val()
     var desc = $("#descriptionClass_text").val()
 
-    $.post("../php/add class.php",{
+    $.post("../php/addClass.php",{
       name:name,
       desc:desc
     },
