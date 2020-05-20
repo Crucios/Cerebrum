@@ -45,6 +45,10 @@ if(!isset($_SESSION["username"])){
       padding: 0.5rem 1rem 0rem 1rem;
       background-color: rgba(255, 255, 255, 0.7); 
     }
+    a, a:hover{
+      color: rgb(60, 60, 60);
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -168,7 +172,7 @@ if(!isset($_SESSION["username"])){
           var description = $(this).find("description").text();
           var code = $(this).find("code").text();
 
-          var classcard = "<div class='col-md-4 col-sm-6' style='margin: 1rem 0;' id='"+class_id+"'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;"+name+"</h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div>"
+          var classcard = "<a href='classwork.php'><div class='col-md-4 col-sm-6' style='margin: 1rem 0;' id='"+class_id+"'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;"+name+"</h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div></a>"
 
           $("#listClass").append(classcard); 
         });
