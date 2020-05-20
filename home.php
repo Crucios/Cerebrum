@@ -52,6 +52,24 @@ if(!isset($_SESSION["username"])){
   </style>
 </head>
 <body>
+  <!-- Change Nickname Modal -->
+  <div class="modal fade" id="changeNickname_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Change Your Nickname</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body form-group">
+          <input name="codeClass" class="form-control" id="changeNickname_text" type="text" style="margin-top: 1rem;">
+        </div>
+        <div class="modal-footer" style="text-align: right;">
+          <button type="button" id="changeNickname_confirm" class="btn btn-warning" style="margin-right: 0; width: 50%;" data-dismiss="modal">Change Nickname</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Join Class Modal -->
   <div class="modal fade" id="joinClass_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -106,10 +124,7 @@ if(!isset($_SESSION["username"])){
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
      <ul class="nav navbar-nav">
        <li class="nav-item active">
-         <form class="form-inline" style="margin-top: 5px;">
-           <input class="form-control mr-sm-2" type="search" placeholder="Search Classroom" aria-label="Search">
-           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-         </form>
+         <input class="form-control mr-sm-2" type="search" id="search" placeholder="Search Classroom" aria-label="Search" style="margin-top: 0.3rem;">
        </li>
        <li class="nav-item dropdown">
          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -125,13 +140,13 @@ if(!isset($_SESSION["username"])){
    </div>
    <div class="nav-item dropdown">
      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <span style="color: lightgray; margin-right: 0.5rem;"><?php echo $_SESSION["nickname"]; ?></span>
+      <span id="nickname" style="color: lightgray; margin-right: 0.5rem;"><?php echo $_SESSION["nickname"]; ?></span>
       <img src="assets/images/user-icon.png" style="width:30px; height:30px;">
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
      <a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a> 
      <a class="dropdown-item" href="#" id="joinClass_button">Change Password</a>
-     <a class="dropdown-item" href="#" id="createClass_button">Change Nickname</a>
+     <a class="dropdown-item" href="#" id="createClass_button" data-toggle="modal" data-target="#changeNickname_modal">Change Nickname</a>
      <a class="dropdown-item" href="logout.php" id="createClass_button">Log Out</a>
    </div>
  </div>
@@ -156,9 +171,38 @@ if(!isset($_SESSION["username"])){
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
  $(document).ready(function(){
+
+  $("#search").on("input", function(){
+    var keyword = $("#search").val();
+
+    var cards = $(".card");
+
+    var body, word;
+
+    if(keyword == ""){
+      for(var i = 0; i < cards.length; i++){
+        cards.eq(i).parent().css("display", "block");
+      }
+    }else{
+      for(var i = 0; i < cards.length; i++){
+        body = cards.eq(i).find("*[class=card-header]");
+
+        word =  body.find("*[class=name]").html();
+
+        word = word.toLowerCase();
+        keyword = keyword.toLowerCase();
+
+        if(word.match(keyword)){
+          cards.eq(i).parent().css("display", "block");
+        }else{
+          cards.eq(i).parent().css("display", "none");
+        }
+      }
+    }
+  });
+
   function refreshClass(){
     var id = <?php echo $_SESSION['id']; ?>;
-
     $("#listClass").empty();
     $.ajax({
       type: "POST",
@@ -172,7 +216,7 @@ if(!isset($_SESSION["username"])){
           var description = $(this).find("description").text();
           var code = $(this).find("code").text();
 
-          var classcard = "<a href='classwork.php'><div class='col-md-4 col-sm-6' style='margin: 1rem 0;' id='"+class_id+"'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;"+name+"</h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div></a>"
+          var classcard = "<a href='classwork.php'><div class='col-md-4 col-sm-6' style='margin: 1rem 0;' id='"+class_id+"'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;<span class='name'>"+name+"</span></h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div></a>"
 
           $("#listClass").append(classcard); 
         });
@@ -181,6 +225,7 @@ if(!isset($_SESSION["username"])){
   }
 
     refreshClass();
+    $("#changeNickname_text").val("<?php echo $_SESSION["nickname"]; ?>");
 
 
     $("#createClass_confirm").click(function(){
@@ -222,9 +267,28 @@ if(!isset($_SESSION["username"])){
 
         var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
         $("#alert").html(alert);
-        $("#joinClass_text").val("");
+        $("#joinClass_text").html("");
 
         refreshClass();
+      });
+    });
+
+    $("#changeNickname_confirm").click(function(){
+      var name = $("#changeNickname_text").val();
+      var id = <?php echo $_SESSION['id']; ?>;
+
+      $.post("phps/changeNickname.php", {
+        id:id, name:name
+      }, function(result){
+        if(result == "Nickname changed successfully!"){
+          var alert = "success";
+          $("#nickname").html(name);
+        }else{
+          var alert = "danger";
+        }
+
+        var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
+        $("#alert").html(alert);
       });
     });
 
