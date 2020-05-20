@@ -128,9 +128,10 @@ if(!isset($_SESSION["username"])){
     $("#createClass_confirm").click(function(){
       var name = $("#nameClass_text").val();
       var desc = $("#descriptionClass_text").val();
+      var id = <?php echo $_SESSION['id']; ?>
       
       $.post("phps/addClass.php", {
-            name:name, desc:desc
+            id:id, name:name, desc:desc
           }, function(result){
 
             if(result == "Class Successfully Created!"){

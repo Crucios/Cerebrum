@@ -14,8 +14,9 @@
     if(isset($_POST["name"]) && $_POST["name"] != ""){
         $name = $_POST["name"];
         $desc = $_POST["desc"];
+        $id = $_POST["id"];
         $code = generateRandomString();
-        $query = mysqli_query($conn, "INSERT INTO class VALUES (0, '$name', '$desc', '$code')");
+        $query = mysqli_query($conn, "INSERT INTO class VALUES (0, $id, '$name', '$desc', '$code')");
 
         if($query){
             echo "Class Successfully Created!";
