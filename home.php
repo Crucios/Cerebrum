@@ -168,7 +168,28 @@ if(!isset($_SESSION["username"])){
 
             var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
             $("#alert").html(alert);
+            $("#nameClass_text").val("");
+            $("#descriptionClass_text").val("");
           });
+    });
+
+    $("#joinClass_confirm").click(function(){
+      var code = $("#joinClass_text").val();
+      var id = <?php echo $_SESSION['id']; ?>;
+
+      $.post("phps/joinClass.php", {
+        id:id, code:code
+      }, function(result){
+        if(result[0] == "S"){
+          var alert = "success";
+        }else{
+          var alert = "danger";
+        }
+
+        var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
+        $("#alert").html(alert);
+        $("#joinClass_text").val("");
+      });
     });
 
    });
