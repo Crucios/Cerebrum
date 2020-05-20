@@ -16,23 +16,28 @@ if(!isset($_SESSION["username"])){
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="website.css">
   <link rel="icon" href="assets/images/logo.png">
+  <style type="text/css">
+    .error{
+      color: red;
+    }
+  </style>
 </head>
 <body>
   <!-- Join Class Modal -->
   <div class="modal fade" id="joinClass_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
+      <div class="modal-content" style="margin: 2rem;">
         <div class="modal-header">
           <h5 class="modal-title">Join Class</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body form-group">
           <p>Ask your teacher to tell you about the class code</p>
-          <label for="codeClass">Class Code</label>
+          <label for="codeClass"><strong>Class Code:</strong></label>
           <input name="codeClass" class="form-control" placeholder="ex: 8RsrGw64" id="joinClass_text" type="text">
         </div>
         <div class="modal-footer" style="text-align: right;">
-          <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-          <button type="button" id="joinClass_confirm" class="btn btn-warning" style="margin-left: 40%;" data-dismiss="modal">Join</button>
+          <button type="button" id="joinClass_confirm" class="btn btn-warning" style="margin-right: 0; width: 30%;" data-dismiss="modal">Join Class</button>
         </div>
       </div>
     </div>
@@ -41,19 +46,19 @@ if(!isset($_SESSION["username"])){
   <!-- Create Class Modal -->
   <div class="modal fade" id="createClass_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
+      <div class="modal-content" style="margin: 1rem;">
         <div class="modal-header">
           <h5 class="modal-title">Create Class</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body form-group">
-          <label for="nameClass">Class Name (required)</label>
-          <input name="nameClass" class="form-control" placeholder="Mathematics D" id="nameClass_text" type="text">
-          <label for="descClass">Description (optional)</label>
+          <label for="nameClass"><strong>Class Name (required):</strong></label>
+          <input name="nameClass" class="form-control" placeholder="Mathematics D" id="nameClass_text" type="text" required>
+          <label style="margin-top: 0.5rem;" for="descClass"><strong>Description (optional):</strong></label>
           <input name="descClass" class="form-control" placeholder="Mathematics Class of 2019/2020" id="descriptionClass_text" type="text">
         </div>
         <div class="modal-footer" style="text-align: right;">
-          <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-          <button type="button" id="createClass_confirm" class="btn btn-warning" style="margin-left: 40%;" data-dismiss="modal">Create</button>
+          <button type="button" id="createClass_confirm" class="btn btn-warning" style="margin-right: 0; width: 30%;" data-dismiss="modal">Create Class</button>
         </div>
       </div>
     </div>
@@ -101,8 +106,40 @@ if(!isset($_SESSION["username"])){
      </div>
    </div>
  </nav>
+
+ <div class="container-fluid" style="margin-top: 5rem;">
+  <div class="row">
+    <div class="col-sm-10 offset-sm-1" id="alert">
+      
+    </div>
+  </div>
+</div>
+
  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
- <script type="text/javascript" src="scripts/home.js"></script>
+ <script type="text/javascript">
+   $(document).ready(function(){
+
+    $("#createClass_confirm").click(function(){
+      var name = $("#nameClass_text").val();
+      var desc = $("#descriptionClass_text").val();
+      
+      $.post("phps/addClass.php", {
+            name:name, desc:desc
+          }, function(result){
+
+            if(result == "Class Successfully Created!"){
+              var alert = "success";
+            }else{
+              var alert = "danger";
+            }
+
+            var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
+            $("#alert").html(alert);
+          });
+    });
+
+   });
+ </script>
 </body>
 </html>
