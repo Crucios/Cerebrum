@@ -1,7 +1,7 @@
 <?php
 require_once("connect.php");
 if(isset($_POST["code"])){
-    $code = $_POST["code"];
+    $code = test_input($_POST["code"]);
     $id = $_POST["id"];
 
     $result = mysqli_query($conn, "SELECT id, name FROM class WHERE code = '$code'");

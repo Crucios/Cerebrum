@@ -51,24 +51,6 @@ if(!isset($_SESSION["username"])){
   </style>
 </head>
 <body>
-  <!-- Change Nickname Modal -->
-  <!-- <div class="modal fade" id="changeNickname_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Change Your Nickname</h5>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body form-group">
-          <input name="codeClass" class="form-control" id="changeNickname_text" type="text" style="margin-top: 1rem;">
-        </div>
-        <div class="modal-footer" style="text-align: right;">
-          <button type="button" id="changeNickname_confirm" class="btn btn-warning" style="margin-right: 0; width: 50%;" data-dismiss="modal">Change Nickname</button>
-        </div>
-      </div>
-    </div>
-  </div> -->
-
   <!-- Join Class Modal -->
   <div class="modal fade" id="joinClass_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -118,20 +100,17 @@ if(!isset($_SESSION["username"])){
           <h5 class="modal-title">Change Password</h5>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-          <div class="modal-body form-group">
-            <label for="password"><strong>Input Password:</strong></label>
-            <input type="password" id="oldPass_Text" name="password" placeholder="Enter your old password" class="form-control">
-            <p id="passwordErrorHandler" style="color: red;"></p>
-            <label style="margin-top: 0.5rem;" for="changePass"><strong>Change Password:</strong></label>
-            <input name="changePass" id="changePass_Text" class="form-control" placeholder="Enter your new password" type="password">
-            <p id="change_passwordErrorHandler" style="color: red;"></p>
-            <label style="margin-top: 0.5rem;" for="confirmPass"><strong>Confirm Password:</strong></label>
-            <input name="confirmPass" id="confirmPass_Text" class="form-control" placeholder="Confirm your new password" type="password">
-            <p id="confirm_passwordErrorHandler" style="color: red;"></p>
-          </div>
-          <div class="modal-footer" style="text-align: right;">
-            <button type="submit" id="changePass_confirm" class="btn btn-warning" style="margin-right: 0; width: 30%;">Change Password</button>
-          </div>
+        <div class="modal-body form-group">
+          <label for="password"><strong>Input Password:</strong>&nbsp;&nbsp;<span id="passwordErrorHandler" style="color: red;"></span></label>
+          <input type="password" id="oldPass_Text" name="password" placeholder="Enter your old password" class="form-control">
+          <label style="margin-top: 0.5rem;" for="changePass"><strong>Change Password:</strong>&nbsp;&nbsp;<span id="change_passwordErrorHandler" style="color: red;"></span></label>
+          <input name="changePass" id="changePass_Text" class="form-control" placeholder="Enter your new password" type="password">
+          <label style="margin-top: 0.5rem;" for="confirmPass"><strong>Confirm Password:</strong>&nbsp;&nbsp;<span id="confirm_passwordErrorHandler" style="color: red;"></span></label>
+          <input name="confirmPass" id="confirmPass_Text" class="form-control" placeholder="Confirm your new password" type="password">
+        </div>
+        <div class="modal-footer" style="text-align: right;">
+          <button type="submit" id="changePass_confirm" class="btn btn-warning" style="margin-right: 0; width: 50%;" data-dismiss="modal">Change Password</button>
+        </div>
       </div>
     </div>
   </div>
@@ -141,16 +120,14 @@ if(!isset($_SESSION["username"])){
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content" style="margin: 1rem;">
         <div class="modal-header">
-          <h5 class="modal-title">Create Class</h5>
+          <h5 class="modal-title">Change Nickname</h5>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body form-group">
-          <label for="changeNick"><strong>Change Nickname:</strong></label>
-          <input name="changeNick" class="form-control" placeholder="New Nickname" id="changeNick_text" type="text" required>
-          <p id="change_nickErrorHandler" style="color: red;"></p>
+          <input name="changeNick" class="form-control" placeholder="New Nickname" id="changeNick_text" type="text" required style="margin-top: 0.5rem;">
         </div>
         <div class="modal-footer" style="text-align: right;">
-          <button type="button" id="changeNick_confirm" class="btn btn-warning" style="margin-right: 0; width: 30%;">Change Nickname</button>
+          <button type="button" id="changeNick_confirm" class="btn btn-warning" style="margin-right: 0; width: 50%;" data-dismiss="modal">Change Nickname</button>
         </div>
       </div>
     </div>
@@ -190,20 +167,12 @@ if(!isset($_SESSION["username"])){
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
      <a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a> 
-     <a class="dropdown-item" href="#" id="joinClass_button">Change Password</a>
-     <a class="dropdown-item" href="#" id="createClass_button" data-toggle="modal" data-target="#changeNickname_modal">Change Nickname</a>
+     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePassword_modal">Change Password</a>
+     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changeNickname_modal">Change Nickname</a>
      <a class="dropdown-item" href="logout.php" id="createClass_button">Log Out</a>
-      <span style="color: lightgray; margin-right: 0.5rem;" id="nickname_account"><?php echo $_SESSION["nickname"]; ?></span>
-       <img src="assets/images/user-icon.png" style="width:30px; height:30px;">
-     </a>
-     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-       <a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a>
-       <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePassword_modal">Change Password</a>
-       <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changeNickname_modal">Change Nickname</a>
-       <a class="dropdown-item" href="logout.php" id="createClass_button">Log Out</a>
-     </div>
    </div>
  </div>
+</div>
 </nav>
 
 <div class="container-fluid" style="margin-top: 5rem;">
@@ -225,6 +194,9 @@ if(!isset($_SESSION["username"])){
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
  $(document).ready(function(){
+
+  refreshClass();
+  $("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
 
   $("#search").on("input", function(){
     var keyword = $("#search").val();
@@ -270,7 +242,7 @@ if(!isset($_SESSION["username"])){
           var description = $(this).find("description").text();
           var code = $(this).find("code").text();
 
-          var classcard = "<a href='classwork.php'><div class='col-md-4 col-sm-6' style='margin: 1rem 0;' id='"+class_id+"'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;<span class='name'>"+name+"</span></h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div></a>"
+          var classcard = "<a href='viewclass.php?id=" + class_id + "'><div class='col-md-4 col-sm-6' style='margin: 1rem 0;'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;<span class='name'>"+name+"</span></h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div></a>"
 
           $("#listClass").append(classcard);
         });
@@ -278,132 +250,115 @@ if(!isset($_SESSION["username"])){
     });
   }
 
-    refreshClass();
-    $("#changeNickname_text").val("<?php echo $_SESSION["nickname"]; ?>");
-  function editNickname(nickname = "0"){
+  $("#createClass_confirm").click(function(){
+    var name = $("#nameClass_text").val();
+    var desc = $("#descriptionClass_text").val();
+    var id = <?php echo $_SESSION['id']; ?>;
+
+    $.post("phps/addClass.php", {
+      id:id, name:name, desc:desc
+    }, function(result){
+
+      if(result == "Class Successfully Created!"){
+        var alert = "success";
+      }else{
+        var alert = "danger";
+      }
+
+      var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
+      $("#alert").html(alert);
+      $("#nameClass_text").val("");
+      $("#descriptionClass_text").val("");
+      refreshClass();
+    });
+
+  });
+
+  $("#joinClass_confirm").click(function(){
+    var code = $("#joinClass_text").val();
+    var id = <?php echo $_SESSION['id']; ?>;
+
+    $.post("phps/joinClass.php", {
+      id:id, code:code
+    }, function(result){
+      if(result[0] == "S"){
+        var alert = "success";
+      }else{
+        var alert = "danger";
+      }
+
+      var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
+      $("#alert").html(alert);
+      $("#joinClass_text").html("");
+
+      refreshClass();
+    });
+  });
+
+  $("#changePass_confirm").click(function(){
+    var id = <?php echo $_SESSION["id"]; ?>;
+    var password = $("#oldPass_Text").val();
+    var newPass = $("#changePass_Text").val();
+    var confirmPass = $("#confirmPass_Text").val();
+
+    $.ajax({
+      url: 'phps/changePassword.php',
+      type: 'POST',
+      datatype: 'json',
+      data: {
+        id:id,
+        password: password,
+        newPass: newPass,
+        confirmPass: confirmPass
+      },
+      success: function(response){
+        var responseJSON = $.parseJSON(response);
+
+        $("#passwordErrorHandler").html(responseJSON.errorOld);
+        $("#change_passwordErrorHandler").html(responseJSON.errorNew);
+        $("#confirm_passwordErrorHandler").html(responseJSON.errConfirm);
+
+        if(responseJSON.message == "Password successfully changed!"){
+          var alert = "success";
+        }else{
+          var alert = "danger";
+        }
+
+        var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + responseJSON.message + "</strong></div>";
+        $("#alert").html(alert);
+      }
+    });
+
+    $("#oldPass_Text").val("");
+    $("#changePass_Text").val("");
+    $("#confirmPass_Text").val("");
+  });
+
+  $("#changeNick_confirm").click(function(){
+    var id = <?php echo $_SESSION["id"]; ?>;
+    var nickname = $("#changeNick_text").val();
     $.ajax({
       type: "POST",
       url: "phps/editNickname.php",
       data: {
-        nickname:nickname
+        id:id, nickname:nickname
       }, success:function(response){
         var responseJSON = $.parseJSON(response);
 
-        var successEdit = responseJSON.successEdit;
-        var successQuery = responseJSON.successQuery;
-        var errorNick = responseJSON.errorNick;
-        var message = responseJSON.message;
-        var markup = responseJSON.markup;
-
-        // Error handling
-        $("#change_nickErrorHandler").html(errorNick);
-
-        // Success edit
-        if(successEdit){
-          $("#changeNickname_modal").modal('hide');
-          alert(message);
-        }
-        else{
-          $("#change_nickErrorHandler").html(message);
+        if(responseJSON.successEdit){
+          var alert = "success";
+          $("#nickname").html(nickname);
+        }else{
+          var alert = "danger";
+          $("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
         }
 
-        // Success Query
-        if(successQuery){
-          $("#nickname_account").html(markup);
-        }
+        var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + responseJSON.message + "</strong></div>";
+        $("#alert").html(alert);
       }
     });
-  }
-
-    refreshClass();
-
-    $("#createClass_confirm").click(function(){
-      var name = $("#nameClass_text").val();
-      var desc = $("#descriptionClass_text").val();
-      var id = <?php echo $_SESSION['id']; ?>;
-
-      $.post("phps/addClass.php", {
-        id:id, name:name, desc:desc
-      }, function(result){
-
-        if(result == "Class Successfully Created!"){
-          var alert = "success";
-        }else{
-          var alert = "danger";
-        }
-
-        var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
-        $("#alert").html(alert);
-        $("#nameClass_text").val("");
-        $("#descriptionClass_text").val("");
-        refreshClass();
-      });
-
-    });
-
-    $("#joinClass_confirm").click(function(){
-      var code = $("#joinClass_text").val();
-      var id = <?php echo $_SESSION['id']; ?>;
-
-      $.post("phps/joinClass.php", {
-        id:id, code:code
-      }, function(result){
-        if(result[0] == "S"){
-          var alert = "success";
-        }else{
-          var alert = "danger";
-        }
-
-        var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
-        $("#alert").html(alert);
-        $("#joinClass_text").html("");
-
-        refreshClass();
-      });
-    });
-
-    $("#changePass_confirm").click(function(){
-      var password = $("#oldPass_Text").val();
-      var newPass = $("#changePass_Text").val();
-      var confirmPass = $("#changePass_Text").val();
-
-      $.ajax({
-        url: 'phps/changePassword.php',
-        type: 'POST',
-        datatype: 'json',
-        data: {
-          password: password,
-          newPass: newPass,
-          confirmPass: confirmPass
-        },
-        success: function(response){
-          responseJSON = $.parseJSON(response);
-
-          var success = responseJSON.success;
-          var passwordErr = responseJSON.errorOld;
-          var change_passwordErr = responseJSON.errorNew;
-          var confirm_passwordErr = responseJSON.errConfirm;
-          var message = responseJSON.message;
-
-          // Error handling
-          $("#passwordErrorHandler").html(passwordErr);
-          $("#change_passwordErrorHandler").html(change_passwordErr);
-          $("#confirm_passwordErrorHandler").html(confirm_passwordErr);
-
-          // Success
-          if(success){
-            $("#changePassword_modal").modal('hide');
-            alert(message);
-          }
-        }
-      });
-    });
-
-    $("#changeNick_confirm").click(function(){
-      var nickname = $("#changeNick_text").val();
-      editNickname(nickname);
-    });
-   });
- </script>
+  });
+});
+</script>
 </body>
 </html>

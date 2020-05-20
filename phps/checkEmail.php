@@ -3,7 +3,7 @@
 require_once "connect.php";
 
 if(isset($_POST["email"])){
-	$email = $_POST["email"];
+	$email = test_input($_POST["email"]);
 
 	$query = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email'");
 

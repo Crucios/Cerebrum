@@ -12,8 +12,8 @@
     }
 
     if(isset($_POST["name"]) && $_POST["name"] != ""){
-        $name = $_POST["name"];
-        $desc = $_POST["desc"];
+        $name = test_input($_POST["name"]);
+        $desc = test_input($_POST["desc"]);
         $id = $_POST["id"];
 
         do{
