@@ -289,9 +289,7 @@ if(!isset($_SESSION["username"])){
         },
         success: function(response){
           responseJSON = $.parseJSON(response);
-          for(var prop in response){
 
-          }
           var success = responseJSON.success;
           var passwordErr = responseJSON.errorOld;
           var change_passwordErr = responseJSON.errorNew;
