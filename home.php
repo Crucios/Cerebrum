@@ -118,17 +118,43 @@ if(!isset($_SESSION["username"])){
       
     </div>
   </div>
+   <div class="row">
+    <div class="col-sm-10 offset-sm-1" id="listClass">
+      
+    </div>
+  </div>
 </div>
 
  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
  <script type="text/javascript">
    $(document).ready(function(){
+    function refreshClass(){
+      var id = <?php echo $_SESSION['id']; ?>;
+
+      $("#listClass").empty();
+      $.ajax({
+        type: "POST",
+        data: { id:id },
+        url: "phps/selectClass.php",
+        success:function(xml){
+          console.log(xml);
+          // $(xml).find('mahasiswa').each(function(){
+          //   var id = $(this).attr('id');
+          //   var nama = $(this).find("nama").text();
+          //   var nrp = $(this).find("nrp").text();
+
+          //   $("#listMahasiswa").append("<tr><td align='center'><span class='link' onclick='refreshNilai("+id+")'>"+nrp+"</span></td><td>"+nama+"</td></tr>"); 
+        }
+      });
+    }
+
+    refreshClass();
 
     $("#createClass_confirm").click(function(){
       var name = $("#nameClass_text").val();
       var desc = $("#descriptionClass_text").val();
-      var id = <?php echo $_SESSION['id']; ?>
+      var id = <?php echo $_SESSION['id']; ?>;
       
       $.post("phps/addClass.php", {
             id:id, name:name, desc:desc
