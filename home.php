@@ -303,6 +303,7 @@ if(!isset($_SESSION["username"])){
 
           // Success
           if(success){
+            $("#changePassword_modal").modal('hide');
             alert(message);
           }
         }
