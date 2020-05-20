@@ -128,10 +128,11 @@ if(!isset($_SESSION["username"])){
         </div>
         <div class="modal-body form-group">
           <label for="changeNick"><strong>Change Nickname:</strong></label>
-          <input name="changeNick" class="form-control" placeholder="Mathematics D" id="changeNick_text" type="text" required>
+          <input name="changeNick" class="form-control" placeholder="New Nickname" id="changeNick_text" type="text" required>
+          <p id="change_nickErrorHandler" style="color: red;"></p>
         </div>
         <div class="modal-footer" style="text-align: right;">
-          <button type="button" id="createClass_confirm" class="btn btn-warning" style="margin-right: 0; width: 30%;" data-dismiss="modal">Create Class</button>
+          <button type="button" id="changeNick_confirm" class="btn btn-warning" style="margin-right: 0; width: 30%;">Change Nickname</button>
         </div>
       </div>
     </div>
@@ -169,7 +170,7 @@ if(!isset($_SESSION["username"])){
    </div>
    <div class="nav-item dropdown">
      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <span style="color: lightgray; margin-right: 0.5rem;"><?php echo $_SESSION["nickname"]; ?></span>
+      <span style="color: lightgray; margin-right: 0.5rem;" id="nickname_account"><?php echo $_SESSION["nickname"]; ?></span>
        <img src="assets/images/user-icon.png" style="width:30px; height:30px;">
      </a>
      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -225,8 +226,42 @@ if(!isset($_SESSION["username"])){
     });
   }
 
-    refreshClass();
+  function editNickname(nickname = "0"){
+    $.ajax({
+      type: "POST",
+      url: "phps/editNickname.php",
+      data: {
+        nickname:nickname
+      }, success:function(response){
+        var responseJSON = $.parseJSON(response);
 
+        var successEdit = responseJSON.successEdit;
+        var successQuery = responseJSON.successQuery;
+        var errorNick = responseJSON.errorNick;
+        var message = responseJSON.message;
+        var markup = responseJSON.markup;
+
+        // Error handling
+        $("#change_nickErrorHandler").html(errorNick);
+
+        // Success edit
+        if(successEdit){
+          $("#changeNickname_modal").modal('hide');
+          alert(message);
+        }
+        else{
+          $("#change_nickErrorHandler").html(message);
+        }
+
+        // Success Query
+        if(successQuery){
+          $("#nickname_account").html(markup);
+        }
+      }
+    });
+  }
+
+    refreshClass();
 
     $("#createClass_confirm").click(function(){
       var name = $("#nameClass_text").val();
@@ -308,7 +343,11 @@ if(!isset($_SESSION["username"])){
           }
         }
       });
+    });
 
+    $("#changeNick_confirm").click(function(){
+      var nickname = $("#changeNick_text").val();
+      editNickname(nickname);
     });
    });
  </script>
