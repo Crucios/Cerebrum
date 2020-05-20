@@ -60,10 +60,11 @@ $role = "creator";
 		</div>
 		<div class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<span style="color: lightgray;">User Settings</span>
+				<span style="color: lightgray; margin-right: 0.5rem;"><?php echo $_SESSION["nickname"]; ?></span>
 				<img src="assets/images/user-icon.png" style="width:30px; height:30px;">
 			</a>
 			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a> 
 				<a class="dropdown-item" href="#" id="joinClass_button">Change Password</a>
 				<a class="dropdown-item" href="#" id="createClass_button">Change Nickname</a>
 				<a class="dropdown-item" href="logout.php" id="createClass_button">Log Out</a>
