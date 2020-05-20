@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2020 at 12:34 PM
+-- Generation Time: May 20, 2020 at 07:37 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.4
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `class` (
   `id` int(11) NOT NULL,
+  `id_creator` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `code` varchar(10) NOT NULL
@@ -38,9 +39,11 @@ CREATE TABLE `class` (
 -- Dumping data for table `class`
 --
 
-INSERT INTO `class` (`id`, `name`, `description`, `code`) VALUES
-(1, 'Tekweb A', '2019/2020 - A', 'cdE12R'),
-(2, 'PPM B', '2019/2020 - B', 'wRs2tE');
+INSERT INTO `class` (`id`, `id_creator`, `name`, `description`, `code`) VALUES
+(1, 1, 'Tekweb A', '2019/2020 - A', 'cdE12R'),
+(2, 1, 'PPM B', '2019/2020 - B', 'wRs2tE'),
+(6, 2, 'Java 2019', 'Kelas Java 2019/2020', '2gzi3gHq'),
+(7, 1, 'Pemrograman Jaringan', 'Pemjar A - 2020/2021', 'CxY1GfPk');
 
 --
 -- Indexes for dumped tables
@@ -60,7 +63,7 @@ ALTER TABLE `class`
 -- AUTO_INCREMENT for table `class`
 --
 ALTER TABLE `class`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

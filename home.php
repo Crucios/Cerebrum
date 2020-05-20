@@ -23,6 +23,31 @@ if(!isset($_SESSION["username"])){
       pointer-events: none;
       cursor: default;
     }
+    .card{
+      border: 4px solid rgba(55, 100, 100);
+      border-radius: 0.5rem;
+      height: 100%;
+    }
+    .card-header{
+      padding: 0.5rem 1rem 0rem 1rem;
+      background-color: rgba(180, 225, 225, 0.7);
+      font-weight: bold;
+    }
+    .card-header > h4{
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+    .card-header:hover{
+      background-color: rgba(140, 185, 185, 0.7);
+    }
+    .card-body{
+      padding: 0.5rem 1rem 0rem 1rem;
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+    a, a:hover{
+      color: rgb(60, 60, 60);
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -154,38 +179,98 @@ if(!isset($_SESSION["username"])){
        <a class="dropdown-item" href="logout.php" id="createClass_button">Log Out</a>
      </div>
    </div>
- </nav>
+ </div>
+</nav>
 
- <div class="container-fluid" style="margin-top: 5rem;">
+<div class="container-fluid" style="margin-top: 5rem;">
   <div class="row">
     <div class="col-sm-10 offset-sm-1" id="alert">
 
     </div>
   </div>
+  <div class="row">
+    <div class="col-sm-10 offset-sm-1">
+      <div class="row" id="listClass">
+
+      </div>
+    </div>
+  </div>
 </div>
 
- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
- <script type="text/javascript">
-   $(document).ready(function(){
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+ $(document).ready(function(){
+  function refreshClass(){
+    var id = <?php echo $_SESSION['id']; ?>;
+
+    $("#listClass").empty();
+    $.ajax({
+      type: "POST",
+      data: { id:id },
+      url: "phps/selectClass.php",
+      success:function(xml){
+        $(xml).find("class").each(function(){
+          var class_id = $(this).attr("id");
+          var name = $(this).find("name").text();
+          var creator = $(this).find("creator").text();
+          var description = $(this).find("description").text();
+          var code = $(this).find("code").text();
+
+          var classcard = "<a href='classwork.php'><div class='col-md-4 col-sm-6' style='margin: 1rem 0;' id='"+class_id+"'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;"+name+"</h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div></a>"
+
+          $("#listClass").append(classcard);
+        });
+      }
+    });
+  }
+
+    refreshClass();
+
 
     $("#createClass_confirm").click(function(){
       var name = $("#nameClass_text").val();
       var desc = $("#descriptionClass_text").val();
+      var id = <?php echo $_SESSION['id']; ?>;
 
       $.post("phps/addClass.php", {
-            name:name, desc:desc
-          }, function(result){
+        id:id, name:name, desc:desc
+      }, function(result){
 
-            if(result == "Class Successfully Created!"){
-              var alert = "success";
-            }else{
-              var alert = "danger";
-            }
+        if(result == "Class Successfully Created!"){
+          var alert = "success";
+        }else{
+          var alert = "danger";
+        }
 
-            var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
-            $("#alert").html(alert);
-          });
+        var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
+        $("#alert").html(alert);
+        $("#nameClass_text").val("");
+        $("#descriptionClass_text").val("");
+        refreshClass();
+      });
+
+    });
+
+    $("#joinClass_confirm").click(function(){
+      var code = $("#joinClass_text").val();
+      var id = <?php echo $_SESSION['id']; ?>;
+
+      $.post("phps/joinClass.php", {
+        id:id, code:code
+      }, function(result){
+        if(result[0] == "S"){
+          var alert = "success";
+        }else{
+          var alert = "danger";
+        }
+
+        var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
+        $("#alert").html(alert);
+        $("#joinClass_text").val("");
+
+        refreshClass();
+      });
     });
 
     $("#changePass_confirm").click(function(){
