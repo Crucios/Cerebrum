@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2020 at 06:18 PM
+-- Generation Time: May 21, 2020 at 06:28 PM
 -- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.4
+-- PHP Version: 7.4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,17 +30,18 @@ SET time_zone = "+00:00";
 CREATE TABLE `class_details` (
   `id` int(11) NOT NULL,
   `class_id` int(11) NOT NULL,
-  `users_id` int(11) NOT NULL
+  `users_id` int(11) NOT NULL,
+  `role` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `class_details`
 --
 
-INSERT INTO `class_details` (`id`, `class_id`, `users_id`) VALUES
-(1, 1, 1),
-(2, 1, 2),
-(3, 2, 1);
+INSERT INTO `class_details` (`id`, `class_id`, `users_id`, `role`) VALUES
+(1, 1, 1, 1),
+(2, 1, 2, 3),
+(3, 2, 1, 1);
 
 --
 -- Indexes for dumped tables
