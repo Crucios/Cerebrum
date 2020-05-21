@@ -205,7 +205,7 @@ if(!isset($_SESSION["class_id"])){
 
 								 <div id="deadline_datetime"></div>
 
-								 <button type='submit' class='btn btn-primary'>Submit</button>
+								 <button type='submit' class='btn btn-primary' id="submit_post">Submit</button>
               </form>
 
 						</div>
