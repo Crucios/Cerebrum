@@ -1,4 +1,4 @@
-<?php
+<?php  
 session_start();
 
 if(!isset($_SESSION["username"])){
@@ -36,8 +36,8 @@ $role = $hasilquery['role'];
 			color: rgb(55, 100, 100);
 		}
 		.post{
-			border-radius: 1rem;
-			background-color: rgba(255, 255, 255, 0.9);
+			border-radius: 1rem; 
+			background-color: rgba(255, 255, 255, 0.9); 
 			border: 3px solid rgba(55, 100, 100);
 		}
 
@@ -114,11 +114,11 @@ $role = $hasilquery['role'];
 				<li class="nav-item">
 					<a class="nav-link" href="home.php">Home</a>
 				</li>
-				<li class="nav-item active">
-					<a class="nav-link" href="#">Classwork</a>
-				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="listmember.php">People</a>
+					<a class="nav-link" href="classwork.php">Classwork</a>
+				</li>
+				<li class="nav-item active">
+					<a class="nav-link" href="#">People</a>
 				</li>
 			</ul>
 		</div>
@@ -128,14 +128,13 @@ $role = $hasilquery['role'];
 				<img src="assets/images/user-icon.png" style="width:30px; height:30px;">
 			</a>
 			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				<a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a>
+				<a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a> 
 				<a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePassword_modal">Change Password</a>
 				<a class="dropdown-item" href="#" data-toggle="modal" data-target="#changeNickname_modal">Change Nickname</a>
 				<a class="dropdown-item" href="logout.php" id="createClass_button">Log Out</a>
 			</div>
 		</div>
 	</nav>
-
 	<div class="container-fluid" style="margin-top: 6rem;">
 		<div class="row">
 			<div class="col-sm-10 offset-sm-1" id="alert">
@@ -168,170 +167,20 @@ $role = $hasilquery['role'];
 				</div>
 			</div>
 		</div>
-		<div class="row mt-3">
+		<div class="row">
 			<div class="col-sm-10 offset-sm-1">
-				<div class="row">
-					<div class="col-md-4">
-						<div class="row mb-2">
+				<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;">
+					<div class="card-body" id="titleDesc">
+						<div class="row">
 							<div class="col">
-								<div class="card" style="border-radius: 1rem; background-color: rgba(200, 200, 200, 0.9); border: 3px solid rgba(55, 100, 100); display: block">
-									<div class="row" align="center" style="margin: 1rem;">
-										<div class="col">
-											<?php if($role == 1){ ?>
-												<button class="btn btn-warning">Edit Description</button>
-												 <a href = "listmember.php"><button class="btn btn-warning">Edit Roles</button></a>
-											<?php } if ($role == 1 or $role == 2) { ?>
-												<button class="btn btn-success">Grade Assignments</button>
-											<?php } if ($role == 3) { ?>
-												<button class="btn btn-primary">Check Grades</button>
-											<?php } if ($role == 1) { ?>
-											<button class="btn btn-danger">Delete Class</button>
-										<?php } if ($role == 2 or $role == 3) ?>
-											<button class="btn btn-danger">Leave Class</button>
-										</div>
-									</div>
-								</div>
+								<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left;">
+								<h5>&nbsp;&nbsp;&nbsp;Username</h5>
+								<h6>&nbsp;&nbsp;&nbsp;&nbsp;Nickname</h6>
+								<button type="button" class="btn btn-info" style="float: right; white-space: nowrap;">Assign to Whatever</button>
 							</div>
-						</div>
-					</div>
-					<div class="col-md-8">
-						<?php if($role == "teacher" or $role == "creator"){ ?> <!-- if role == teacher -->
-							<div class="row mb-1">
-								<div class="col">
-									<div class="card" style="border-radius: 1rem; background-color: rgba(245, 245, 245, 0.8); border: 3px solid rgba(55, 100, 100);">
-										<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-											<div class="col">
-												<a href="create-post.php">
-													<h5 style="width: bold;">
-														<img id="plus" src="assets/images/black-plus.png" width="25" height="25">&nbsp;&nbsp;Create a new post!
-													</h5>
-												</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-					<?php } ?>
-					<div class="row">
-						<div class="col" id="postTemplate">
-							<!-- example -->
-							<div class="card mt-1 post">
-								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-									<div class="col">
-										<h5 style="width: bold;"><img src="assets/images/assignment.png" width="25" height="25">&nbsp;&nbsp;Assignment I : PHP</h5>
-									</div>
-								</div>
-							</div>
-							<div class="card mt-1 post">
-								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-									<div class="col">
-										<h5 style="width: bold;"><img src="assets/images/announcement.png" width="25" height="25">&nbsp;&nbsp;Announcement I : Ajax</h5>
-									</div>
-								</div>
-							</div>
-							<div class="card mt-1 post">
-								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-									<div class="col">
-										<h5 style="width: bold;"><img src="assets/images/material.png" width="25" height="25">&nbsp;&nbsp;Material I : MySQL</h5>
-									</div>
-								</div>
-							</div>
-							<!-- example -->
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-	$(document).ready(function(){
-		$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
-
-		$("#plus").mouseenter(function(){
-			$(this).animate({
-				width: "35px",
-				height: "35px"
-			}, 200);
-		});
-
-		$("#plus").mouseleave(function(){
-			$(this).animate({
-				width: "25px",
-				height: "25px"
-			}, 200);
-		});
-
-		$(".post").click(function(){
-			window.location.href = "classwork.php";
-		});
-
-		$("#changePass_confirm").click(function(){
-			var id = <?php echo $_SESSION["id"]; ?>;
-			var password = $("#oldPass_Text").val();
-			var newPass = $("#changePass_Text").val();
-			var confirmPass = $("#confirmPass_Text").val();
-
-			$.ajax({
-				url: 'phps/changePassword.php',
-				type: 'POST',
-				datatype: 'json',
-				data: {
-					id:id,
-					password: password,
-					newPass: newPass,
-					confirmPass: confirmPass
-				},
-				success: function(response){
-					var responseJSON = $.parseJSON(response);
-
-					$("#passwordErrorHandler").html(responseJSON.errorOld);
-					$("#change_passwordErrorHandler").html(responseJSON.errorNew);
-					$("#confirm_passwordErrorHandler").html(responseJSON.errConfirm);
-
-					if(responseJSON.message == "Password successfully changed!"){
-						var alert = "success";
-					}else{
-						var alert = "danger";
-					}
-
-					var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + responseJSON.message + "</strong></div>";
-					$("#alert").html(alert);
-				}
-			});
-
-			$("#oldPass_Text").val("");
-			$("#changePass_Text").val("");
-			$("#confirmPass_Text").val("");
-		});
-
-		$("#changeNick_confirm").click(function(){
-			var id = <?php echo $_SESSION["id"]; ?>;
-			var nickname = $("#changeNick_text").val();
-			$.ajax({
-				type: "POST",
-				url: "phps/editNickname.php",
-				data: {
-					id:id, nickname:nickname
-				}, success:function(response){
-					var responseJSON = $.parseJSON(response);
-
-					if(responseJSON.successEdit){
-						var alert = "success";
-						$("#nickname").html(nickname);
-					}else{
-						var alert = "danger";
-						$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
-					}
-
-					var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + responseJSON.message + "</strong></div>";
-					$("#alert").html(alert);
-				}
-			});
-		});
-	});
-</script>
-</body>
-</html>
