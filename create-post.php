@@ -9,8 +9,6 @@ if(!isset($_SESSION["class_id"])){
 	header("Location: home.php");
 }
 
-$role = "creator";
-
 ?>
 
 <!DOCTYPE html>
@@ -23,29 +21,71 @@ $role = "creator";
 	<link rel="stylesheet" type="text/css" href="website.css">
 	<link rel="icon" href="assets/images/logo.png">
 	<style type="text/css">
-		h2, h5, h6, a > strong, a > span{
-			color: rgb(55, 100, 100);
-		}
-		.post{
-			border-radius: 1rem;
-			background-color: rgba(255, 255, 255, 0.9);
-			border: 3px solid rgba(55, 100, 100);
-		}
-
-		.btn{
-			margin-top: 0.5rem;
-			width: 200px;
-		}
-		#titleHeader{
-			padding: 1.5rem 3rem 1rem 3rem;
-			background-color: rgba(180, 225, 225, 0.7);
-			font-weight: bold;
-		}
-		#titleDesc{
-			padding: 1rem 3rem 1rem 3rem;
-			background-color: rgba(255, 255, 255, 0.7);
-		}
+    #titleHeader{
+      padding: 1.5rem 3rem 1rem 3rem;
+      background-color: rgba(180, 225, 225, 0.7);
+      font-weight: bold;
+    }
+    #create-post-content{
+      background-color: white;
+    }
+    #formdiv {
+  text-align: center;
+    }
+    #file {
+      color: green;
+      padding: 5px;
+      border: 1px dashed #123456;
+      background-color: #f9ffe5;
+    }
+    #img {
+      width: 17px;
+      border: none;
+      height: 17px;
+      margin-left: -20px;
+      margin-bottom: 191px;
+    }
+    .upload {
+      width: 100%;
+      height: 30px;
+    }
+    .previewBox {
+      text-align: center;
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin-right: 10px;
+      margin-bottom: 20px;
+      float: left;
+    }
+    .previewBox img {
+      height: 150px;
+      width: 150px;
+      padding: 5px;
+      border: 1px solid rgb(232, 222, 189);
+    }
+    .delete {
+      color: red;
+      font-weight: bold;
+      position: absolute;
+      top: 0;
+      cursor: pointer;
+      width: 20px;
+      height:  20px;
+      border-radius: 50%;
+      background: #ccc;
+    }
 	</style>
+  <script>
+    function preview_images()
+    {
+     var total_file=document.getElementById("images").files.length;
+     for(var i=0;i<total_file;i++)
+     {
+      $('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' width='40' height='40'>");
+     }
+    }
+  </script>
 </head>
 <body>
 
@@ -128,104 +168,46 @@ $role = "creator";
 	</nav>
 
 	<div class="container-fluid" style="margin-top: 6rem;">
-		<div class="row">
-			<div class="col-sm-10 offset-sm-1" id="alert">
-
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-10 offset-sm-1">
-				<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100);">
-					<div class="card-header" id="titleHeader">
-						<div class="row">
-							<div class="col">
-								<h2 style="font-weight: bold;"><img src="assets/images/studying.png" width="30" height="30">&nbsp;&nbsp;<?php echo $_SESSION["classname"]; ?></h2>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<h5 style="font-weight: bold;"><?php echo $_SESSION["creator"]; ?></h5>
-							</div>
-						</div>
-					</div>
-					<div class="card-body" id="titleDesc">
-						<div class="row">
-							<div class="col">
-								<h6><?php echo $_SESSION["description"]; ?></h6>
-								<a><strong>Class Code: </strong><span><?php echo $_SESSION["code"]; ?></span></a>
-							</div>
+    <div class="col-sm-10 offset-sm-1">
+			<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100);">
+				<div class="card-header" id="titleHeader">
+					<div class="row">
+						<div class="col">
+							<h2 style="font-weight: bold;"><img src="assets/images/pencil.png" width="30" height="30">&nbsp;&nbsp;Create Post</h2>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-		<div class="row mt-3">
-			<div class="col-sm-10 offset-sm-1">
-				<div class="row">
-					<div class="col-md-4">
-						<div class="row mb-2">
-							<div class="col">
-								<div class="card" style="border-radius: 1rem; background-color: rgba(200, 200, 200, 0.9); border: 3px solid rgba(55, 100, 100);">
-									<div class="row" align="center" style="margin: 1rem;">
-										<div class="col">
-											<?php if($role == "creator"){ ?>
-												<button class="btn btn-warning">Edit Description</button>
-												<button class="btn btn-warning">Edit Roles</button>
-											<?php } if ($role == "creator" or $role == "teacher"){ ?>
-												<button class="btn btn-success">Grade Assignments</button>
-											<?php } if ($role == "student"){ ?>
-												<button class="btn btn-primary">Check Grades</button>
-											<?php } ?>
-											<button class="btn btn-danger">Leave Class</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-8">
-						<?php if($role == "teacher" or $role == "creator"){ ?> <!-- if role == teacher -->
-							<div class="row mb-1">
-								<div class="col">
-									<div class="card" style="border-radius: 1rem; background-color: rgba(245, 245, 245, 0.8); border: 3px solid rgba(55, 100, 100);">
-										<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-											<div class="col">
-												<a href="create-post.php">
-													<h5 style="width: bold;">
-														<img id="plus" src="assets/images/black-plus.png" width="25" height="25">&nbsp;&nbsp;Create a new post!
-													</h5>
-												</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-					<?php } ?>
+				<div class="card-body" id="create-post-content">
 					<div class="row">
-						<div class="col" id="postTemplate">
-							<!-- example -->
-							<div class="card mt-1 post">
-								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-									<div class="col">
-										<h5 style="width: bold;"><img src="assets/images/assignment.png" width="25" height="25">&nbsp;&nbsp;Assignment I : PHP</h5>
-									</div>
-								</div>
-							</div>
-							<div class="card mt-1 post">
-								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-									<div class="col">
-										<h5 style="width: bold;"><img src="assets/images/announcement.png" width="25" height="25">&nbsp;&nbsp;Announcement I : Ajax</h5>
-									</div>
-								</div>
-							</div>
-							<div class="card mt-1 post">
-								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-									<div class="col">
-										<h5 style="width: bold;"><img src="assets/images/material.png" width="25" height="25">&nbsp;&nbsp;Material I : MySQL</h5>
-									</div>
-								</div>
-							</div>
-							<!-- example -->
+						<div class="col">
+              <form>
+                <!-- Select Type Post -->
+                <div class="input-group mb-3">
+                 <div class="input-group-prepend">
+                   <label class="input-group-text" for="select_type">Type Post</label>
+                 </div>
+                 <select class="custom-select" id="select_type">
+                   <option selected>Choose...</option>
+                   <option value="announce">Announcement</option>
+                   <option value="material">Material</option>
+                   <option value="assignment">Assignment</option>
+                 </select>
+                </div>
+                <!-- Select Type Post -->
+
+                <label for="title">Title</label>
+                <input type="text" id="title_post" name="title" placeholder="Quiz 1: Arithmetics" class="form-control">
+                <label for="content">Content</label>
+                <textarea class="form-control" id="content" rows="3" placeholder="This quiz will be your first assignment."></textarea>
+
+                 <input type="file" class="form-control" id="images" name="images[]" onchange="preview_images();" multiple/>
+                 <div id="image_preview"></div><br>
+
+								 <div id="deadline_datetime"></div>
+
+								 <button type='submit' class='btn btn-primary'>Submit</button>
+              </form>
+
 						</div>
 					</div>
 				</div>
@@ -235,8 +217,29 @@ $role = "creator";
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
 	$(document).ready(function(){
+		$("#select_type").change(function(){
+			var value_select = $(this).val();
+			var markup = "";
+
+			if(value_select == "assignment"){
+				markup = "<label for='deadline_date'>Deadline Date</label>" +
+				"<input type='date' name='deadline_date' value='0000-00-00' class='form-control' required=''>" +
+				"<br><label for='deadline_time'>Deadline Time</label>" +
+				"<input id='timepicker' name='deadline_time' width='276' /><br>;"
+			}
+
+			$("#deadline_datetime").html(markup);
+
+		});
+
+    $('#timepicker').timepicker({
+         uiLibrary: 'bootstrap4'
+     });
+
 		$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
 
 		$("#plus").mouseenter(function(){
@@ -320,6 +323,81 @@ $role = "creator";
 				}
 			});
 		});
+
+
+    $('#add_more').click(function() {
+         "use strict";
+         $(this).before($("<div/>", {
+           id: 'filediv'
+         }).fadeIn('slow').append(
+           $("<input/>", {
+             name: 'file[]',
+             type: 'file',
+             id: 'file',
+             multiple: 'multiple',
+             accept: 'image/*'
+           })
+         ));
+       });
+
+       $('#upload').click(function(e) {
+         "use strict";
+         e.preventDefault();
+
+         if (window.filesToUpload.length === 0 || typeof window.filesToUpload === "undefined") {
+           alert("No files are selected.");
+           return false;
+         }
+
+         // Now, upload the files below...
+         // https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications#Handling_the_upload_process_for_a_file.2C_asynchronously
+       });
+
+       deletePreview = function (ele, i) {
+         "use strict";
+         try {
+           $(ele).parent().remove();
+           window.filesToUpload.splice(i, 1);
+         } catch (e) {
+           console.log(e.message);
+         }
+       }
+
+       $("#file").on('change', function() {
+         "use strict";
+
+         // create an empty array for the files to reside.
+         window.filesToUpload = [];
+
+         if (this.files.length >= 1) {
+           $("[id^=previewImg]").remove();
+           $.each(this.files, function(i, img) {
+             var reader = new FileReader(),
+               newElement = $("<div id='previewImg" + i + "' class='previewBox'><img /></div>"),
+               deleteBtn = $("<span class='delete' onClick='deletePreview(this, " + i + ")'>X</span>").prependTo(newElement),
+               preview = newElement.find("img");
+
+             reader.onloadend = function() {
+               preview.attr("src", reader.result);
+               preview.attr("alt", img.name);
+             };
+
+             try {
+               window.filesToUpload.push(document.getElementById("file").files[i]);
+             } catch (e) {
+               console.log(e.message);
+             }
+
+             if (img) {
+               reader.readAsDataURL(img);
+             } else {
+               preview.src = "";
+             }
+
+             newElement.appendTo("#filediv");
+           });
+         }
+       });
 	});
 </script>
 </body>
