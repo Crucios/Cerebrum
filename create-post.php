@@ -21,71 +21,71 @@ if(!isset($_SESSION["class_id"])){
 	<link rel="stylesheet" type="text/css" href="website.css">
 	<link rel="icon" href="assets/images/logo.png">
 	<style type="text/css">
-    #titleHeader{
-      padding: 1.5rem 3rem 1rem 3rem;
-      background-color: rgba(180, 225, 225, 0.7);
-      font-weight: bold;
-    }
-    #create-post-content{
-      background-color: white;
-    }
-    #formdiv {
-  text-align: center;
-    }
-    #file {
-      color: green;
-      padding: 5px;
-      border: 1px dashed #123456;
-      background-color: #f9ffe5;
-    }
-    #img {
-      width: 17px;
-      border: none;
-      height: 17px;
-      margin-left: -20px;
-      margin-bottom: 191px;
-    }
-    .upload {
-      width: 100%;
-      height: 30px;
-    }
-    .previewBox {
-      text-align: center;
-      position: relative;
-      width: 150px;
-      height: 150px;
-      margin-right: 10px;
-      margin-bottom: 20px;
-      float: left;
-    }
-    .previewBox img {
-      height: 150px;
-      width: 150px;
-      padding: 5px;
-      border: 1px solid rgb(232, 222, 189);
-    }
-    .delete {
-      color: red;
-      font-weight: bold;
-      position: absolute;
-      top: 0;
-      cursor: pointer;
-      width: 20px;
-      height:  20px;
-      border-radius: 50%;
-      background: #ccc;
-    }
+		#titleHeader{
+			padding: 1.5rem 3rem 1rem 3rem;
+			background-color: rgba(180, 225, 225, 0.7);
+			font-weight: bold;
+		}
+		#create-post-content{
+			background-color: rgba(255, 255, 255, 0.6);
+			padding: 2rem 3rem;
+		}
+		#formdiv {
+			text-align: center;
+		}
+		#file {
+			color: green;
+			padding: 5px;
+			border: 1px dashed #123456;
+			background-color: #f9ffe5;
+		}
+		#img {
+			width: 17px;
+			border: none;
+			height: 17px;
+			margin-left: -20px;
+			margin-bottom: 191px;
+		}
+		.upload {
+			width: 100%;
+			height: 30px;
+		}
+		.previewBox {
+			text-align: center;
+			position: relative;
+			width: 150px;
+			height: 150px;
+			margin: 1rem 2rem;
+			float: left;
+		}
+		.previewBox img {
+			height: 150px;
+			width: 150px;
+			padding: 5px;
+			border: 1px solid rgb(232, 222, 189);
+		}
+		.delete {
+			color: red;
+			font-weight: bold;
+			position: absolute;
+			top: 0;
+			cursor: pointer;
+			width: 20px;
+			height:  20px;
+			border-radius: 50%;
+			background: #ccc;
+		}
 	</style>
-  <script>
-    function preview_images()
-    {
-     var total_file=document.getElementById("images").files.length;
-     for(var i=0;i<total_file;i++)
-     {
-      $('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' width='40' height='40'>");
-     }
-    }
-  </script>
+	<script>
+		function preview_images()
+		{
+			var total_file=document.getElementById("images").files.length;
+			for(var i=0;i<total_file;i++)
+			{
+				$('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' width='40' height='40'>");
+			}
+		}
+	</script>
 </head>
 <body>
 
@@ -145,11 +145,11 @@ if(!isset($_SESSION["class_id"])){
 				<li class="nav-item">
 					<a class="nav-link" href="home.php">Home</a>
 				</li>
-				<li class="nav-item active">
-					<a class="nav-link" href="#">Classwork</a>
+				<li class="nav-item">
+					<a class="nav-link" href="classwork.php">Classwork</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">People</a>
+					<a class="nav-link" href="listmember.php">People</a>
 				</li>
 			</ul>
 		</div>
@@ -168,7 +168,7 @@ if(!isset($_SESSION["class_id"])){
 	</nav>
 
 	<div class="container-fluid" style="margin-top: 6rem;">
-    <div class="col-sm-10 offset-sm-1">
+		<div class="col-sm-10 offset-sm-1">
 			<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100);">
 				<div class="card-header" id="titleHeader">
 					<div class="row">
@@ -180,34 +180,38 @@ if(!isset($_SESSION["class_id"])){
 				<div class="card-body" id="create-post-content">
 					<div class="row">
 						<div class="col">
-              <form>
-                <!-- Select Type Post -->
-                <div class="input-group mb-3">
-                 <div class="input-group-prepend">
-                   <label class="input-group-text" for="select_type">Type Post</label>
-                 </div>
-                 <select class="custom-select" id="select_type">
-                   <option selected>Choose...</option>
-                   <option value="announce">Announcement</option>
-                   <option value="material">Material</option>
-                   <option value="assignment">Assignment</option>
-                 </select>
-                </div>
-                <!-- Select Type Post -->
+							<form>
+								<!-- Select Type Post -->
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<label class="input-group-text" for="select_type">Type Post</label>
+									</div>
+									<select class="custom-select" id="select_type">
+										<option selected disabled>Choose...</option>
+										<option value="announce">Announcement</option>
+										<option value="material">Material</option>
+										<option value="assignment">Assignment</option>
+									</select>
+								</div>
+								<!-- Select Type Post -->
 
-                <label for="title">Title</label>
-                <input type="text" id="title_post" name="title" placeholder="Quiz 1: Arithmetics" class="form-control">
-                <label for="content">Content</label>
-                <textarea class="form-control" id="content" rows="3" placeholder="This quiz will be your first assignment."></textarea>
+								<label for="title">Title:</label>
+								<input type="text" id="title_post" name="title" placeholder="Quiz 1: Arithmetics" class="form-control">
+								<label for="content" class="mt-3">Content:</label>
+								<textarea class="form-control" id="content" rows="3" placeholder="This quiz will be your first assignment."></textarea>
 
-                 <input type="file" class="form-control" id="images" name="images[]" onchange="preview_images();" multiple/>
-                 <div id="image_preview"></div><br>
+								<div id="attachments">
 
-								 <div id="deadline_datetime"></div>
+								</div>
 
-								 <button type='submit' class='btn btn-primary' id="submit_post">Submit</button>
-              </form>
+								<div id="deadline_datetime">
 
+								</div>
+
+								<div class="row mt-4" align="center" id="submitBtn">
+									
+								</div>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -218,43 +222,32 @@ if(!isset($_SESSION["class_id"])){
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#select_type").change(function(){
 			var value_select = $(this).val();
 			var markup = "";
+			var attach = "";
 
 			if(value_select == "assignment"){
-				markup = "<label for='deadline_date'>Deadline Date</label>" +
-				"<input type='date' name='deadline_date' value='0000-00-00' class='form-control' required=''>" +
-				"<br><label for='deadline_time'>Deadline Time</label>" +
-				"<input id='timepicker' name='deadline_time' width='276' /><br>;"
+				markup = "<label for='deadline_date'>Deadline Date:</label><input type='date' name='deadline_date' value='0000-00-00' class='form-control' required=''><div class='form-group pmd-textfield pmd-textfield-floating-label mt-3'><label class='control-label' for='timepicker'>Deadline Time:</label><input type='text' class='form-control' id='timepicker'></div>"
+			}
+
+			if(value_select != "announce"){
+				attach = "<label for='images' class='mt-3'>Add Attachment Files:</label><br><input type='file' id='images' name='images[]' onchange='preview_images();' multiple><div id='image_preview' class='mt-3 mb-3'></div>"
 			}
 
 			$("#deadline_datetime").html(markup);
-
+			$("#attachments").html(attach);
+			$("#submitBtn").html("<div class='col'><button type='submit' class='btn btn-primary' id='submit_post' style='width: 50%;'>Submit</button></div>")
 		});
 
-    $('#timepicker').timepicker({
-         uiLibrary: 'bootstrap4'
-     });
+		$('#timepicker').timepicker({
+			uiLibrary: 'bootstrap4'
+		});
 
 		$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
-
-		$("#plus").mouseenter(function(){
-			$(this).animate({
-				width: "35px",
-				height: "35px"
-			}, 200);
-		});
-
-		$("#plus").mouseleave(function(){
-			$(this).animate({
-				width: "25px",
-				height: "25px"
-			}, 200);
-		});
 
 		$(".post").click(function(){
 			window.location.href = "classwork.php";
@@ -325,79 +318,79 @@ if(!isset($_SESSION["class_id"])){
 		});
 
 
-    $('#add_more').click(function() {
-         "use strict";
-         $(this).before($("<div/>", {
-           id: 'filediv'
-         }).fadeIn('slow').append(
-           $("<input/>", {
-             name: 'file[]',
-             type: 'file',
-             id: 'file',
-             multiple: 'multiple',
-             accept: 'image/*'
-           })
-         ));
-       });
+		$('#add_more').click(function() {
+			"use strict";
+			$(this).before($("<div/>", {
+				id: 'filediv'
+			}).fadeIn('slow').append(
+			$("<input/>", {
+				name: 'file[]',
+				type: 'file',
+				id: 'file',
+				multiple: 'multiple',
+				accept: 'image/*'
+			})
+			));
+		});
 
-       $('#upload').click(function(e) {
-         "use strict";
-         e.preventDefault();
+		$('#upload').click(function(e) {
+			"use strict";
+			e.preventDefault();
 
-         if (window.filesToUpload.length === 0 || typeof window.filesToUpload === "undefined") {
-           alert("No files are selected.");
-           return false;
-         }
+			if (window.filesToUpload.length === 0 || typeof window.filesToUpload === "undefined") {
+				alert("No files are selected.");
+				return false;
+			}
 
          // Now, upload the files below...
          // https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications#Handling_the_upload_process_for_a_file.2C_asynchronously
-       });
+     });
 
-       deletePreview = function (ele, i) {
-         "use strict";
-         try {
-           $(ele).parent().remove();
-           window.filesToUpload.splice(i, 1);
-         } catch (e) {
-           console.log(e.message);
-         }
-       }
+		deletePreview = function (ele, i) {
+			"use strict";
+			try {
+				$(ele).parent().remove();
+				window.filesToUpload.splice(i, 1);
+			} catch (e) {
+				console.log(e.message);
+			}
+		}
 
-       $("#file").on('change', function() {
-         "use strict";
+		$("#file").on('change', function() {
+			"use strict";
 
          // create an empty array for the files to reside.
          window.filesToUpload = [];
 
          if (this.files.length >= 1) {
-           $("[id^=previewImg]").remove();
-           $.each(this.files, function(i, img) {
-             var reader = new FileReader(),
-               newElement = $("<div id='previewImg" + i + "' class='previewBox'><img /></div>"),
-               deleteBtn = $("<span class='delete' onClick='deletePreview(this, " + i + ")'>X</span>").prependTo(newElement),
-               preview = newElement.find("img");
+         	$("[id^=previewImg]").remove();
+         	$.each(this.files, function(i, img) {
+         		var reader = new FileReader(),
+         		newElement = $("<div id='previewImg" + i + "' class='previewBox'><img /></div>"),
+         		deleteBtn = $("<span class='delete' onClick='deletePreview(this, " + i + ")'>X</span>").prependTo(newElement),
+         		preview = newElement.find("img");
 
-             reader.onloadend = function() {
-               preview.attr("src", reader.result);
-               preview.attr("alt", img.name);
-             };
+         		reader.onloadend = function() {
+         			preview.attr("src", reader.result);
+         			preview.attr("alt", img.name);
+         		};
 
-             try {
-               window.filesToUpload.push(document.getElementById("file").files[i]);
-             } catch (e) {
-               console.log(e.message);
-             }
+         		try {
+         			window.filesToUpload.push(document.getElementById("file").files[i]);
+         		} catch (e) {
+         			console.log(e.message);
+         		}
 
-             if (img) {
-               reader.readAsDataURL(img);
-             } else {
-               preview.src = "";
-             }
+         		if (img) {
+         			reader.readAsDataURL(img);
+         		} else {
+         			preview.src = "";
+         		}
 
-             newElement.appendTo("#filediv");
-           });
+         		newElement.appendTo("#filediv");
+         	});
          }
-       });
+     });
 	});
 </script>
 </body>

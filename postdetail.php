@@ -76,6 +76,10 @@ $submitfile = "tugas1.jpg";
       color: darkblue;
     }
 
+    a:hover{
+      text-decoration: none;
+    }
+
     .comment{
       margin: 0.5rem 0;
       padding: 0.3rem 1rem;

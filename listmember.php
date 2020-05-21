@@ -46,12 +46,12 @@ $role = $hasilquery['role'];
 			width: 200px;
 		}
 		#titleHeader{
-			padding: 1.5rem 3rem 1rem 3rem;
+			padding: 1.5rem 2rem 0.5rem 2rem;
 			background-color: rgba(180, 225, 225, 0.7);
 			font-weight: bold;
 		}
 		#titleDesc{
-			padding: 1rem 3rem 1rem 3rem;
+			padding: 1rem 2rem 1rem 2rem;
 			background-color: rgba(255, 255, 255, 0.7);
 		}
 	</style>

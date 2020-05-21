@@ -46,13 +46,17 @@ $role = $hasilquery['role'];
 			width: 200px;
 		}
 		#titleHeader{
-			padding: 1.5rem 3rem 1rem 3rem;
+			padding: 1.5rem 2rem 0.5rem 2rem;
 			background-color: rgba(180, 225, 225, 0.7);
 			font-weight: bold;
 		}
 		#titleDesc{
-			padding: 1rem 3rem 1rem 3rem;
+			padding: 1rem 2rem 1rem 2rem;
 			background-color: rgba(255, 255, 255, 0.7);
+		}
+
+		a:hover{
+			text-decoration: none;
 		}
 	</style>
 </head>
@@ -195,7 +199,7 @@ $role = $hasilquery['role'];
 						</div>
 					</div>
 					<div class="col-md-8">
-						<?php if($role == "teacher" or $role == "creator"){ ?> <!-- if role == teacher -->
+						<?php if($role == 1 or $role == 2){ ?> <!-- if role == teacher -->
 							<div class="row mb-1">
 								<div class="col">
 									<div class="card" style="border-radius: 1rem; background-color: rgba(245, 245, 245, 0.8); border: 3px solid rgba(55, 100, 100);">
@@ -215,6 +219,7 @@ $role = $hasilquery['role'];
 					<div class="row">
 						<div class="col" id="postTemplate">
 							<!-- example -->
+							<a href="postdetail.php">
 							<div class="card mt-1 post">
 								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
 									<div class="col">
@@ -222,6 +227,7 @@ $role = $hasilquery['role'];
 									</div>
 								</div>
 							</div>
+							</a>
 							<div class="card mt-1 post">
 								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
 									<div class="col">
@@ -262,10 +268,6 @@ $role = $hasilquery['role'];
 				width: "25px",
 				height: "25px"
 			}, 200);
-		});
-
-		$(".post").click(function(){
-			window.location.href = "classwork.php";
 		});
 
 		$("#changePass_confirm").click(function(){
