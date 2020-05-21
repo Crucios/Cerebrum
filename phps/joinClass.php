@@ -16,7 +16,7 @@ if(isset($_POST["code"])){
         if(mysqli_num_rows($query) > 0){
             echo "You already joined $name!";
         }else{
-            $query = mysqli_query($conn, "INSERT INTO class_details VALUES (0, $id_class, $id)");
+            $query = mysqli_query($conn, "INSERT INTO class_details VALUES (0, $id_class, $id, 3)");
 
             if($query){
                 echo "Successfully joined $name!";
