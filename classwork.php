@@ -17,8 +17,6 @@ $hasilusers = mysqli_fetch_array($queryidusers);
 $idusersactive = $hasilusers['id'];
 $query = mysqli_query($conn, "SELECT * FROM class_details WHERE class_id = $classid AND users_id = $idusersactive");
 $hasilquery = mysqli_fetch_array($query);
-$role = $hasilquery['role'];
-// role 1 = creator, 2 = teacher, 3 = student
 
 ?>
 
@@ -57,6 +55,10 @@ $role = $hasilquery['role'];
 
 		a:hover{
 			text-decoration: none;
+		}
+
+		#menu > button{
+			width: 80%;
 		}
 	</style>
 </head>
@@ -128,7 +130,7 @@ $role = $hasilquery['role'];
 		</div>
 		<div class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<span style="color: lightgray; margin-right: 0.5rem;"><?php echo $_SESSION["nickname"]; ?></span>
+				<span id="nickname" style="color: lightgray; margin-right: 0.5rem;"><?php echo $_SESSION["nickname"]; ?></span>
 				<img src="assets/images/user-icon.png" style="width:30px; height:30px;">
 			</a>
 			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -180,17 +182,17 @@ $role = $hasilquery['role'];
 							<div class="col">
 								<div class="card" style="border-radius: 1rem; background-color: rgba(200, 200, 200, 0.9); border: 3px solid rgba(55, 100, 100); display: block">
 									<div class="row" align="center" style="margin: 1rem;">
-										<div class="col">
-											<?php if($role == 1){ ?>
+										<div class="col" id="menu">
+											<?php if($_SESSION["role"] == "creator"){ ?>
 												<button class="btn btn-warning">Edit Description</button>
-												 <a href = "listmember.php"><button class="btn btn-warning">Edit Roles</button></a>
-											<?php } if ($role == 1 or $role == 2) { ?>
+												<button class="btn btn-warning">Edit Roles</button>
+											<?php } if ($_SESSION["role"] == "creator" or $_SESSION["role"] == "teacher") { ?>
 												<button class="btn btn-success">Grade Assignments</button>
-											<?php } if ($role == 3) { ?>
+											<?php } if ($_SESSION["role"] == "student") { ?>
 												<button class="btn btn-primary">Check Grades</button>
-											<?php } if ($role == 1) { ?>
+											<?php } if ($_SESSION["role"] == "creator") { ?>
 											<button class="btn btn-danger">Delete Class</button>
-										<?php } if ($role == 2 or $role == 3) ?>
+										<?php } if ($_SESSION["role"] == "teacher" or $_SESSION["role"] == "student") ?>
 											<button class="btn btn-danger">Leave Class</button>
 										</div>
 									</div>
@@ -199,7 +201,7 @@ $role = $hasilquery['role'];
 						</div>
 					</div>
 					<div class="col-md-8">
-						<?php if($role == 1 or $role == 2){ ?> <!-- if role == teacher -->
+						<?php if($_SESSION["role"] == "creator" or $_SESSION["role"] == "teacher"){ ?> <!-- if role == teacher -->
 							<div class="row mb-1">
 								<div class="col">
 									<div class="card" style="border-radius: 1rem; background-color: rgba(245, 245, 245, 0.8); border: 3px solid rgba(55, 100, 100);">
@@ -217,13 +219,14 @@ $role = $hasilquery['role'];
 							</div>
 					<?php } ?>
 					<div class="row">
-						<div class="col" id="postTemplate">
+						<div class="col" id="listPost">
 							<!-- example -->
 							<a href="postdetail.php">
 							<div class="card mt-1 post">
 								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
 									<div class="col">
 										<h5 style="width: bold;"><img src="assets/images/assignment.png" width="25" height="25">&nbsp;&nbsp;Assignment I : PHP</h5>
+										<h6><img src="assets/images/account.png" width="18" height="18">&nbsp;&nbsp;Joni - Posted on May 19, 2020</h6>
 									</div>
 								</div>
 							</div>
@@ -254,6 +257,32 @@ $role = $hasilquery['role'];
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		function refreshPost(){
+			var id = <?php echo $_SESSION['class_id']; ?>;
+			$("#listPost").empty();
+			$.ajax({
+				type: "POST",
+				data: { id:id },
+				url: "phps/selectPost.php",
+				success:function(xml){
+					console.log(xml);
+					$(xml).find("post").each(function(){
+						var id = $(this).attr("id");
+						var type = $(this).find("type").text();
+						var creator = $(this).find("creator").text();
+						var timestamp = $(this).find("timestamp").text();
+						var title = $(this).find("title").text();
+
+						var postcard = "<a href='viewpost.php?id="+id+"'><div class='card mt-1 post'><div class='row' style='margin: 1rem 2rem 0.5rem 1rem;'><div class='col'><h5 style='width: bold;'><img src='assets/images/"+type+".png' width='25' height='25'>&nbsp;&nbsp;"+title+"</h5><h6><img src='assets/images/account.png' width='18' height='18'>&nbsp;&nbsp;"+creator+" - Posted on "+timestamp+"</h6></div></div></div></a>";
+
+						$("#listPost").prepend(postcard);
+					});
+				}
+    		});
+		}
+
+		refreshPost();
+
 		$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
 
 		$("#plus").mouseenter(function(){

@@ -124,7 +124,7 @@ $role = $hasilquery['role'];
 		</div>
 		<div class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<span style="color: lightgray; margin-right: 0.5rem;"><?php echo $_SESSION["nickname"]; ?></span>
+				<span id="nickname" style="color: lightgray; margin-right: 0.5rem;"><?php echo $_SESSION["nickname"]; ?></span>
 				<img src="assets/images/user-icon.png" style="width:30px; height:30px;">
 			</a>
 			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -135,6 +135,7 @@ $role = $hasilquery['role'];
 			</div>
 		</div>
 	</nav>
+
 	<div class="container-fluid" style="margin-top: 6rem;">
 		<div class="row">
 			<div class="col-sm-10 offset-sm-1" id="alert">
@@ -184,3 +185,78 @@ $role = $hasilquery['role'];
 			</div>
 		</div>
 	</div>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
+
+			$("#changePass_confirm").click(function(){
+				var id = <?php echo $_SESSION["id"]; ?>;
+				var password = $("#oldPass_Text").val();
+				var newPass = $("#changePass_Text").val();
+				var confirmPass = $("#confirmPass_Text").val();
+
+				$.ajax({
+					url: 'phps/changePassword.php',
+					type: 'POST',
+					datatype: 'json',
+					data: {
+						id:id,
+						password: password,
+						newPass: newPass,
+						confirmPass: confirmPass
+					},
+					success: function(response){
+						var responseJSON = $.parseJSON(response);
+
+						$("#passwordErrorHandler").html(responseJSON.errorOld);
+						$("#change_passwordErrorHandler").html(responseJSON.errorNew);
+						$("#confirm_passwordErrorHandler").html(responseJSON.errConfirm);
+
+						if(responseJSON.message == "Password successfully changed!"){
+							var alert = "success";
+						}else{
+							var alert = "danger";
+						}
+
+						var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + responseJSON.message + "</strong></div>";
+						$("#alert").html(alert);
+					}
+				});
+
+				$("#oldPass_Text").val("");
+				$("#changePass_Text").val("");
+				$("#confirmPass_Text").val("");
+			});
+
+			$("#changeNick_confirm").click(function(){
+				var id = <?php echo $_SESSION["id"]; ?>;
+				var nickname = $("#changeNick_text").val();
+				$.ajax({
+					type: "POST",
+					url: "phps/editNickname.php",
+					data: {
+						id:id, nickname:nickname
+					}, success:function(response){
+						var responseJSON = $.parseJSON(response);
+
+						if(responseJSON.successEdit){
+							var alert = "success";
+							$("#nickname").html(nickname);
+						}else{
+							var alert = "danger";
+							$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
+						}
+
+						var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + responseJSON.message + "</strong></div>";
+						$("#alert").html(alert);
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

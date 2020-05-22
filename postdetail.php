@@ -5,14 +5,6 @@ if(!isset($_SESSION["username"])){
   header("Location: index.php");
 }
 
-$title = "Assignment I : Tugas PHP";
-$content = "Kerjakan dengan seksama, kumpulkan dalam bentuk zip";
-$creator = "Henry Wicaksono";
-$type = "assignment";
-$timestamp = "2020-05-31 17:33:41";
-$deadline = "2020-06-11 23:59:00";
-$dateposted = date('F d, Y', strtotime($timestamp));
-$datedeadline = date('F d, Y', strtotime($deadline));
 $filename = "tugas1.docx";
 $submitfile = "tugas1.jpg";
 
@@ -176,8 +168,8 @@ $submitfile = "tugas1.jpg";
   <div class="row mt-2">
     <div class="col-sm-10 offset-sm-1" id="alert">
       <div class="card" id="main">
-        <h2><img src="assets/images/<?php echo $type; ?>.png" height="25" width="25" style="margin-right: 0.5rem;"><?php echo $title; ?></h2>
-        <h5><img src="assets/images/account.png" height="20" width="20" style="margin-right: 0.5rem;"><?php echo $creator; ?> - Posted on <strong><?php echo $dateposted; ?></strong></h5>
+        <h2><img src="assets/images/<?php echo $_SESSION["post_type"]; ?>.png" height="25" width="25" style="margin-right: 0.5rem;"><?php echo $_SESSION["post_title"]; ?></h2>
+        <h5><img src="assets/images/account.png" height="20" width="20" style="margin-right: 0.5rem;"><?php echo $_SESSION["post_creator"]; ?> - Posted on <strong><?php echo date('F d, Y', strtotime($_SESSION["post_timestamp"])); ?></strong></h5>
       </div>
     </div>
   </div>
@@ -185,7 +177,7 @@ $submitfile = "tugas1.jpg";
     <div class="col-sm-10 offset-sm-1" id="alert">
       <div class="card" id="content">
         <h3>Post Details:</h3>
-        <?php if($type != "announcement"){ ?>
+        <?php if($_SESSION["post_type"] != "announcement"){ ?>
         <div class="row mb-2" id="listFiles">
           <div class="col-md-3 col-sm-6">
             <a href="/assets/postfiles/<?php echo $filename; ?>" download="<?php echo $filename; ?>">
@@ -196,9 +188,9 @@ $submitfile = "tugas1.jpg";
           </div>
         </div>
         <?php } ?>
-        <h5 class="mt-1"><?php echo $content; ?></h5>
+        <h5 class="mt-1"><?php echo $_SESSION["post_content"]; ?></h5>
       </div>
-      <?php if($type == "assignment"){ ?>
+      <?php if($_SESSION["post_type"] == "assignment"){ ?>
       <div class="card mt-3" id="submissions">
         <h3>Your Submissions:</h3>
         <div class="row" id="listFiles">
@@ -215,7 +207,7 @@ $submitfile = "tugas1.jpg";
             <button type="button" class="btn btn-primary">Edit Submissions</button>
           </div>
         </div>
-        <h5 class="mt-2"><strong>Deadline: <?php echo $datedeadline; ?></strong></h5>
+        <h5 class="mt-2"><strong>Deadline: <?php echo date('F d, Y', strtotime($_SESSION["post_deadline"])); ?></strong></h5>
       </div>
       <?php } ?>
       <div class="card mt-3" id="comments">
