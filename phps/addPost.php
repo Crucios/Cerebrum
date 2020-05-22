@@ -106,7 +106,7 @@
               }
           }
           else if($type == "assignment"){
-              $deadlineTimeStamp = strtotime($deadlineDate.' '.$deadlineTime);
+              $deadlineTimeStamp = $deadlineDate.' '.$deadlineTime;
               $query = mysqli_query($conn, "INSERT INTO posts VALUES(NULL, '$title', '$content', '$timestamp', '$type', $deadlineTimeStamp, '$id_class', '$id_user')");
               if($query){
                 $checkQuery = true;

@@ -236,22 +236,14 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 			var markup = "";
 
 			if(value_select == "assignment"){
-				markup = "<label for='deadline_date'>Deadline Date:</label><input type='date' name='date' value='0000-00-00' class='form-control' required=''><div class='form-group pmd-textfield pmd-textfield-floating-label mt-3'><label class='control-label' for='timepicker'>Deadline Time:</label><input type='text' class='form-control' id='timepicker' name='time'></div>"
+				markup = "<label for='deadline_date'>Deadline Date:</label><input type='date' name='date' value='0000-00-00' class='form-control' required=''><div class='form-group pmd-textfield pmd-textfield-floating-label mt-3'><label class='control-label' for='timepicker'>Deadline Time:</label><input type='time' class='form-control' id='timepicker' name='time' required=''></div>"
 			}
 
 			$("#deadline_datetime").html(markup);
 			$("#submitBtn").html("<div class='col'><button type='submit' class='btn btn-primary' id='submit_post' style='width: 50%;'>Submit</button></div>")
 		});
 
-		// $('#timepicker').timepicker({
-		// 	uiLibrary: 'bootstrap4'
-		// });
-
 		$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
-
-		$(".post").click(function(){
-			window.location.href = "classwork.php";
-		});
 
 		$("#changePass_confirm").click(function(){
 			var id = <?php echo $_SESSION["id"]; ?>;
@@ -316,68 +308,6 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 				}
 			});
 		});
-
-
-		// $('#add_more').click(function() {
-		// 	"use strict";
-		// 	$(this).before($("<div/>", {
-		// 		id: 'filediv'
-		// 	}).fadeIn('slow').append(
-		// 	$("<input/>", {
-		// 		name: 'file[]',
-		// 		type: 'file',
-		// 		id: 'file',
-		// 		multiple: 'multiple',
-		// 		accept: 'image/*'
-		// 	})
-		// 	));
-		// });
-
-		// deletePreview = function (ele, i) {
-		// 	"use strict";
-		// 	try {
-		// 		$(ele).parent().remove();
-		// 		window.filesToUpload.splice(i, 1);
-		// 	} catch (e) {
-		// 		console.log(e.message);
-		// 	}
-		// }
-
-		// $("#file").on('change', function() {
-		// 	"use strict";
-
-  //        // create an empty array for the files to reside.
-  //        window.filesToUpload = [];
-
-  //        if (this.files.length >= 1) {
-  //        	$("[id^=previewImg]").remove();
-  //        	$.each(this.files, function(i, img) {
-  //        		var reader = new FileReader(),
-  //        		newElement = $("<div id='previewImg" + i + "' class='previewBox'><img /></div>"),
-  //        		deleteBtn = $("<span class='delete' onClick='deletePreview(this, " + i + ")'>X</span>").prependTo(newElement),
-  //        		preview = newElement.find("img");
-
-  //        		reader.onloadend = function() {
-  //        			preview.attr("src", reader.result);
-  //        			preview.attr("alt", img.name);
-  //        		};
-
-  //        		try {
-  //        			window.filesToUpload.push(document.getElementById("file").files[i]);
-  //        		} catch (e) {
-  //        			console.log(e.message);
-  //        		}
-
-  //        		if (img) {
-  //        			reader.readAsDataURL(img);
-  //        		} else {
-  //        			preview.src = "";
-  //        		}
-
-  //        		newElement.appendTo("#filediv");
-  //        	});
-  //        }
-  //    });
 	});
 </script>
 </body>
