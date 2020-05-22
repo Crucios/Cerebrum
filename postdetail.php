@@ -5,7 +5,6 @@ if(!isset($_SESSION["username"])){
   header("Location: index.php");
 }
 
-$filename = "tugas1.docx";
 $submitfile = "tugas1.jpg";
 
 ?>
@@ -53,19 +52,19 @@ $submitfile = "tugas1.jpg";
     }
 
     .files{
-      background-color:rgba(205, 205, 205, 0.9);
+      background-color: white;
       padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
       border: 3px solid rgba(55, 100, 100);
       font-size: 15px;
       font-weight: bold;
-      box-shadow: 0.2rem 0.2rem grey;
+      box-shadow: 0.2rem 0.2rem #5984b3;
       color: rgb(80, 80, 80);
     }
 
     .files:hover{
       background-color:rgba(165, 165, 165, 0.8);
       color: darkblue;
+      box-shadow: 0rem 0rem; 
     }
 
     a:hover{
@@ -174,18 +173,12 @@ $submitfile = "tugas1.jpg";
     </div>
   </div>
   <div class="row mt-3">
-    <div class="col-sm-10 offset-sm-1" id="alert">
+    <div class="col-sm-10 offset-sm-1">
       <div class="card" id="content">
         <h3>Post Details:</h3>
         <?php if($_SESSION["post_type"] != "announcement"){ ?>
         <div class="row mb-2" id="listFiles">
-          <div class="col-md-3 col-sm-6">
-            <a href="/assets/postfiles/<?php echo $filename; ?>" download="<?php echo $filename; ?>">
-              <div class="card files">
-                <?php echo $filename; ?>
-              </div>
-            </a>
-          </div>
+          
         </div>
         <?php } ?>
         <h5 class="mt-1"><?php echo $_SESSION["post_content"]; ?></h5>
@@ -193,7 +186,7 @@ $submitfile = "tugas1.jpg";
       <?php if($_SESSION["post_type"] == "assignment"){ ?>
       <div class="card mt-3" id="submissions">
         <h3>Your Submissions:</h3>
-        <div class="row" id="listFiles">
+        <div class="row" id="listSubmissions">
           <div class="col-md-3 col-sm-6">
             <a href="/assets/submitfiles/<?php echo $submitfile; ?>" download="<?php echo $submitfile; ?>">
               <div class="card files">
@@ -213,21 +206,11 @@ $submitfile = "tugas1.jpg";
       <div class="card mt-3" id="comments">
         <h3>Post Comments:</h3>
         <span class="form-inline mt-1">
-          <input class="form-control" placeholder="Write your comment here..." id="comment_text" type="text" style="width: 80%;"><button type="button" class="btn btn-primary" style="width: 20%;"><img src="assets/images/send.png" width="20" height="20"></button>
+          <input class="form-control" placeholder="Write your comment here..." id="comment_text" type="text" style="width: 80%;"><button type="button" class="btn btn-primary" style="width: 20%;" id="post_comment"><img src="assets/images/send.png" width="20" height="20"></button>
         </span>
+          <a id="error" style="color: red;"></a>
         <div id="listComments">
-          <div class="card comment">
-            <a><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><strong>Henry Wicaksono</strong>&nbsp;&nbsp;May 12</a>
-            <a>Tugas apa apaan ini susah banget hah ga tau lagi liburan apa!</a>
-          </div>
-          <div class="card comment">
-            <a><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><strong>Gerry Steven</strong>&nbsp;&nbsp;May 12</a>
-            <a>Nani</a>
-          </div>
-          <div class="card comment">
-            <a><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><strong>Misael Setio</strong>&nbsp;&nbsp;May 13</a>
-            <a>Memecahkan... celengan nilai ~</a>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -239,7 +222,71 @@ $submitfile = "tugas1.jpg";
 <script type="text/javascript">
  $(document).ready(function(){
 
+  function refreshComment(){
+    var id = <?php echo $_SESSION['post_id']; ?>;
+    $("#listComments").empty();
+    $.ajax({
+      type: "POST",
+      data: { id:id },
+      url: "phps/selectComment.php",
+      success:function(xml){
+        $(xml).find("comment").each(function(){
+          var creator = $(this).find("creator").text();
+          var timestamp = $(this).find("timestamp").text();
+          var message = $(this).find("message").text();
+
+          var commentcard = "<div class='card comment'><a><img src='assets/images/account.png' height='15' width='15' style='margin-right: 0.5rem;'><strong>"+creator+"</strong>&nbsp;&nbsp;"+timestamp+"</a><a>"+message+"</a></div>";
+
+          $("#listComments").append(commentcard);
+        });
+      }
+    });
+  }
+
+  function refreshAttachment(){
+    var id = <?php echo $_SESSION['post_id']; ?>;
+    $("#listFiles").empty();
+    $.ajax({
+      type: "POST",
+      data: { id:id },
+      url: "phps/selectAttachment.php",
+      success:function(xml){
+        $(xml).find("file").each(function(){
+          var link = $(this).find("files").text();
+
+          var filecard = "<div class='col-md-3 col-sm-6'><a href='/assets/postfiles/"+link+"' download='"+link+"'><div class='card files'>"+link+"</div></a></div>";
+
+          $("#listFiles").append(filecard);
+        });
+      }
+    });
+  }
+
+  refreshComment();
+  refreshAttachment();
   $("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
+
+  $("#post_comment").click(function(){
+    var id = "<?php echo $_SESSION["id"] ?>";
+    var post = "<?php echo $_SESSION["post_id"] ?>"
+    var message = $("#comment_text").val();
+    
+    $.ajax({
+      type: "POST",
+      url: "phps/addComment.php",
+      data: {
+        id:id, message:message, post:post
+      }, success:function(response){
+        if(response == "Y"){
+          refreshComment();
+          $("#error").html("");
+          $("#comment_text").val("");
+        }else{
+          $("#error").html(response);
+        }
+      }
+    });
+  });
 
   $("#changePass_confirm").click(function(){
     var id = <?php echo $_SESSION["id"]; ?>;
