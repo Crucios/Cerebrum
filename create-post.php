@@ -9,6 +9,9 @@ if(!isset($_SESSION["class_id"])){
 	header("Location: home.php");
 }
 
+// if($_SESSION["role"] == "creator" || $_SESSION["role"] == "teacher"){
+// 	header("Location: classwork.php");
+// }
 ?>
 
 <!DOCTYPE html>
@@ -17,6 +20,8 @@ if(!isset($_SESSION["class_id"])){
 	<title>Cerebrum</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+	<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="website.css">
 	<link rel="icon" href="assets/images/logo.png">
@@ -77,9 +82,10 @@ if(!isset($_SESSION["class_id"])){
 		}
 	</style>
 	<script>
-		function preview_images()
+		function preview_postfiles()
 		{
-			var total_file=document.getElementById("images").files.length;
+			var total_file=document.getElementById("postfiles").files.length;
+			$("#image_preview").html("");
 			for(var i=0;i<total_file;i++)
 			{
 				$('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' width='40' height='40'>");
@@ -180,13 +186,13 @@ if(!isset($_SESSION["class_id"])){
 				<div class="card-body" id="create-post-content">
 					<div class="row">
 						<div class="col">
-							<form>
+							<form action="phps/addPost.php" method="post" enctype="multipart/form-data">
 								<!-- Select Type Post -->
 								<div class="input-group mb-3">
 									<div class="input-group-prepend">
 										<label class="input-group-text" for="select_type">Type Post</label>
 									</div>
-									<select class="custom-select" id="select_type">
+									<select class="custom-select" id="select_type" name="type">
 										<option selected disabled>Choose...</option>
 										<option value="announce">Announcement</option>
 										<option value="material">Material</option>
@@ -198,7 +204,7 @@ if(!isset($_SESSION["class_id"])){
 								<label for="title">Title:</label>
 								<input type="text" id="title_post" name="title" placeholder="Quiz 1: Arithmetics" class="form-control">
 								<label for="content" class="mt-3">Content:</label>
-								<textarea class="form-control" id="content" rows="3" placeholder="This quiz will be your first assignment."></textarea>
+								<textarea class="form-control" id="content" name="content" rows="3" placeholder="This quiz will be your first assignment."></textarea>
 
 								<div id="attachments">
 
@@ -209,7 +215,7 @@ if(!isset($_SESSION["class_id"])){
 								</div>
 
 								<div class="row mt-4" align="center" id="submitBtn">
-									
+
 								</div>
 							</form>
 						</div>
@@ -221,8 +227,7 @@ if(!isset($_SESSION["class_id"])){
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#select_type").change(function(){
@@ -231,11 +236,11 @@ if(!isset($_SESSION["class_id"])){
 			var attach = "";
 
 			if(value_select == "assignment"){
-				markup = "<label for='deadline_date'>Deadline Date:</label><input type='date' name='deadline_date' value='0000-00-00' class='form-control' required=''><div class='form-group pmd-textfield pmd-textfield-floating-label mt-3'><label class='control-label' for='timepicker'>Deadline Time:</label><input type='text' class='form-control' id='timepicker'></div>"
+				markup = "<label for='deadline_date'>Deadline Date:</label><input type='date' name='date' value='0000-00-00' class='form-control' required=''><div class='form-group pmd-textfield pmd-textfield-floating-label mt-3'><label class='control-label' for='timepicker'>Deadline Time:</label><input type='text' class='form-control' id='timepicker' name='time'></div>"
 			}
 
 			if(value_select != "announce"){
-				attach = "<label for='images' class='mt-3'>Add Attachment Files:</label><br><input type='file' id='images' name='images[]' onchange='preview_images();' multiple><div id='image_preview' class='mt-3 mb-3'></div>"
+				attach = "<label for='postfiles' class='mt-3'>Add Attachment Files:</label><br><input type='file' id='postfiles' name='postfiles[]' onchange='preview_postfiles();' multiple><div id='image_preview' class='mt-3 mb-3'></div>"
 			}
 
 			$("#deadline_datetime").html(markup);
@@ -332,19 +337,6 @@ if(!isset($_SESSION["class_id"])){
 			})
 			));
 		});
-
-		$('#upload').click(function(e) {
-			"use strict";
-			e.preventDefault();
-
-			if (window.filesToUpload.length === 0 || typeof window.filesToUpload === "undefined") {
-				alert("No files are selected.");
-				return false;
-			}
-
-         // Now, upload the files below...
-         // https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications#Handling_the_upload_process_for_a_file.2C_asynchronously
-     });
 
 		deletePreview = function (ele, i) {
 			"use strict";
