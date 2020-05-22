@@ -9,9 +9,9 @@ if(!isset($_SESSION["class_id"])){
 	header("Location: home.php");
 }
 
-// if($_SESSION["role"] == "creator" || $_SESSION["role"] == "teacher"){
-// 	header("Location: classwork.php");
-// }
+if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
+	header("Location: classwork.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -20,8 +20,6 @@ if(!isset($_SESSION["class_id"])){
 	<title>Cerebrum</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-	<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="website.css">
 	<link rel="icon" href="assets/images/logo.png">
@@ -82,15 +80,7 @@ if(!isset($_SESSION["class_id"])){
 		}
 	</style>
 	<script>
-		function preview_postfiles()
-		{
-			var total_file=document.getElementById("postfiles").files.length;
-			$("#image_preview").html("");
-			for(var i=0;i<total_file;i++)
-			{
-				$('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' width='40' height='40'>");
-			}
-		}
+	
 	</script>
 </head>
 <body>
@@ -194,7 +184,7 @@ if(!isset($_SESSION["class_id"])){
 									</div>
 									<select class="custom-select" id="select_type" name="type">
 										<option selected disabled>Choose...</option>
-										<option value="announce">Announcement</option>
+										<option value="announcement">Announcement</option>
 										<option value="material">Material</option>
 										<option value="assignment">Assignment</option>
 									</select>
@@ -207,7 +197,8 @@ if(!isset($_SESSION["class_id"])){
 								<textarea class="form-control" id="content" name="content" rows="3" placeholder="This quiz will be your first assignment."></textarea>
 
 								<div id="attachments">
-
+									<label for='postfiles' class='mt-3'>Add Attachment Files:</label><br>
+									<input type='file' id='postfiles' name='postfiles[]' onchange='preview_postfiles();' multiple><div id='image_preview' class='mt-3 mb-3'></div>
 								</div>
 
 								<div id="deadline_datetime">
@@ -229,34 +220,30 @@ if(!isset($_SESSION["class_id"])){
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
+	function preview_postfiles()
+	{
+		var total_file=document.getElementById("postfiles").files.length;
+		$("#image_preview").html("");
+		for(var i=0;i<total_file;i++)
+		{
+			$('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' width='40' height='40'>");
+		}
+	}
+
 	$(document).ready(function(){
 		$("#select_type").change(function(){
 			var value_select = $(this).val();
 			var markup = "";
-			var attach = "";
 
 			if(value_select == "assignment"){
-				markup = "<label for='deadline_date'>Deadline Date:</label><input type='date' name='date' value='0000-00-00' class='form-control' required=''><div class='form-group pmd-textfield pmd-textfield-floating-label mt-3'><label class='control-label' for='timepicker'>Deadline Time:</label><input type='text' class='form-control' id='timepicker' name='time'></div>"
-			}
-
-			if(value_select != "announce"){
-				attach = "<label for='postfiles' class='mt-3'>Add Attachment Files:</label><br><input type='file' id='postfiles' name='postfiles[]' onchange='preview_postfiles();' multiple><div id='image_preview' class='mt-3 mb-3'></div>"
+				markup = "<label for='deadline_date'>Deadline Date:</label><input type='date' name='date' value='0000-00-00' class='form-control' required=''><div class='form-group pmd-textfield pmd-textfield-floating-label mt-3'><label class='control-label' for='timepicker'>Deadline Time:</label><input type='time' class='form-control' id='timepicker' name='time' required=''></div>"
 			}
 
 			$("#deadline_datetime").html(markup);
-			$("#attachments").html(attach);
 			$("#submitBtn").html("<div class='col'><button type='submit' class='btn btn-primary' id='submit_post' style='width: 50%;'>Submit</button></div>")
 		});
 
-		$('#timepicker').timepicker({
-			uiLibrary: 'bootstrap4'
-		});
-
 		$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
-
-		$(".post").click(function(){
-			window.location.href = "classwork.php";
-		});
 
 		$("#changePass_confirm").click(function(){
 			var id = <?php echo $_SESSION["id"]; ?>;
@@ -321,68 +308,6 @@ if(!isset($_SESSION["class_id"])){
 				}
 			});
 		});
-
-
-		$('#add_more').click(function() {
-			"use strict";
-			$(this).before($("<div/>", {
-				id: 'filediv'
-			}).fadeIn('slow').append(
-			$("<input/>", {
-				name: 'file[]',
-				type: 'file',
-				id: 'file',
-				multiple: 'multiple',
-				accept: 'image/*'
-			})
-			));
-		});
-
-		deletePreview = function (ele, i) {
-			"use strict";
-			try {
-				$(ele).parent().remove();
-				window.filesToUpload.splice(i, 1);
-			} catch (e) {
-				console.log(e.message);
-			}
-		}
-
-		$("#file").on('change', function() {
-			"use strict";
-
-         // create an empty array for the files to reside.
-         window.filesToUpload = [];
-
-         if (this.files.length >= 1) {
-         	$("[id^=previewImg]").remove();
-         	$.each(this.files, function(i, img) {
-         		var reader = new FileReader(),
-         		newElement = $("<div id='previewImg" + i + "' class='previewBox'><img /></div>"),
-         		deleteBtn = $("<span class='delete' onClick='deletePreview(this, " + i + ")'>X</span>").prependTo(newElement),
-         		preview = newElement.find("img");
-
-         		reader.onloadend = function() {
-         			preview.attr("src", reader.result);
-         			preview.attr("alt", img.name);
-         		};
-
-         		try {
-         			window.filesToUpload.push(document.getElementById("file").files[i]);
-         		} catch (e) {
-         			console.log(e.message);
-         		}
-
-         		if (img) {
-         			reader.readAsDataURL(img);
-         		} else {
-         			preview.src = "";
-         		}
-
-         		newElement.appendTo("#filediv");
-         	});
-         }
-     });
 	});
 </script>
 </body>
