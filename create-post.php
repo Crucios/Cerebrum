@@ -9,9 +9,9 @@ if(!isset($_SESSION["class_id"])){
 	header("Location: home.php");
 }
 
-if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
-	header("Location: classwork.php");
-}
+// if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
+// 	header("Location: classwork.php");
+// }
 ?>
 
 <!DOCTYPE html>
@@ -80,7 +80,7 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 		}
 	</style>
 	<script>
-	
+
 	</script>
 </head>
 <body>

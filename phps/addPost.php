@@ -72,6 +72,7 @@
       	while($row = $query->fetch_array()){
       		$maxId = $row["id"];
       	}
+        $maxId += 1;
       }
 
       // If there is file to upload
@@ -120,8 +121,19 @@
             echo "Query Post Success";
             if($filesToUpload){
               $checkFileQuery = true;
+
+              // Get max id file
+              $query = mysqli_query($conn, "SELECT id FROM files");
+              $maxIdFile = 0;
+              if(mysqli_num_rows($query) > 0){
+              	while($row = $query->fetch_array()){
+              		$maxIdFile = $row["id"];
+              	}
+                $maxIdFile += 1;
+              }
+
               for($i = 0; $i < count($array_files); $i++){
-                move_uploaded_file($array_files[$i]['file_tmp'], "../assets/postfiles/".$array_files[$i]['filename']);
+                move_uploaded_file($array_files[$i]['file_tmp'], "../assets/postfiles/".$maxId.'_'.$maxIdFile.'-'.$array_files[$i]['filename']);
                 $query = mysqli_query($conn, $array_files[$i]['query']);
 
                 if(!$query){
