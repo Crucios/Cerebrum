@@ -75,6 +75,7 @@
       }
 
       // If there is file to upload
+      echo $_FILES['postfiles'];
   		if(isset($_FILES['postfiles']) && $checkDeadline){
         $filesToUpload = true;
         $file_array = reArrayFiles($_FILES['postfiles']);
@@ -83,7 +84,9 @@
         for($i = 0; $i < count($file_array); $i++){
           if($file_array[$i]['error']){
               echo $file_array[$i]['name'].' - '.$phpFileUploadError[$file_array[$i]['error']];
-              $checkFile = false;
+              if ($phpFileUploadError[$file_array[$i]['error']] != "No files were uploaded"){
+                  $checkFile = false;
+              }
           }
           else{
             $filename = $file_array[$i]['name'];
