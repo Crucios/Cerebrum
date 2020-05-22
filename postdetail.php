@@ -188,7 +188,7 @@ $submitfile = "tugas1.jpg";
         <h3>Your Submissions:</h3>
         <div class="row" id="listSubmissions">
           <div class="col-md-3 col-sm-6">
-            <a href="/assets/submitfiles/<?php echo $submitfile; ?>" download="<?php echo $submitfile; ?>">
+            <a href="./assets/submitfiles/<?php echo $submitfile; ?>" download="<?php echo $submitfile; ?>">
               <div class="card files">
                 <?php echo $submitfile; ?>
               </div>
@@ -254,7 +254,7 @@ $submitfile = "tugas1.jpg";
         $(xml).find("file").each(function(){
           var link = $(this).find("files").text();
 
-          var filecard = "<div class='col-md-3 col-sm-6'><a href='/assets/postfiles/"+link+"' download='"+link+"'><div class='card files'>"+link+"</div></a></div>";
+          var filecard = "<div class='col-md-3 col-sm-6'><a href='./assets/postfiles/"+link+"' download='"+link+"'><div class='card files'>"+link+"</div></a></div>";
 
           $("#listFiles").append(filecard);
         });
