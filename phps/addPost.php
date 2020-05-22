@@ -99,7 +99,7 @@
           $timestamp = date('Y-m-d h:i:s', time());
           $checkQuery = false;
 
-          if($type == "material" || $type == "announce"){
+          if($type == "material" || $type == "announcement"){
               $query = mysqli_query($conn, "INSERT INTO posts VALUES(NULL, '$title', '$content', '$timestamp', '$type', NULL, '$id_class', '$id_user')");
               if($query){
                 $checkQuery = true;
