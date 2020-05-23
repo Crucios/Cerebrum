@@ -32,9 +32,9 @@
 
     require_once("connect.php");
     session_start();
-    $output = array('success' => false, 'message' => null);
+    $output = array('success' => false, 'message' => null, 'titleError' => null, 'contentError' => null, 'deadlineDateError' => null, 'deadlineTimeError' => null, 'attachmentsError' => null);
 
-    if(isset($_POST["title"]) && $_POST["title"] != "" && isset($_POST["type"]) && $_POST["type"] != ""){
+    if(isset($_POST["title"]) && $_POST["title"] != "" && isset($_POST["content"]) && $_POST["content"] != ""){
       $title = $_POST["title"];
       $content = $_POST["content"];
       $type = $_POST["type"];
@@ -51,14 +51,14 @@
       if($type == "assignment"){
         if(!isset($_POST["date"]) || $_POST["date"] == ""){
           $checkDeadline = false;
-          echo "date is empty";
+          $output['deadlineDateError'] = "Deadline date is required";
         }
         else{
           $deadlineDate = $_POST["date"];
         }
         if(!isset($_POST["time"]) || $_POST["time"] == ""){
           $checkDeadline = false;
-          echo "time is empty";
+          $output['deadlineTimeError'] = "Deadline time is required";
         }
         else{
           $deadlineTime = $_POST["time"];
@@ -76,7 +76,6 @@
       }
 
       // If there is file to upload
-      echo $_FILES['postfiles'];
   		if(isset($_FILES['postfiles']) && $checkDeadline){
         $filesToUpload = true;
         $file_array = reArrayFiles($_FILES['postfiles']);
@@ -84,9 +83,10 @@
 
         for($i = 0; $i < count($file_array); $i++){
           if($file_array[$i]['error']){
-              echo $file_array[$i]['name'].' - '.$phpFileUploadError[$file_array[$i]['error']];
               if ($phpFileUploadError[$file_array[$i]['error']] != "No files were uploaded"){
                   $checkFile = false;
+                  $output['attachmentsError'] = $file_array[$i]['name'].' - '.$phpFileUploadError[$file_array[$i]['error']];
+                  break;
               }
           }
           else{
@@ -118,7 +118,6 @@
           }
 
           if($checkQuery){
-            echo "Query Post Success";
             if($filesToUpload){
               $checkFileQuery = true;
 
@@ -137,7 +136,7 @@
                 $query = mysqli_query($conn, $array_files[$i]['query']);
 
                 if(!$query){
-                  echo "File query failed";
+                  $output['message'] = "File query failed";
                   $checkFileQuery = false;
                   break;
                 }
@@ -145,21 +144,39 @@
 
               if($checkFileQuery){
                 $output['success'] = true;
+                $output['message'] = "Post successfully created";
               }
             }
           }
           else{
-            echo "Query post failed";
+            $output['message'] = "Query post failed";
           }
 
         }
       }
     }
-    else{
-      echo "Title required!";
+
+    if(!isset($_POST["title"]) || $_POST["title"] == ""){
+      $output['titleError'] = "Title is required";
+    }
+
+    if(!isset($_POST["content"]) || $_POST["content"] == ""){
+      $output['contentError'] = "Content is required";
+    }
+
+    if(!isset($_POST["date"]) || $_POST["date"] == ""){
+      $output['deadlineDateError'] = "Deadline date is required";
+    }
+
+    if(!isset($_POST["time"]) || $_POST["time"] == ""){
+      $output['deadlineTimeError'] = "Deadline time is required";
     }
 
     if($output['success']){
         header("Location: ../classwork.php");
     }
+    else{
+
+    }
+    echo json_encode($output);
 ?>

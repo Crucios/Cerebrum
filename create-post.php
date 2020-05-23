@@ -176,7 +176,7 @@ if(!isset($_SESSION["class_id"])){
 				<div class="card-body" id="create-post-content">
 					<div class="row">
 						<div class="col">
-							<form action="phps/addPost.php" method="post" enctype="multipart/form-data">
+							<form enctype="multipart/form-data">
 								<!-- Select Type Post -->
 								<div class="input-group mb-3">
 									<div class="input-group-prepend">
@@ -193,12 +193,15 @@ if(!isset($_SESSION["class_id"])){
 
 								<label for="title">Title:</label>
 								<input type="text" id="title_post" name="title" placeholder="Quiz 1: Arithmetics" class="form-control">
+								<p id="titleError" style="color: red;"></p>
 								<label for="content" class="mt-3">Content:</label>
 								<textarea class="form-control" id="content" name="content" rows="3" placeholder="This quiz will be your first assignment."></textarea>
+								<p id="contentError" style="color: red;"></p>
 
 								<div id="attachments">
 									<label for='postfiles' class='mt-3'>Add Attachment Files:</label><br>
 									<input type='file' id='postfiles' name='postfiles[]' onchange='preview_postfiles();' multiple><div id='image_preview' class='mt-3 mb-3'></div>
+									<p id="attachmentsError" style="color: red;"></p>
 								</div>
 
 								<div id="deadline_datetime">
@@ -231,12 +234,43 @@ if(!isset($_SESSION["class_id"])){
 	}
 
 	$(document).ready(function(){
+		form = $("form");
+		form.submit(function(event){
+			event.preventDefault();
+			$.ajax({
+				url:'phps/addPost.php',
+				type:"POST",
+				dataType:'json',
+				data:form.serialize(),
+				success:function(response){
+					console.log(response);
+
+					if(!response.success){
+						$("#titleError").html(response.titleError);
+						$("#contentError").html(response.contentError);
+						$("#deadlineDateError").html(response.deadlineDateError);
+						$("#deadlineTimeError").html(response.deadlineTimeError);
+						$("#attachmentsError").html(response.attachmentsError);
+					}
+					else{
+						alert(response.message);
+					}
+				}
+			}); //ajax call ends
+		}); //form.submit() ends
+
 		$("#select_type").change(function(){
 			var value_select = $(this).val();
 			var markup = "";
 
 			if(value_select == "assignment"){
-				markup = "<label for='deadline_date'>Deadline Date:</label><input type='date' name='date' value='0000-00-00' class='form-control' required=''><div class='form-group pmd-textfield pmd-textfield-floating-label mt-3'><label class='control-label' for='timepicker'>Deadline Time:</label><input type='time' class='form-control' id='timepicker' name='time' required=''></div>"
+				markup = "<label for='deadline_date'>Deadline Date:</label>" +
+				"<input type='date' name='date' value='0000-00-00' class='form-control'>" +
+				"<div class='form-group pmd-textfield pmd-textfield-floating-label mt-3'>" +
+				"<p id='deadlineDateError' style='color: red;'></p>" +
+				"<label class='control-label' for='timepicker'>Deadline Time:</label>" +
+				"<input type='time' class='form-control' id='timepicker' name='time'></div>" +
+				"<p id='deadlineTimeError' style='color: red;'></p>" ;
 			}
 
 			$("#deadline_datetime").html(markup);
