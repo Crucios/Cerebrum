@@ -32,7 +32,7 @@ if(mysqli_num_rows($query) > 0){
 		}
 	}
 }
-
+// role 1 = creator, 2 = teacher, 3 = student
 header("Location: classwork.php");
 
 ?>

@@ -9,16 +9,6 @@ if(!isset($_SESSION["class_id"])){
 	header("Location: home.php");
 }
 
-require_once "phps/connect.php";
-$useractive = $_SESSION["username"];
-$classid = $_SESSION["class_id"];
-$queryidusers = mysqli_query($conn, "SELECT * FROM users WHERE username = '$useractive'");
-$hasilusers = mysqli_fetch_array($queryidusers);
-$idusersactive = $hasilusers['id'];
-$query = mysqli_query($conn, "SELECT * FROM class_details WHERE class_id = $classid AND users_id = $idusersactive");
-$hasilquery = mysqli_fetch_array($query);
-$role = $hasilquery['role'];
-// role 1 = creator, 2 = teacher, 3 = student
 
 ?>
 
@@ -168,22 +158,91 @@ $role = $hasilquery['role'];
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-sm-10 offset-sm-1">
-				<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;">
+		<?php 
+		require_once "phps/connect.php";
+		$classid = $_SESSION["class_id"];
+		$query = mysqli_query($conn, "SELECT * FROM users u JOIN class_details cd ON u.id = cd.users_id WHERE cd.class_id = $classid ORDER BY u.username ASC");
+		while($row = mysqli_fetch_array($query)){
+			if ($_SESSION['role'] == "creator") {
+				if ($_SESSION['username'] == $row["username"]) {
+					echo '<div class="row">
+					<div class="col-sm-10 offset-sm-1">
+					<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;">
 					<div class="card-body" id="titleDesc">
-						<div class="row">
-							<div class="col">
-								<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left;">
-								<h5>&nbsp;&nbsp;&nbsp;Username</h5>
-								<h6>&nbsp;&nbsp;&nbsp;&nbsp;Nickname</h6>
-								<button type="button" class="btn btn-info" style="float: right; white-space: nowrap;">Assign to Whatever</button>
-							</div>
-						</div>
+					<div class="row">
+					<div class="col">
+					<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;">
+					<h5>'.$row["username"].'</h5>
+					<h6>'.$row["nickname"].'</h6>
 					</div>
+					</div>
+					</div>
+					</div>
+					</div>
+					</div>';
+				}
+				else{
+					if ($row['role'] == 3) {
+						echo '<div class="row">
+						<div class="col-sm-10 offset-sm-1">
+						<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;">
+						<div class="card-body" id="titleDesc">
+						<div class="row">
+						<div class="col">
+						<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;">
+						<h5>'.$row["username"].'</h5>
+						<h6>'.$row["nickname"].'</h6>
+						<button type="button" class="btn btn-info" style="float: right; white-space: nowrap;" id = "editrole">Assign to Teacher</button>
+						</div>
+						</div>
+						</div>
+						</div>
+						</div>
+						</div>';
+					}
+					
+					
+					else if ($row['role'] == 2) {
+						echo '<div class="row">
+						<div class="col-sm-10 offset-sm-1">
+						<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;">
+						<div class="card-body" id="titleDesc">
+						<div class="row">
+						<div class="col">
+						<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;">
+						<h5>'.$row["username"].'</h5>
+						<h6>'.$row["nickname"].'</h6>
+						<button type="button" class="btn btn-info" style="float: right; white-space: nowrap;" id = "editrole">Assign to Student</button>
+						</div>
+						</div>
+						</div>
+						</div>
+						</div>
+						</div>';
+					}
+				}
+				
+			}
+			else{
+				echo '<div class="row">
+				<div class="col-sm-10 offset-sm-1">
+				<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;">
+				<div class="card-body" id="titleDesc">
+				<div class="row">
+				<div class="col">
+				<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;">
+				<h5>'.$row["username"].'</h5>
+				<h6>'.$row["nickname"].'</h6>
 				</div>
-			</div>
-		</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>';
+			}
+		}
+		
+		?>		
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -255,6 +314,15 @@ $role = $hasilquery['role'];
 						$("#alert").html(alert);
 					}
 				});
+			});
+			$("#editrole").click(function(){
+				var username = $(this).parent().find("h5").text();
+				$.post("phps/editRole.php", {username:username},
+					function(data){
+						alert(data);
+						location.reload();
+					}
+					);
 			});
 		});
 	</script>
