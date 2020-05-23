@@ -5,6 +5,7 @@ if(!isset($_SESSION["username"])){
   header("Location: index.php");
 }
 
+date_default_timezone_set('Asia/Bangkok');
 $submitfile = "tugas1.jpg";
 
 ?>
@@ -176,31 +177,29 @@ $submitfile = "tugas1.jpg";
     <div class="col-sm-10 offset-sm-1">
       <div class="card" id="content">
         <h3>Post Details:</h3>
-        <?php if($_SESSION["post_type"] != "announcement"){ ?>
-        <div class="row mb-2" id="listFiles">
-          
+        <div class="row" id="listFiles">
         </div>
-        <?php } ?>
-        <h5 class="mt-1"><?php echo $_SESSION["post_content"]; ?></h5>
+        <h5><?php echo $_SESSION["post_content"]; ?></h5>
       </div>
       <?php if($_SESSION["post_type"] == "assignment"){ ?>
       <div class="card mt-3" id="submissions">
         <h3>Your Submissions:</h3>
         <div class="row" id="listSubmissions">
-          <div class="col-md-3 col-sm-6">
-            <a href="./assets/submitfiles/<?php echo $submitfile; ?>" download="<?php echo $submitfile; ?>">
-              <div class="card files">
-                <?php echo $submitfile; ?>
-              </div>
-            </a>
-          </div>
+          
         </div>
-        <div class="row mt-3">
+        <?php if (date('Y-m-d H:i:s', time()) > $_SESSION["post_deadline"]) { ?>
+        <div class="row-mt-3">
+          <h4 class="mt-2"><strong>The deadline for this assigment is already due</strong></h4>
+        </div>
+        <?php } else { ?>
+        <div class="row mt-2 mb-3">
           <div class="col-md-4 col-sm-6">
             <button type="button" class="btn btn-primary">Edit Submissions</button>
           </div>
-        </div>
-        <h5 class="mt-2"><strong>Deadline: <?php echo date('F d, Y', strtotime($_SESSION["post_deadline"])); ?></strong></h5>
+        </div>         
+        <?php } ?>
+        <h5><strong>Deadline: <?php echo date('F d, Y - H:i:s', strtotime($_SESSION["post_deadline"])); ?></strong></h5>
+        <h4><strong>Grade: </strong><span id="score"></span></h4>
       </div>
       <?php } ?>
       <div class="card mt-3" id="comments">
@@ -253,8 +252,9 @@ $submitfile = "tugas1.jpg";
       success:function(xml){
         $(xml).find("file").each(function(){
           var link = $(this).find("files").text();
+          var display = link.split("-")[1];
 
-          var filecard = "<div class='col-md-3 col-sm-6'><a href='./assets/postfiles/"+link+"' download='"+link+"'><div class='card files'>"+link+"</div></a></div>";
+          var filecard = "<div class='col-md-3 col-sm-6 mb-3'><a href='./assets/postfiles/"+link+"' download='"+display+"'><div class='card files'>"+display+"</div></a></div>";
 
           $("#listFiles").append(filecard);
         });
@@ -262,8 +262,37 @@ $submitfile = "tugas1.jpg";
     });
   }
 
+  function refreshSubmission(){
+    var postid = <?php echo $_SESSION['post_id']; ?>;
+    var userid = <?php echo $_SESSION['id'] ?>;
+    $("#listSubmissions").empty();
+    $.ajax({
+      type: "POST",
+      data: { post:postid, user:userid },
+      dataType: "json",
+      url: "phps/selectSubmission.php",
+      success:function(response){
+        console.log(response);
+        if(response.exist){
+          $("#score").html(response.score);
+          $("#listSubmissions").html("<div class='col-12'><h5><strong>Last submitted:</strong> "+response.time+"</h5></div>");
+          for(var i = 0; i < response.files.length; i++){
+            var filename = response.files[i].split("-")[1];
+            var submitcard = "<div class='col-md-3 col-sm-6 mb-2'><a href='./assets/submitfiles/"+response.files[i]+"' download='"+filename+"'><div class='card files'>"+filename+"</div></a></div>";
+            $("#listSubmissions").append(submitcard);
+          }
+        }else{
+          $("#score").html("Not graded yet");
+          $("#listSubmissions").html("<div class='col' style='color: red;'><h4>You haven't made any submission for this assignment</h4></div>");
+          $("#listSubmissions").css("color", "rgba(255, 0, 0, 0.7)");
+        }
+      }
+    });
+  }
+
   refreshComment();
   refreshAttachment();
+  refreshSubmission();
   $("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
 
   $("#post_comment").click(function(){

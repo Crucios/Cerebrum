@@ -9,15 +9,6 @@ if(!isset($_SESSION["class_id"])){
 	header("Location: home.php");
 }
 
-require_once "phps/connect.php";
-$useractive = $_SESSION["username"];
-$classid = $_SESSION["class_id"];
-$queryidusers = mysqli_query($conn, "SELECT * FROM users WHERE username = '$useractive'");
-$hasilusers = mysqli_fetch_array($queryidusers);
-$idusersactive = $hasilusers['id'];
-$query = mysqli_query($conn, "SELECT * FROM class_details WHERE class_id = $classid AND users_id = $idusersactive");
-$hasilquery = mysqli_fetch_array($query);
-
 ?>
 
 <!DOCTYPE html>
@@ -185,11 +176,6 @@ $hasilquery = mysqli_fetch_array($query);
 										<div class="col" id="menu">
 											<?php if($_SESSION["role"] == "creator"){ ?>
 												<button class="btn btn-warning">Edit Description</button>
-												<button class="btn btn-warning">Edit Roles</button>
-											<?php } if ($_SESSION["role"] == "creator" or $_SESSION["role"] == "teacher") { ?>
-												<button class="btn btn-success">Grade Assignments</button>
-											<?php } if ($_SESSION["role"] == "student") { ?>
-												<button class="btn btn-primary">Check Grades</button>
 											<?php } if ($_SESSION["role"] == "creator") { ?>
 											<button class="btn btn-danger">Delete Class</button>
 										<?php } if ($_SESSION["role"] == "teacher" or $_SESSION["role"] == "student") ?>
@@ -220,32 +206,7 @@ $hasilquery = mysqli_fetch_array($query);
 					<?php } ?>
 					<div class="row">
 						<div class="col" id="listPost">
-							<!-- example -->
-							<a href="postdetail.php">
-							<div class="card mt-1 post">
-								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-									<div class="col">
-										<h5 style="width: bold;"><img src="assets/images/assignment.png" width="25" height="25">&nbsp;&nbsp;Assignment I : PHP</h5>
-										<h6><img src="assets/images/account.png" width="18" height="18">&nbsp;&nbsp;Joni - Posted on May 19, 2020</h6>
-									</div>
-								</div>
-							</div>
-							</a>
-							<div class="card mt-1 post">
-								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-									<div class="col">
-										<h5 style="width: bold;"><img src="assets/images/announcement.png" width="25" height="25">&nbsp;&nbsp;Announcement I : Ajax</h5>
-									</div>
-								</div>
-							</div>
-							<div class="card mt-1 post">
-								<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-									<div class="col">
-										<h5 style="width: bold;"><img src="assets/images/material.png" width="25" height="25">&nbsp;&nbsp;Material I : MySQL</h5>
-									</div>
-								</div>
-							</div>
-							<!-- example -->
+							
 						</div>
 					</div>
 				</div>
@@ -265,7 +226,6 @@ $hasilquery = mysqli_fetch_array($query);
 				data: { id:id },
 				url: "phps/selectPost.php",
 				success:function(xml){
-					console.log(xml);
 					$(xml).find("post").each(function(){
 						var id = $(this).attr("id");
 						var type = $(this).find("type").text();
@@ -277,6 +237,11 @@ $hasilquery = mysqli_fetch_array($query);
 
 						$("#listPost").prepend(postcard);
 					});
+
+					if($("#listPost").html() == ""){
+						var postcard = "<div class='card mt-1 post'><div class='row' style='margin: 1rem 2rem 0.5rem 1rem;'><div class='col'><h3 style='font-weight: bold;'>Welcome to <?php echo $_SESSION["classname"]; ?>!</h3><h5>There hasn't been any post yet in this class...</h5></div></div></div>";
+						$("#listPost").html(postcard);
+					}
 				}
     		});
 		}
