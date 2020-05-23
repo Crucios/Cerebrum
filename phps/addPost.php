@@ -105,7 +105,7 @@
         if($checkFile && $checkDeadline){
           // Get time now
           date_default_timezone_set('Asia/Bangkok');
-          $timestamp = date('Y-m-d h:i:s', time());
+          $timestamp = date('Y-m-d H:i:s', time());
           $checkQuery = false;
 
           if($type == "material" || $type == "announcement"){
@@ -139,7 +139,7 @@
               for($i = 0; $i < count($array_files); $i++){
                 // to upload each files
                 move_uploaded_file($array_files[$i]['file_tmp'], "../assets/postfiles/".$maxId.'_'.$maxIdFile.'-'.$array_files[$i]['filename']);
-
+                $maxIdFile += 1;
                 // to query each files
                 $query = mysqli_query($conn, $array_files[$i]['query']);
 

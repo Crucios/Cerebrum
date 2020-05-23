@@ -5,8 +5,8 @@ if(!isset($_SESSION["username"])){
   header("Location: index.php");
 }
 
-if(!isset($_SESSION["post_id"])){
-  header("Location: classwork.php");
+if(!isset($_SESSION["post_id"]) or ($_SESSION["role"] != "creator" and $_SESSION["role"] != "teacher")){
+  header("Location: postdetail.php");
 }
 
 date_default_timezone_set('Asia/Bangkok');
@@ -39,20 +39,36 @@ date_default_timezone_set('Asia/Bangkok');
       border-radius: 1rem;
     }
 
-    #submissions{
-      background-color: rgba(205, 180, 255, 0.8); 
+    #submit{
+      background-color: rgba(180, 205, 180, 0.8); 
       padding: 1rem 3rem; 
       color: rgb(80, 80, 80);
       border: 3px solid rgba(55, 100, 100);
       border-radius: 1rem;
     }
 
-    #comments{
-      background-color: rgba(180, 205, 180, 0.8); 
-      padding: 1rem 3rem; 
+    #nosubmit{
+      background-color: rgba(255, 200, 200, 0.7); 
+      padding: 1rem 4rem; 
       color: rgb(80, 80, 80);
       border: 3px solid rgba(55, 100, 100);
       border-radius: 1rem;
+    }
+
+    .submission{
+      padding: 1rem;
+      margin: 0.5rem 0;
+      border: 3px solid rgba(100, 145, 140, 0.8);
+      border-radius: 0.5rem;
+      background-color: rgba(245, 240, 190, 0.8);
+    }
+
+    .noSubmission{
+      padding: 0.5rem 1rem 0rem 1rem;
+      margin: 0.5rem 0;
+      border: 3px solid rgba(100, 145, 140, 0.8);
+      border-radius: 0.5rem;
+      background-color: rgba(245, 240, 190, 0.8);
     }
 
     .files{
@@ -75,13 +91,10 @@ date_default_timezone_set('Asia/Bangkok');
       text-decoration: none;
     }
 
-    .comment{
-      margin: 0.5rem 0;
-      padding: 0.3rem 1rem;
-    }
-
-    #studentCount, #submitCount{
-      font-weight: bold;
+    .error{
+      color: red;
+      margin-left: 1rem;
+      display: none;
     }
   </style>
 </head>
@@ -144,6 +157,9 @@ date_default_timezone_set('Asia/Bangkok');
           <a class="nav-link" href="home.php">Home</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="postdetail.php">Post</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="classwork.php">Classwork</a>
         </li>
         <li class="nav-item">
@@ -173,10 +189,11 @@ date_default_timezone_set('Asia/Bangkok');
     </div>
   </div>
   <div class="row mt-2">
-    <div class="col-sm-10 offset-sm-1">
+    <div class="col-sm-10 offset-sm-1" id="alert">
       <div class="card" id="main">
         <h2><img src="assets/images/<?php echo $_SESSION["post_type"]; ?>.png" height="25" width="25" style="margin-right: 0.5rem;"><?php echo $_SESSION["post_title"]; ?></h2>
         <h5><img src="assets/images/account.png" height="20" width="20" style="margin-right: 0.5rem;"><?php echo $_SESSION["post_creator"]; ?> - Posted on <strong><?php echo date('F d, Y', strtotime($_SESSION["post_timestamp"])); ?></strong></h5>
+        <h5><strong>Deadline: <?php echo date('F d, Y - H:i:s', strtotime($_SESSION["post_deadline"])); ?></strong></h5>
       </div>
     </div>
   </div>
@@ -185,49 +202,25 @@ date_default_timezone_set('Asia/Bangkok');
       <div class="card" id="content">
         <h3><?php echo ucfirst($_SESSION["post_type"]); ?> Details:</h3>
         <div class="row" id="listFiles">
+
         </div>
         <h5><?php echo $_SESSION["post_content"]; ?></h5>
+        <h5 class="mt-1"><strong>Status: </strong><span id="submitCount"></span> out of <span id="studentCount"></span> students have submitted their assignments</h5>
       </div>
-      <?php if($_SESSION["post_type"] == "assignment"){ ?>
-      <div class="card mt-3" id="submissions">
-        <?php if($_SESSION["role"] == "student"){ ?>
-        <h3>Your Submissions:</h3>
+      <div class="card mt-3" id="submit">
+        <h3>Submissions: </h3>
         <div class="row" id="listSubmissions">
           
         </div>
-        <?php if (date('Y-m-d H:i:s', time()) > $_SESSION["post_deadline"]) { ?>
-        <div class="row-mt-3">
-          <h4 class="mt-2"><strong>The deadline for this assigment is already due</strong></h4>
-        </div>
-        <?php } else { ?>
-        <div class="row mt-2 mb-3">
-          <div class="col-md-4 col-sm-6">
-            <button type="button" class="btn btn-primary">Edit Submissions</button>
-          </div>
-        </div>         
-        <?php } ?>
-        <h5><strong>Deadline: <?php echo date('F d, Y - H:i:s', strtotime($_SESSION["post_deadline"])); ?></strong></h5>
-        <h4><strong>Grade: </strong><span id="score"></span></h4>
-        <?php } else { ?>
-        <h3>Submissions:</h3>
-        <h5 class="mt-1"><span id="submitCount"></span> out of <span id="studentCount"></span> students have submitted their assignments</h5>
-        <div class="row mt-2 mb-3">
-          <div class="col-md-4 col-sm-6">
-            <button type="button" class="btn btn-primary" id="grade">View and Grade Submissions</button>
-          </div>
-        </div> 
-        <h5><strong>Deadline: <?php echo date('F d, Y - H:i:s', strtotime($_SESSION["post_deadline"])); ?></strong></h5>
-        <?php } ?>
       </div>
-      <?php } ?>
-      <div class="card mt-3" id="comments">
-        <h3>Post Comments:</h3>
-        <span class="form-inline mt-1">
-          <input class="form-control" placeholder="Write your comment here..." id="comment_text" type="text" style="width: 80%;"><button type="button" class="btn btn-primary" style="width: 20%;" id="post_comment"><img src="assets/images/send.png" width="20" height="20"></button>
-        </span>
-          <a id="error" style="color: red;"></a>
-        <div id="listComments">
-          
+      <div class="card mt-3" id="nosubmit">
+        <h3>No Submission Yet: </h3>
+        <div class="row" id="listNoSubmit">
+          <div class="col-12">
+            <div class="card noSubmission">
+              <h5><img src="assets/images/account.png" height="20" width="20" style="margin-right: 0.5rem;">Leonardo DiCaprio</h5>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -237,6 +230,29 @@ date_default_timezone_set('Asia/Bangkok');
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+
+function changeGrade(id){
+    var score = $("#grade-input-"+id).val();
+    $.ajax({
+      type: "POST",
+      data: { id:id, score:score },
+      url: "phps/changeGrade.php",
+      success:function(result){
+        result = $.parseJSON(result);
+
+        if(result.success){
+          $("#error-"+id).html("");
+          $("#grade-input-"+id).val("");
+          $("#score-"+id).html(parseInt(score));
+          $("#error-"+id).hide();
+        }else{
+          $("#error-"+id).html(result.error);
+          $("#error-"+id).show();
+        }
+      }
+    });
+  }
+
  $(document).ready(function(){
 
   function countSubmission(){
@@ -254,25 +270,8 @@ date_default_timezone_set('Asia/Bangkok');
     });
   }
 
-  function refreshComment(){
-    var id = <?php echo $_SESSION['post_id']; ?>;
-    $("#listComments").empty();
-    $.ajax({
-      type: "POST",
-      data: { id:id },
-      url: "phps/selectComment.php",
-      success:function(xml){
-        $(xml).find("comment").each(function(){
-          var creator = $(this).find("creator").text();
-          var timestamp = $(this).find("timestamp").text();
-          var message = $(this).find("message").text();
+  function refreshNoSubmit(){
 
-          var commentcard = "<div class='card comment'><a><img src='assets/images/account.png' height='15' width='15' style='margin-right: 0.5rem;'><strong>"+creator+"</strong>&nbsp;&nbsp;"+timestamp+"</a><a>"+message+"</a></div>";
-
-          $("#listComments").append(commentcard);
-        });
-      }
-    });
   }
 
   function refreshAttachment(){
@@ -295,64 +294,45 @@ date_default_timezone_set('Asia/Bangkok');
     });
   }
 
-  function refreshSubmission(){
-    var postid = <?php echo $_SESSION['post_id']; ?>;
-    var userid = <?php echo $_SESSION['id'] ?>;
+  function refreshSubmissions(){
+    var id = <?php echo $_SESSION['post_id']; ?>;
     $("#listSubmissions").empty();
     $.ajax({
       type: "POST",
-      data: { post:postid, user:userid },
-      dataType: "json",
-      url: "phps/selectSubmission.php",
-      success:function(response){
-        if(response.exist){
-          $("#score").html(response.score);
-          $("#listSubmissions").html("<div class='col-12'><h5><strong>Last submitted:</strong> "+response.time+"</h5></div>");
-          for(var i = 0; i < response.files.length; i++){
-            var filename = response.files[i].split("-")[1];
-            var submitcard = "<div class='col-md-3 col-sm-6 mb-2'><a href='./assets/submitfiles/"+response.files[i]+"' download='"+filename+"'><div class='card files'>"+filename+"</div></a></div>";
-            $("#listSubmissions").append(submitcard);
+      data: { id:id },
+      url: "phps/selectPostSubmissions.php",
+      success:function(xml){
+        $(xml).find("submission").each(function(){
+          var id = $(this).attr("id");
+          var name = $(this).find("name").text();
+          var timestamp = $(this).find("timestamp").text();
+          var score = $(this).find("score").text();
+
+          if(score == ""){
+            score = "Not graded yet";
           }
-        }else{
-          $("#score").html("Not graded yet");
-          $("#listSubmissions").html("<div class='col' style='color: red;'><h4>You haven't made any submission for this assignment</h4></div>");
-          $("#listSubmissions").css("color", "rgba(255, 0, 0, 0.7)");
-        }
+
+          var subcard = "<div class='col-12'><div class='card submission'><h5><img src='assets/images/account.png' height='20' width='20' style='margin-right: 0.5rem;'>"+name+" - Submitted on <strong>"+timestamp+"</strong></h5><h6><span class='error' id='error-"+id+"'></span></h6><div class='row'>";
+
+          $(this).find("files").each(function(){
+            var file = $(this).find("file").text();
+            var display = file.split("-")[1];
+            subcard += "<div class='col-md-3 col-sm-6 mb-2 mt-1'><a href='./assets/submitfiles/"+file+"' download='"+display+"'><div class='card files'>"+display+"</div></a></div>";
+          });
+
+          subcard += "</div><div class='row'><div class='col-md-6'><h5 class='mt-2'><strong>Grade: </strong><span id='score-"+id+"'>"+score+"</span></h5></div><div class='col-md-6'><span class='form-inline mt-1'><input class='form-control' id='grade-input-"+id+"' placeholder='Grade' type='number' max='100' min='0' style='width: 45%;'><span style='width: 5%;'></span><button type='button' class='btn btn-primary' style='width: 45%;' onclick='changeGrade("+id+")'>Change Grade</button></span></div></div></div></div>";
+
+          $("#listSubmissions").append(subcard);
+        });
       }
     });
   }
 
-  refreshComment();
-  refreshAttachment();
-  refreshSubmission();
   countSubmission();
+  refreshAttachment();
+  refreshSubmissions();
+
   $("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
-
-  $("#grade").on("click", function(){
-    window.location.href = "viewsubmission.php";
-  });
-
-  $("#post_comment").click(function(){
-    var id = "<?php echo $_SESSION["id"] ?>";
-    var post = "<?php echo $_SESSION["post_id"] ?>"
-    var message = $("#comment_text").val();
-    
-    $.ajax({
-      type: "POST",
-      url: "phps/addComment.php",
-      data: {
-        id:id, message:message, post:post
-      }, success:function(response){
-        if(response == "Y"){
-          refreshComment();
-          $("#error").html("");
-          $("#comment_text").val("");
-        }else{
-          $("#error").html(response);
-        }
-      }
-    });
-  });
 
   $("#changePass_confirm").click(function(){
     var id = <?php echo $_SESSION["id"]; ?>;
