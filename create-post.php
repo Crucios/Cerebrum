@@ -176,7 +176,8 @@ if(!isset($_SESSION["class_id"])){
 				<div class="card-body" id="create-post-content">
 					<div class="row">
 						<div class="col">
-							<form enctype="multipart/form-data">
+							<!-- <form action="phps/addPost.php" method="post" enctype="multipart/form-data" id="dataPost"> -->
+							<form id="dataPost" enctype="multipart/form-data">
 								<!-- Select Type Post -->
 								<div class="input-group mb-3">
 									<div class="input-group-prepend">
@@ -221,7 +222,8 @@ if(!isset($_SESSION["class_id"])){
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
 <script type="text/javascript">
 	function preview_postfiles()
 	{
@@ -237,13 +239,23 @@ if(!isset($_SESSION["class_id"])){
 		form = $("form");
 		form.submit(function(event){
 			event.preventDefault();
+
+			const formData = new FormData(this);
+
+			var data = form.serialize();
+			console.log(data);
+			console.log(formData);
 			$.ajax({
 				url:'phps/addPost.php',
 				type:"POST",
-				dataType:'json',
-				data:form.serialize(),
+				data: formData,
+				cache: false,
+        contentType: false,
+        processData: false,
 				success:function(response){
+					response = $.parseJSON(response);
 					console.log(response);
+
 
 					if(!response.success){
 						$("#titleError").html(response.titleError);
@@ -255,7 +267,13 @@ if(!isset($_SESSION["class_id"])){
 					else{
 						alert(response.message);
 					}
-				}
+				},
+				error:function (xhr, desc, err)
+        {
+					console.log(xhr);
+					console.log(desc);
+					console.log(err);
+        }
 			}); //ajax call ends
 		}); //form.submit() ends
 

@@ -35,6 +35,7 @@
     $output = array('success' => false, 'message' => null, 'titleError' => null, 'contentError' => null, 'deadlineDateError' => null, 'deadlineTimeError' => null, 'attachmentsError' => null);
 
     if(isset($_POST["title"]) && $_POST["title"] != "" && isset($_POST["content"]) && $_POST["content"] != ""){
+      // if title and content is not empty do below
       $title = $_POST["title"];
       $content = $_POST["content"];
       $type = $_POST["type"];
@@ -42,13 +43,14 @@
       $id_user = $_SESSION['id'];
 
       $checkFile = true;
-      $checkDeadline = true;
-      $filesToUpload = false;
+      $checkDeadline = true;  // check if there is deadline, is the deadline true
+      $filesToUpload = false; // check if there is files to upload
 
       $deadlineDate = "";
       $deadlineTime = "";
 
       if($type == "assignment"){
+        // If the type is assignment then do below
         if(!isset($_POST["date"]) || $_POST["date"] == ""){
           $checkDeadline = false;
           $output['deadlineDateError'] = "Deadline date is required";
@@ -65,7 +67,7 @@
         }
       }
 
-      // Find max id
+      // Find max id for new id post
       $query = mysqli_query($conn, "SELECT id FROM posts");
       $maxId = 0;
       if(mysqli_num_rows($query) > 0){
@@ -75,12 +77,14 @@
         $maxId += 1;
       }
 
-      // If there is file to upload
-  		if(isset($_FILES['postfiles']) && $checkDeadline){
+      // if type is not assignment do below, if assignment must check deadline
+  		if($checkDeadline){
+        // If there is file to upload
         $filesToUpload = true;
         $file_array = reArrayFiles($_FILES['postfiles']);
         $array_files = array();
 
+        // this is for check if file to be upload is valid
         for($i = 0; $i < count($file_array); $i++){
           if($file_array[$i]['error']){
               if ($phpFileUploadError[$file_array[$i]['error']] != "No files were uploaded"){
@@ -97,8 +101,9 @@
         }
 
 
-        // Query if all necessary is true
+        // Query if all files are valid and deadline is valid
         if($checkFile && $checkDeadline){
+          // Get time now
           date_default_timezone_set('Asia/Bangkok');
           $timestamp = date('Y-m-d h:i:s', time());
           $checkQuery = false;
@@ -132,7 +137,10 @@
               }
 
               for($i = 0; $i < count($array_files); $i++){
+                // to upload each files
                 move_uploaded_file($array_files[$i]['file_tmp'], "../assets/postfiles/".$maxId.'_'.$maxIdFile.'-'.$array_files[$i]['filename']);
+
+                // to query each files
                 $query = mysqli_query($conn, $array_files[$i]['query']);
 
                 if(!$query){
@@ -147,12 +155,27 @@
                 $output['message'] = "Post successfully created";
               }
             }
+            else{
+              $output['success'] = true;
+              $output['message'] = "Post successfully created";
+            }
           }
           else{
             $output['message'] = "Query post failed";
           }
 
         }
+      }
+    }
+
+    // Check if the fields required are empty
+    if($_POST["type"] == "assignment"){
+      if(!isset($_POST["date"]) || $_POST["date"] == ""){
+        $output['deadlineDateError'] = "Deadline date is required";
+      }
+
+      if(!isset($_POST["time"]) || $_POST["time"] == ""){
+        $output['deadlineTimeError'] = "Deadline time is required";
       }
     }
 
@@ -164,19 +187,13 @@
       $output['contentError'] = "Content is required";
     }
 
-    if(!isset($_POST["date"]) || $_POST["date"] == ""){
-      $output['deadlineDateError'] = "Deadline date is required";
-    }
+    // if($output['success']){
+    //     header("Location: ../classwork.php");
+    // }
+    // else{
+    //     header("Location: ../create-post.php");
+    // }
 
-    if(!isset($_POST["time"]) || $_POST["time"] == ""){
-      $output['deadlineTimeError'] = "Deadline time is required";
-    }
-
-    if($output['success']){
-        header("Location: ../classwork.php");
-    }
-    else{
-
-    }
     echo json_encode($output);
+
 ?>
