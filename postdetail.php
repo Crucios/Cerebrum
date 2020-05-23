@@ -76,6 +76,10 @@ $submitfile = "tugas1.jpg";
       margin: 0.5rem 0;
       padding: 0.3rem 1rem;
     }
+
+    #studentCount, #submitCount{
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -183,6 +187,7 @@ $submitfile = "tugas1.jpg";
       </div>
       <?php if($_SESSION["post_type"] == "assignment"){ ?>
       <div class="card mt-3" id="submissions">
+        <?php if($_SESSION["role"] == "student"){ ?>
         <h3>Your Submissions:</h3>
         <div class="row" id="listSubmissions">
           
@@ -200,6 +205,16 @@ $submitfile = "tugas1.jpg";
         <?php } ?>
         <h5><strong>Deadline: <?php echo date('F d, Y - H:i:s', strtotime($_SESSION["post_deadline"])); ?></strong></h5>
         <h4><strong>Grade: </strong><span id="score"></span></h4>
+        <?php } else { ?>
+        <h3>Submissions:</h3>
+        <h5 class="mt-1"><span id="submitCount">25</span> out of <span id="studentCount">36</span> students have submitted their assignments</h5>
+        <div class="row mt-2 mb-3">
+          <div class="col-md-4 col-sm-6">
+            <button type="button" class="btn btn-primary">View and Grade Submissions</button>
+          </div>
+        </div> 
+        <h5><strong>Deadline: <?php echo date('F d, Y - H:i:s', strtotime($_SESSION["post_deadline"])); ?></strong></h5>
+        <?php } ?>
       </div>
       <?php } ?>
       <div class="card mt-3" id="comments">
@@ -220,6 +235,21 @@ $submitfile = "tugas1.jpg";
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
  $(document).ready(function(){
+
+  function countSubmission(){
+    var idpost = <?php echo $_SESSION['post_id']; ?>;
+    var idclass = <?php echo $_SESSION['class_id']; ?>;
+    $.ajax({
+      type: "POST",
+      data: { idpost:idpost, idclass:idclass },
+      url: "phps/countSubmission.php",
+      success:function(result){
+        result = $.parseJSON(result);
+        $("#studentCount").html(result.student);
+        $("#submitCount").html(result.submissions);
+      }
+    });
+  }
 
   function refreshComment(){
     var id = <?php echo $_SESSION['post_id']; ?>;
@@ -272,7 +302,6 @@ $submitfile = "tugas1.jpg";
       dataType: "json",
       url: "phps/selectSubmission.php",
       success:function(response){
-        console.log(response);
         if(response.exist){
           $("#score").html(response.score);
           $("#listSubmissions").html("<div class='col-12'><h5><strong>Last submitted:</strong> "+response.time+"</h5></div>");
@@ -293,6 +322,7 @@ $submitfile = "tugas1.jpg";
   refreshComment();
   refreshAttachment();
   refreshSubmission();
+  countSubmission();
   $("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
 
   $("#post_comment").click(function(){
