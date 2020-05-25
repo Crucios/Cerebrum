@@ -58,7 +58,7 @@ if(count($file_array) > 0 and $file_array[0]["name"] != ""){
 		}
 
 	}else{
-		$query = mysqli_query($conn, "INSERT INTO submissions VALUES (NULL, $timestamp, NULL, ".$_SESSION['id'].", ".$_SESSION['post_id']);
+		$query = mysqli_query($conn, "INSERT INTO submissions VALUES (NULL, '$timestamp', NULL, ".$_SESSION['id'].", ".$_SESSION['post_id'].")");
 
 		if($query){
 			$query = mysqli_query($conn, "SELECT id FROM submissions WHERE id_post = ".$_SESSION['post_id']." AND id_users = ".$_SESSION['id']);
@@ -102,7 +102,7 @@ if(count($file_array) > 0 and $file_array[0]["name"] != ""){
 
 				if(mysqli_num_rows($query) > 0){
 					while($row = mysqli_fetch_assoc($query)){
-						$idFile = $row["id"] + 1;
+						$idFile = $row["id"];
 						break;
 					}
 				}

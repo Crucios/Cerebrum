@@ -279,7 +279,7 @@ function changeGrade(id){
         console.log(result);
 
         for(var name in result){
-          var nosubmitcard = "<div class='col-12'><div class='card noSubmission'><h5><img src='assets/images/account.png' height='20' width='20' style='margin-right: 0.5rem;'>Leonardo DiCaprio</h5></div></div>";
+          var nosubmitcard = "<div class='col-12'><div class='card noSubmission'><h5><img src='assets/images/account.png' height='20' width='20' style='margin-right: 0.5rem;'>"+result[name]+"</h5></div></div>";
           $("#listNoSubmit").append(nosubmitcard);
         }
       }
@@ -315,6 +315,7 @@ function changeGrade(id){
       url: "phps/selectPostSubmissions.php",
       success:function(xml){
         $(xml).find("submission").each(function(){
+          console.log(xml);
           var id = $(this).attr("id");
           var name = $(this).find("name").text();
           var timestamp = $(this).find("timestamp").text();
@@ -326,8 +327,8 @@ function changeGrade(id){
 
           var subcard = "<div class='col-12'><div class='card submission'><h5><img src='assets/images/account.png' height='20' width='20' style='margin-right: 0.5rem;'>"+name+" - Submitted on <strong>"+timestamp+"</strong></h5><h6><span class='error' id='error-"+id+"'></span></h6><div class='row'>";
 
-          $(this).find("files").each(function(){
-            var file = $(this).find("file").text();
+          $(this).find("file").each(function(){
+            var file = $(this).text();
             var display = file.split("-")[1];
             subcard += "<div class='col-md-3 col-sm-6 mb-2 mt-1'><a href='./assets/submitfiles/"+file+"' download='"+display+"'><div class='card files'>"+display+"</div></a></div>";
           });
