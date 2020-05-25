@@ -124,7 +124,7 @@ if($_SESSION["role"] != "student" || !isset($_SESSION["role"])){
 					<a class="nav-link" href="home.php">Home</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="home.php">Post</a>
+					<a class="nav-link" href="postdetail.php">Post</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="classwork.php">Classwork</a>
@@ -181,12 +181,10 @@ if($_SESSION["role"] != "student" || !isset($_SESSION["role"])){
 					</div>
 					<div class="row mt-3">
 						<div class="col">
-							<!-- <form action="phps/addPost.php" method="post" enctype="multipart/form-data" id="dataPost"> -->
 							<form id="dataPost" enctype="multipart/form-data">
 								<div id="attachments">
-									<h6>Add Attachment Files:</h6>
-									<input type='file' id='postfiles' name='postfiles[]' onchange='preview_postfiles();' multiple><div id='image_preview' class='mt-3 mb-3'></div>
-									<p id="attachmentsError" style="color: red;"></p>
+									<h6>Add Attachment Files:<span id="error" style="margin-left: 1rem; color: red;"></span></h6>
+									<input type='file' id='upload' name='upload[]' onchange='preview_postfiles();' multiple><div id='image_preview' class='mt-3 mb-3'></div>
 								</div>
 								<div class="row mt-4" id="submitBtn">
 									<div class='col-md-3 col-sm-6 col-12'>
@@ -208,11 +206,11 @@ if($_SESSION["role"] != "student" || !isset($_SESSION["role"])){
 <script type="text/javascript">
 	function preview_postfiles()
 	{
-		var total_file=document.getElementById("postfiles").files.length;
+		var total_file=document.getElementById("upload").files.length;
 		$("#image_preview").html("");
 		for(var i=0;i<total_file;i++)
 		{
-			$('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' height='40' style='margin-right: 1rem;'>");
+			$('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' height='60' style='margin-right: 1rem;'>");
 		}
 	}
 
@@ -247,37 +245,25 @@ if($_SESSION["role"] != "student" || !isset($_SESSION["role"])){
 		form = $("form");
 		form.submit(function(event){
 			event.preventDefault();
-
 			const formData = new FormData(this);
-
-			var data = form.serialize();
-			console.log(data);
-			console.log(formData);
 			$.ajax({
-				url:'phps/addPost.php',
+				url:'phps/addSubmission.php',
 				type:"POST",
 				data: formData,
+				processData: false,
+    			contentType: false,
+    			cache: false,
 				success:function(response){
 					response = $.parseJSON(response);
 					console.log(response);
-
-					if(!response.success){
-						$("#titleError").html(response.titleError);
-						$("#contentError").html(response.contentError);
-						$("#deadlineDateError").html(response.deadlineDateError);
-						$("#deadlineTimeError").html(response.deadlineTimeError);
-						$("#attachmentsError").html(response.attachmentsError);
+					if(response.success){
+						refreshSubmission();
+						$("#error").html("");
+						$('#image_preview').html("");
+					}else{
+						$("#error").html(response.error);
 					}
-					else{
-						alert(response.message);
-					}
-				},
-				error:function (xhr, desc, err)
-        {
-					console.log(xhr);
-					console.log(desc);
-					console.log(err);
-        }
+				}
 			});
 		});
 
