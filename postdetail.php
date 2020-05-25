@@ -197,7 +197,7 @@ date_default_timezone_set('Asia/Bangkok');
         </div>
         <?php if (date('Y-m-d H:i:s', time()) > $_SESSION["post_deadline"]) { ?>
         <div class="row-mt-3">
-          <h4 class="mt-2"><strong>The deadline for this assigment is already due</strong></h4>
+          <h4 class="mt-2" style="color: rgba(255, 0, 0, 0.8);"><strong>The deadline for this assigment is already due</strong></h4>
         </div>
         <?php } else { ?>
         <div class="row mt-2 mb-3">

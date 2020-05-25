@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set("Asia/Bangkok");
 
 if(!isset($_SESSION["username"])){
 	header("Location: index.php");
@@ -11,6 +12,10 @@ if(!isset($_SESSION["post_id"])){
 
 if($_SESSION["role"] != "student" || !isset($_SESSION["role"])){
 	header("Location: classwork.php");
+}
+
+if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
+	header("Location: postdetail.php");
 }
 ?>
 
@@ -136,7 +141,7 @@ if($_SESSION["role"] != "student" || !isset($_SESSION["role"])){
 		</div>
 		<div class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<span style="color: lightgray; margin-right: 0.5rem;"><?php echo $_SESSION["nickname"]; ?></span>
+				<span id="nickname" style="color: lightgray; margin-right: 0.5rem;"><?php echo $_SESSION["nickname"]; ?></span>
 				<img src="assets/images/user-icon.png" style="width:30px; height:30px;">
 			</a>
 			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -149,49 +154,56 @@ if($_SESSION["role"] != "student" || !isset($_SESSION["role"])){
 	</nav>
 
 	<div class="container-fluid" style="margin-top: 6rem;">
-		<div class="col-sm-10 offset-sm-1">
-			<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100);">
-				<div class="card-header" id="titleHeader">
-					<div class="row">
-						<div class="col">
-							<h2 style="font-weight: bold;"><img src="assets/images/assignment.png" width="30" height="30">&nbsp;&nbsp;Edit Submissions</h2>
-						</div>
-					</div>
-				</div>
-				<div class="card-body" id="submit-content">
-					<div class="row">
-						<div class="col">
-							<h5><strong>Last Submitted:</strong> <span id="time"></span></h5>
-							<div class="row mt-3 table-responsive">
-								<div class="col" id="tableWrap">
-									<table class="table table-bordered">
-										<thead>
-											<tr>
-												<td style="width: 60%;">Files</td>
-												<td>Action</td>
-											</tr>
-										</thead>
-										<tbody id="listSubmissions">
-											
-										</tbody>
-									</table>
-								</div>
+		<div class="row">
+			<div class="col-sm-10 offset-sm-1" id="alert">
+
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-10 offset-sm-1">
+				<div class="card mt-2" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100);">
+					<div class="card-header" id="titleHeader">
+						<div class="row">
+							<div class="col">
+								<h2 style="font-weight: bold;"><img src="assets/images/assignment.png" width="30" height="30">&nbsp;&nbsp;Edit Submissions</h2>
 							</div>
 						</div>
 					</div>
-					<div class="row mt-3">
-						<div class="col">
-							<form id="dataPost" enctype="multipart/form-data">
-								<div id="attachments">
-									<h6>Add Attachment Files:<span id="error" style="margin-left: 1rem; color: red;"></span></h6>
-									<input type='file' id='upload' name='upload[]' onchange='preview_postfiles();' multiple><div id='image_preview' class='mt-3 mb-3'></div>
-								</div>
-								<div class="row mt-4" id="submitBtn">
-									<div class='col-md-3 col-sm-6 col-12'>
-										<button type='submit' class='btn btn-primary' id='submit_post' style="width: 100%;">Add to Submission</button>
+					<div class="card-body" id="submit-content">
+						<div class="row">
+							<div class="col">
+								<h5><strong>Last Submitted:</strong> <span id="time"></span></h5>
+								<div class="row mt-3 table-responsive">
+									<div class="col" id="tableWrap">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<td style="width: 60%;">Files</td>
+													<td>Action</td>
+												</tr>
+											</thead>
+											<tbody id="listSubmissions">
+
+											</tbody>
+										</table>
 									</div>
 								</div>
-							</form>
+							</div>
+						</div>
+						<div class="row mt-3">
+							<div class="col">
+								<form id="dataPost" enctype="multipart/form-data">
+									<div id="attachments">
+										<h6>Add Attachment Files:<span id="error" style="margin-left: 1rem; color: red;"></span></h6>
+										<input type='file' id='upload' name='upload[]' onchange='preview_postfiles();' multiple><div id='image_preview' class='mt-3 mb-3'></div>
+									</div>
+									<div class="row mt-4" id="submitBtn">
+										<div class='col-md-3 col-sm-6 col-12'>
+											<button type='submit' class='btn btn-primary' id='submit_post' style="width: 100%;">Add to Submission</button>
+										</div>
+									</div>
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
