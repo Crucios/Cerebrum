@@ -55,6 +55,24 @@ if(!isset($_SESSION["class_id"])){
 </head>
 <body>
 
+	<!-- Edit Description Modal -->
+	<div class="modal fade" id="editDesc_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content" style="margin: 1rem;">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit Class Description</h5>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-body form-group">
+					<input name="editDesc" class="form-control" placeholder="Enter class description" id="editDesc_text" type="text" required style="margin-top: 0.5rem;">
+				</div>
+				<div class="modal-footer" style="text-align: right;">
+					<button type="button" id="editDesc_confirm" class="btn btn-warning" style="margin-right: 0; width: 50%;" data-dismiss="modal">Edit Description</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Change Password Modal -->
 	<div class="modal fade" id="changePassword_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
@@ -157,7 +175,7 @@ if(!isset($_SESSION["class_id"])){
 					<div class="card-body" id="titleDesc">
 						<div class="row">
 							<div class="col">
-								<h6><?php echo $_SESSION["description"]; ?></h6>
+								<h6 id="description"><?php echo $_SESSION["description"]; ?></h6>
 								<a><strong>Class Code: </strong><span><?php echo $_SESSION["code"]; ?></span></a>
 							</div>
 						</div>
@@ -175,7 +193,7 @@ if(!isset($_SESSION["class_id"])){
 									<div class="row" align="center" style="margin: 1rem;">
 										<div class="col" id="menu">
 											<?php if($_SESSION["role"] == "creator"){ ?>
-												<button class="btn btn-warning">Edit Description</button>
+												<button class="btn btn-warning" data-toggle="modal" data-target="#editDesc_modal">Edit Description</button>
 											<?php } if ($_SESSION["role"] == "creator") { ?>
 											<button class="btn btn-danger">Delete Class</button>
 										<?php } if ($_SESSION["role"] == "teacher" or $_SESSION["role"] == "student") ?>
@@ -249,6 +267,7 @@ if(!isset($_SESSION["class_id"])){
 		refreshPost();
 
 		$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
+		$("#editDesc_text").val("<?php echo $_SESSION["description"]; ?>");
 
 		$("#plus").mouseenter(function(){
 			$(this).animate({
@@ -262,6 +281,31 @@ if(!isset($_SESSION["class_id"])){
 				width: "25px",
 				height: "25px"
 			}, 200);
+		});
+
+		$("#editDesc_confirm").click(function(){
+			var id = "<?php echo $_SESSION["class_id"]; ?>";
+			var desc = $("#editDesc_text").val();
+			$.ajax({
+				type: "POST",
+				url: "phps/editDescription.php",
+				data: {
+					id:id, desc:desc
+				}, success:function(response){
+					var responseJSON = $.parseJSON(response);
+
+					if(responseJSON.success){
+						var alert = "success";
+						$("#description").html(desc);
+					}else{
+						var alert = "danger";
+						$("#editDesc_text").val("<?php echo $_SESSION["description"]; ?>");
+					}
+
+					var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + responseJSON.message + "</strong></div>";
+					$("#alert").html(alert);
+				}
+			});
 		});
 
 		$("#changePass_confirm").click(function(){
