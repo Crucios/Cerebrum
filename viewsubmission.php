@@ -65,10 +65,10 @@ date_default_timezone_set('Asia/Bangkok');
 
     .noSubmission{
       padding: 0.5rem 1rem 0rem 1rem;
-      margin: 0.5rem 0;
+      margin: 0.2rem 0;
       border: 3px solid rgba(100, 145, 140, 0.8);
       border-radius: 0.5rem;
-      background-color: rgba(245, 240, 190, 0.8);
+      background-color: rgba(245, 245, 245, 0.8);
     }
 
     .files{
@@ -216,11 +216,7 @@ date_default_timezone_set('Asia/Bangkok');
       <div class="card mt-3" id="nosubmit">
         <h3>No Submission Yet: </h3>
         <div class="row" id="listNoSubmit">
-          <div class="col-12">
-            <div class="card noSubmission">
-              <h5><img src="assets/images/account.png" height="20" width="20" style="margin-right: 0.5rem;">Leonardo DiCaprio</h5>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -271,7 +267,23 @@ function changeGrade(id){
   }
 
   function refreshNoSubmit(){
+    var idpost = <?php echo $_SESSION['post_id']; ?>;
+    var idclass = <?php echo $_SESSION['class_id']; ?>;
+    $("#listNoSubmit").html("");
+    $.ajax({
+      type: "POST",
+      data: { idpost:idpost, idclass:idclass },
+      url: "phps/selectNoSubmission.php",
+      success:function(result){
+        result = $.parseJSON(result);
+        console.log(result);
 
+        for(var name in result){
+          var nosubmitcard = "<div class='col-12'><div class='card noSubmission'><h5><img src='assets/images/account.png' height='20' width='20' style='margin-right: 0.5rem;'>Leonardo DiCaprio</h5></div></div>";
+          $("#listNoSubmit").append(nosubmitcard);
+        }
+      }
+    });
   }
 
   function refreshAttachment(){
@@ -331,6 +343,7 @@ function changeGrade(id){
   countSubmission();
   refreshAttachment();
   refreshSubmissions();
+  refreshNoSubmit();
 
   $("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
 
