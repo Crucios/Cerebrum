@@ -19,7 +19,7 @@ if(mysqli_num_rows($query) > 0){
 	}
 }
 
-$query = mysqli_query($conn, "SELECT role FROM class_details WHERE users_id = $user_id AND class_id = $id");
+$query = mysqli_query($conn, "SELECT * FROM class_details WHERE users_id = $user_id AND class_id = $id");
 
 if(mysqli_num_rows($query) > 0){
 	while($row = $query->fetch_array()){
@@ -30,9 +30,16 @@ if(mysqli_num_rows($query) > 0){
 		}else if($row["role"] == 3){
 			$_SESSION["role"] = "student";	
 		}
+		if ($row["status"] == 1) {
+			$_SESSION["status"] = "active";
+		}
+		else if ($row["status"] == 0) {
+			$_SESSION["status"] = "inactive";
+		}
 	}
 }
 // role 1 = creator, 2 = teacher, 3 = student
+// inactive 0 // active 1
 header("Location: classwork.php");
 
 ?>

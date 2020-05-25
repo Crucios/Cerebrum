@@ -31,7 +31,7 @@
                 $id_class = $row["id"];
             }
 
-            $query = mysqli_query($conn, "INSERT INTO class_details VALUES (0, $id_class, $id, 1)");
+            $query = mysqli_query($conn, "INSERT INTO class_details VALUES (0, $id_class, $id, 1, 1)");
 
             if($query){
                 echo "Class Successfully Created!";

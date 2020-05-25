@@ -8,6 +8,9 @@ if(!isset($_SESSION["username"])){
 if(!isset($_SESSION["class_id"])){
 	header("Location: home.php");
 }
+if ($_SESSION["status"] == "inactive") {
+	header("Location: home.php");
+}
 
 ?>
 
@@ -165,6 +168,7 @@ if(!isset($_SESSION["class_id"])){
 							<div class="col">
 								<h2 style="font-weight: bold;"><img src="assets/images/studying.png" width="30" height="30">&nbsp;&nbsp;<?php echo $_SESSION["classname"]; ?></h2>
 							</div>
+
 						</div>
 						<div class="row">
 							<div class="col">
@@ -195,9 +199,9 @@ if(!isset($_SESSION["class_id"])){
 											<?php if($_SESSION["role"] == "creator"){ ?>
 												<button class="btn btn-warning" data-toggle="modal" data-target="#editDesc_modal">Edit Description</button>
 											<?php } if ($_SESSION["role"] == "creator") { ?>
-											<button class="btn btn-danger">Delete Class</button>
-										<?php } if ($_SESSION["role"] == "teacher" or $_SESSION["role"] == "student") ?>
-											<button class="btn btn-danger">Leave Class</button>
+												<button class="btn btn-danger">Delete Class</button>
+											<?php } if ($_SESSION["role"] == "teacher" or $_SESSION["role"] == "student") ?>
+											<button class="btn btn-danger" id = "leaving">Leave Class</button>
 										</div>
 									</div>
 								</div>
@@ -206,21 +210,21 @@ if(!isset($_SESSION["class_id"])){
 					</div>
 					<div class="col-md-8">
 						<?php if($_SESSION["role"] == "creator" or $_SESSION["role"] == "teacher"){ ?> <!-- if role == teacher -->
-							<div class="row mb-1">
-								<div class="col">
-									<div class="card" style="border-radius: 1rem; background-color: rgba(245, 245, 245, 0.8); border: 3px solid rgba(55, 100, 100);">
-										<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
-											<div class="col">
-												<a href="create-post.php">
-													<h5 style="width: bold;">
-														<img id="plus" src="assets/images/black-plus.png" width="25" height="25">&nbsp;&nbsp;Create a new post!
-													</h5>
-												</a>
-											</div>
+						<div class="row mb-1">
+							<div class="col">
+								<div class="card" style="border-radius: 1rem; background-color: rgba(245, 245, 245, 0.8); border: 3px solid rgba(55, 100, 100);">
+									<div class="row" style="margin: 1rem 2rem 0.5rem 1rem;">
+										<div class="col">
+											<a href="create-post.php">
+												<h5 style="width: bold;">
+													<img id="plus" src="assets/images/black-plus.png" width="25" height="25">&nbsp;&nbsp;Create a new post!
+												</h5>
+											</a>
 										</div>
 									</div>
 								</div>
 							</div>
+						</div>
 					<?php } ?>
 					<div class="row">
 						<div class="col" id="listPost">
@@ -234,6 +238,8 @@ if(!isset($_SESSION["class_id"])){
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
 		function refreshPost(){
@@ -261,7 +267,7 @@ if(!isset($_SESSION["class_id"])){
 						$("#listPost").html(postcard);
 					}
 				}
-    		});
+			});
 		}
 
 		refreshPost();
@@ -370,6 +376,24 @@ if(!isset($_SESSION["class_id"])){
 					$("#alert").html(alert);
 				}
 			});
+		});
+		$("#leaving").click(function(){
+			var id = <?php echo $_SESSION["id"]; ?>;
+			var classid = <?php echo $_SESSION["class_id"]; ?>;
+			var check = confirm("Are you sure want to leave this class?");
+			if (check == true) {
+				$.ajax({
+					type: "POST",
+					url: "phps/leaveClass.php",
+					data: {
+						id:id, classid:classid
+					}, success: function(res){
+						alert(res);
+						window.location = "home.php";
+					}
+				});
+			}
+			
 		});
 	});
 </script>

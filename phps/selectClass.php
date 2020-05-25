@@ -7,7 +7,7 @@
 	echo "<?xml version='1.0' encoding='UTF-8'?>\n";
 	echo "<data>\n";
 	
-	$result = mysqli_query($conn, "SELECT class.id, class.name, users.nickname, class.description, class.code FROM class_details JOIN class ON class_details.class_id = class.id JOIN users ON class.id_creator = users.id WHERE class_details.users_id = $id");
+	$result = mysqli_query($conn, "SELECT class.id, class.name, users.nickname, class.description, class.code FROM class_details JOIN class ON class_details.class_id = class.id JOIN users ON class.id_creator = users.id WHERE class_details.users_id = $id AND class_details.status = 1");
 	
 	if(!empty($result)){
 		while($row = mysqli_fetch_array($result)){

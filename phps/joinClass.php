@@ -11,12 +11,24 @@ if(isset($_POST["code"])){
         $id_class = $row["id"];
         $name = $row["name"];
 
-        $query = mysqli_query($conn, "SELECT id FROM class_details WHERE class_id = $id_class AND users_id = $id");
+        $query = mysqli_query($conn, "SELECT * FROM class_details WHERE class_id = $id_class AND users_id = $id");
+        $hasil = mysqli_fetch_array($query);
 
         if(mysqli_num_rows($query) > 0){
-            echo "You already joined $name!";
+            if ($hasil['status'] == 0) {
+                $query = mysqli_query($conn, "UPDATE class_details SET status = 1 WHERE users_id = $id");
+                if($query){
+                    echo "Successfully joined $name!";
+                }
+                else{
+                    echo "Failed to join $name!";
+                }
+            }
+            else{
+                echo "You already joined, $name!";
+            }
         }else{
-            $query = mysqli_query($conn, "INSERT INTO class_details VALUES (0, $id_class, $id, 3)");
+            $query = mysqli_query($conn, "INSERT INTO class_details VALUES (0, $id_class, $id, 3, 1)");
 
             if($query){
                 echo "Successfully joined $name!";

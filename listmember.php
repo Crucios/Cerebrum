@@ -8,8 +8,9 @@ if(!isset($_SESSION["username"])){
 if(!isset($_SESSION["class_id"])){
 	header("Location: home.php");
 }
-
-
+if ($_SESSION["status"] == "inactive") {
+	header("Location: home.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -247,6 +248,7 @@ if(!isset($_SESSION["class_id"])){
 
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 
