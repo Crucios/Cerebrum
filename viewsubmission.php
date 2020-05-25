@@ -251,6 +251,15 @@ function changeGrade(id){
 
  $(document).ready(function(){
 
+  function cutId(link){
+    list = link.split('-');
+    link = list[1];
+    for(var i = 2; i < list.length; i++){
+      link += "-" + list[i];
+    }
+    return link;
+  }
+
   function countSubmission(){
     var idpost = <?php echo $_SESSION['post_id']; ?>;
     var idclass = <?php echo $_SESSION['class_id']; ?>;
@@ -296,7 +305,7 @@ function changeGrade(id){
       success:function(xml){
         $(xml).find("file").each(function(){
           var link = $(this).find("files").text();
-          var display = link.split("-")[1];
+          var display = cutId(link);
 
           var filecard = "<div class='col-md-3 col-sm-6 mb-3'><a href='./assets/postfiles/"+link+"' download='"+display+"'><div class='card files'>"+display+"</div></a></div>";
 
@@ -329,7 +338,7 @@ function changeGrade(id){
 
           $(this).find("file").each(function(){
             var file = $(this).text();
-            var display = file.split("-")[1];
+            var display = cutId(file);
             subcard += "<div class='col-md-3 col-sm-6 mb-2 mt-1'><a href='./assets/submitfiles/"+file+"' download='"+display+"'><div class='card files'>"+display+"</div></a></div>";
           });
 

@@ -216,6 +216,15 @@ if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
 <script src="http://malsup.github.com/jquery.form.js"></script>
 <script type="text/javascript">
+	function cutId(link){
+		list = link.split('-');
+		link = list[1];
+		for(var i = 2; i < list.length; i++){
+			link += "-" + list[i];
+		}
+		return link;
+	}
+
 	function preview_postfiles()
 	{
 		var total_file=document.getElementById("upload").files.length;
@@ -240,7 +249,7 @@ if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
 					if(response.exist){
 						$("#time").html(response.time);
 						for(var i = 0; i < response.files.length; i++){
-							var filename = response.files[i].split("-")[1];
+							var filename = cutId(response.files[i]);
 							var submitcard = "<tr><td><a href='./assets/submitfiles/"+response.files[i]+"' download='"+filename+"'><div class='card files' style='width: 80%;'>"+filename+"</div></a></td><td align='center'><button type='button' class='btn btn-danger' style='width: 70%;'>Delete</button></td></tr>";
 							$("#listSubmissions").append(submitcard);
 						}

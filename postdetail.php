@@ -239,6 +239,15 @@ date_default_timezone_set('Asia/Bangkok');
 <script type="text/javascript">
  $(document).ready(function(){
 
+  function cutId(link){
+    list = link.split('-');
+    link = list[1];
+    for(var i = 2; i < list.length; i++){
+      link += "-" + list[i];
+    }
+    return link;
+  }
+
   function countSubmission(){
     var idpost = <?php echo $_SESSION['post_id']; ?>;
     var idclass = <?php echo $_SESSION['class_id']; ?>;
@@ -285,7 +294,7 @@ date_default_timezone_set('Asia/Bangkok');
       success:function(xml){
         $(xml).find("file").each(function(){
           var link = $(this).find("files").text();
-          var display = link.split("-")[1];
+          var display = cutId(link);
 
           var filecard = "<div class='col-md-3 col-sm-6 mb-3'><a href='./assets/postfiles/"+link+"' download='"+display+"'><div class='card files'>"+display+"</div></a></div>";
 
@@ -309,7 +318,7 @@ date_default_timezone_set('Asia/Bangkok');
           $("#score").html(response.score);
           $("#listSubmissions").html("<div class='col-12'><h5><strong>Last submitted:</strong> "+response.time+"</h5></div>");
           for(var i = 0; i < response.files.length; i++){
-            var filename = response.files[i].split("-")[1];
+            var filename = cutId(response.files[i]);
             var submitcard = "<div class='col-md-3 col-sm-6 mb-2'><a href='./assets/submitfiles/"+response.files[i]+"' download='"+filename+"'><div class='card files'>"+filename+"</div></a></div>";
             $("#listSubmissions").append(submitcard);
           }
