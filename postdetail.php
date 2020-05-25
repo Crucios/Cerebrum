@@ -202,7 +202,7 @@ date_default_timezone_set('Asia/Bangkok');
         <?php } else { ?>
         <div class="row mt-2 mb-3">
           <div class="col-md-4 col-sm-6">
-            <button type="button" class="btn btn-primary">Edit Submissions</button>
+            <button type="button" class="btn btn-primary" id="submit">Edit Submissions</button>
           </div>
         </div>         
         <?php } ?>
@@ -330,6 +330,10 @@ date_default_timezone_set('Asia/Bangkok');
 
   $("#grade").on("click", function(){
     window.location.href = "viewsubmission.php";
+  });
+
+  $("#submit").on("click", function(){
+    window.location.href = "submit.php";
   });
 
   $("#post_comment").click(function(){

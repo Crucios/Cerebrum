@@ -5,11 +5,11 @@ if(!isset($_SESSION["username"])){
 	header("Location: index.php");
 }
 
-if(!isset($_SESSION["class_id"])){
-	header("Location: home.php");
+if(!isset($_SESSION["post_id"])){
+	header("Location: classwork.php");
 }
 
-if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
+if($_SESSION["role"] != "student" || !isset($_SESSION["role"])){
 	header("Location: classwork.php");
 }
 ?>
@@ -29,54 +29,36 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 			background-color: rgba(180, 225, 225, 0.7);
 			font-weight: bold;
 		}
-		#create-post-content{
+		#submit-content{
 			background-color: rgba(255, 255, 255, 0.6);
 			padding: 2rem 3rem;
 		}
-		#formdiv {
-			text-align: center;
+		thead{
+			background-color: rgba(20, 20, 20, 0.8);
+			color: white;
 		}
-		#file {
-			color: green;
-			padding: 5px;
-			border: 1px dashed #123456;
-			background-color: #f9ffe5;
+		table{
+			background-color: rgba(244, 244, 244, 0.8);
 		}
-		#img {
-			width: 17px;
-			border: none;
-			height: 17px;
-			margin-left: -20px;
-			margin-bottom: 191px;
-		}
-		.upload {
-			width: 100%;
-			height: 30px;
-		}
-		.previewBox {
-			text-align: center;
-			position: relative;
-			width: 150px;
-			height: 150px;
-			margin: 1rem 2rem;
-			float: left;
-		}
-		.previewBox img {
-			height: 150px;
-			width: 150px;
-			padding: 5px;
-			border: 1px solid rgb(232, 222, 189);
-		}
-		.delete {
-			color: red;
+
+		.files{
+			background-color: white;
+			padding: 0.5rem 1rem;
+			border: 3px solid rgba(55, 100, 100);
+			font-size: 15px;
 			font-weight: bold;
-			position: absolute;
-			top: 0;
-			cursor: pointer;
-			width: 20px;
-			height:  20px;
-			border-radius: 50%;
-			background: #ccc;
+			box-shadow: 0.2rem 0.2rem #5984b3;
+			color: rgb(80, 80, 80);
+		}
+
+		.files:hover{
+			background-color:rgba(165, 165, 165, 0.8);
+			color: darkblue;
+			box-shadow: 0rem 0rem; 
+		}
+
+		a:hover{
+			text-decoration: none;
 		}
 	</style>
 	<script>
@@ -142,6 +124,9 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 					<a class="nav-link" href="home.php">Home</a>
 				</li>
 				<li class="nav-item">
+					<a class="nav-link" href="home.php">Post</a>
+				</li>
+				<li class="nav-item">
 					<a class="nav-link" href="classwork.php">Classwork</a>
 				</li>
 				<li class="nav-item">
@@ -169,48 +154,44 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 				<div class="card-header" id="titleHeader">
 					<div class="row">
 						<div class="col">
-							<h2 style="font-weight: bold;"><img src="assets/images/pencil.png" width="30" height="30">&nbsp;&nbsp;Create Post</h2>
+							<h2 style="font-weight: bold;"><img src="assets/images/assignment.png" width="30" height="30">&nbsp;&nbsp;Edit Submissions</h2>
 						</div>
 					</div>
 				</div>
-				<div class="card-body" id="create-post-content">
+				<div class="card-body" id="submit-content">
 					<div class="row">
+						<div class="col">
+							<h5><strong>Last Submitted:</strong> <span id="time"></span></h5>
+							<div class="row mt-3 table-responsive">
+								<div class="col" id="tableWrap">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<td style="width: 60%;">Files</td>
+												<td>Action</td>
+											</tr>
+										</thead>
+										<tbody id="listSubmissions">
+											
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row mt-3">
 						<div class="col">
 							<!-- <form action="phps/addPost.php" method="post" enctype="multipart/form-data" id="dataPost"> -->
 							<form id="dataPost" enctype="multipart/form-data">
-								<!-- Select Type Post -->
-								<div class="input-group mb-3">
-									<div class="input-group-prepend">
-										<label class="input-group-text" for="select_type">Type Post</label>
-									</div>
-									<select class="custom-select" id="select_type" name="type">
-										<option selected disabled>Choose...</option>
-										<option value="announcement">Announcement</option>
-										<option value="material">Material</option>
-										<option value="assignment">Assignment</option>
-									</select>
-								</div>
-								<!-- Select Type Post -->
-
-								<label for="title">Title:</label>
-								<input type="text" id="title_post" name="title" placeholder="Quiz 1: Arithmetics" class="form-control">
-								<p id="titleError" style="color: red;"></p>
-								<label for="content" class="mt-3">Content:</label>
-								<textarea class="form-control" id="content" name="content" rows="3" placeholder="This quiz will be your first assignment."></textarea>
-								<p id="contentError" style="color: red;"></p>
-
 								<div id="attachments">
-									<label for='postfiles' class='mt-3'>Add Attachment Files:</label><br>
+									<h6>Add Attachment Files:</h6>
 									<input type='file' id='postfiles' name='postfiles[]' onchange='preview_postfiles();' multiple><div id='image_preview' class='mt-3 mb-3'></div>
 									<p id="attachmentsError" style="color: red;"></p>
 								</div>
-
-								<div id="deadline_datetime">
-
-								</div>
-
-								<div class="row mt-4" align="center" id="submitBtn">
-
+								<div class="row mt-4" id="submitBtn">
+									<div class='col-md-3 col-sm-6 col-12'>
+										<button type='submit' class='btn btn-primary' id='submit_post' style="width: 100%;">Add to Submission</button>
+									</div>
 								</div>
 							</form>
 						</div>
@@ -231,11 +212,38 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 		$("#image_preview").html("");
 		for(var i=0;i<total_file;i++)
 		{
-			$('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' width='40' height='40'>");
+			$('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' height='40' style='margin-right: 1rem;'>");
 		}
 	}
 
 	$(document).ready(function(){
+		function refreshSubmission(){
+			var postid = <?php echo $_SESSION['post_id']; ?>;
+			var userid = <?php echo $_SESSION['id'] ?>;
+			$("#listSubmissions").empty();
+			$.ajax({
+				type: "POST",
+				data: { post:postid, user:userid },
+				dataType: "json",
+				url: "phps/selectSubmission.php",
+				success:function(response){
+					if(response.exist){
+						$("#time").html(response.time);
+						for(var i = 0; i < response.files.length; i++){
+							var filename = response.files[i].split("-")[1];
+							var submitcard = "<tr><td><a href='./assets/submitfiles/"+response.files[i]+"' download='"+filename+"'><div class='card files' style='width: 80%;'>"+filename+"</div></a></td><td align='center'><button type='button' class='btn btn-danger' style='width: 70%;'>Delete</button></td></tr>";
+							$("#listSubmissions").append(submitcard);
+						}
+					}else{
+						$("#time").html("-")
+						$("#listSubmissions").html("<tr><td colspan='2' style='color: red; font-weight: bold;'>You haven't made any submission for this assignment</td></tr>");
+					}
+				}
+			});
+		}
+
+		refreshSubmission();
+
 		form = $("form");
 		form.submit(function(event){
 			event.preventDefault();
@@ -249,13 +257,9 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 				url:'phps/addPost.php',
 				type:"POST",
 				data: formData,
-				cache: false,
-        contentType: false,
-        processData: false,
 				success:function(response){
 					response = $.parseJSON(response);
 					console.log(response);
-
 
 					if(!response.success){
 						$("#titleError").html(response.titleError);
@@ -274,25 +278,7 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 					console.log(desc);
 					console.log(err);
         }
-			}); //ajax call ends
-		}); //form.submit() ends
-
-		$("#select_type").change(function(){
-			var value_select = $(this).val();
-			var markup = "";
-
-			if(value_select == "assignment"){
-				markup = "<label for='deadline_date'>Deadline Date:</label>" +
-				"<input type='date' name='date' value='0000-00-00' class='form-control'>" +
-				"<div class='form-group pmd-textfield pmd-textfield-floating-label mt-3'>" +
-				"<p id='deadlineDateError' style='color: red;'></p>" +
-				"<label class='control-label' for='timepicker'>Deadline Time:</label>" +
-				"<input type='time' class='form-control' id='timepicker' name='time'></div>" +
-				"<p id='deadlineTimeError' style='color: red;'></p>" ;
-			}
-
-			$("#deadline_datetime").html(markup);
-			$("#submitBtn").html("<div class='col'><button type='submit' class='btn btn-primary' id='submit_post' style='width: 50%;'>Submit</button></div>")
+			});
 		});
 
 		$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
