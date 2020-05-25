@@ -33,50 +33,9 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 			background-color: rgba(255, 255, 255, 0.6);
 			padding: 2rem 3rem;
 		}
-		#formdiv {
-			text-align: center;
-		}
-		#file {
-			color: green;
-			padding: 5px;
-			border: 1px dashed #123456;
-			background-color: #f9ffe5;
-		}
-		#img {
-			width: 17px;
-			border: none;
-			height: 17px;
-			margin-left: -20px;
-			margin-bottom: 191px;
-		}
-		.upload {
-			width: 100%;
-			height: 30px;
-		}
-		.previewBox {
-			text-align: center;
-			position: relative;
-			width: 150px;
-			height: 150px;
-			margin: 1rem 2rem;
-			float: left;
-		}
-		.previewBox img {
-			height: 150px;
-			width: 150px;
-			padding: 5px;
-			border: 1px solid rgb(232, 222, 189);
-		}
-		.delete {
+		.error{
 			color: red;
-			font-weight: bold;
-			position: absolute;
-			top: 0;
-			cursor: pointer;
-			width: 20px;
-			height:  20px;
-			border-radius: 50%;
-			background: #ccc;
+			margin-left: 1rem;
 		}
 	</style>
 	<script>
@@ -198,24 +157,22 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 										</div>
 										<!-- Select Type Post -->
 
-										<label for="title">Title:</label>
+										<label for="title">Title:<span class="error" id="titleError"></span></label>
 										<input type="text" id="title_post" name="title" placeholder="Quiz 1: Arithmetics" class="form-control">
-										<p id="titleError" style="color: red;"></p>
-										<label for="content" class="mt-3">Content:</label>
+										
+										<label for="content" class="mt-3">Content:<span class="error" id="contentError"></span></label>
 										<textarea class="form-control" id="content" name="content" rows="3" placeholder="This quiz will be your first assignment."></textarea>
-										<p id="contentError" style="color: red;"></p>
 
 										<div id="attachments">
-											<label for='postfiles' class='mt-3'>Add Attachment Files:</label><br>
+											<label for='postfiles' class='mt-3'>Add Attachment Files:<span class="error" id="attachmentsError"></span></label><br>
 											<input type='file' id='postfiles' name='postfiles[]' onchange='preview_postfiles();' multiple><div id='image_preview' class='mt-3 mb-3'></div>
-											<p id="attachmentsError" style="color: red;"></p>
 										</div>
 
 										<div id="deadline_datetime">
 
 										</div>
 
-										<div class="row mt-4" align="center" id="submitBtn">
+										<div class="row mt-2" align="center" id="submitBtn">
 
 										</div>
 									</form>
@@ -238,7 +195,7 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 			$("#image_preview").html("");
 			for(var i=0;i<total_file;i++)
 			{
-				$('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' width='40' height='40'>");
+				$('#image_preview').append("<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"' height='60' style='margin-right: 1rem;'>");
 			}
 		}
 
@@ -249,9 +206,6 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 
 				const formData = new FormData(this);
 
-				var data = form.serialize();
-				console.log(data);
-				console.log(formData);
 				$.ajax({
 					url:'phps/addPost.php',
 					type:"POST",
@@ -260,9 +214,8 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 					contentType: false,
 					processData: false,
 					success:function(response){
-						response = $.parseJSON(response);
 						console.log(response);
-
+						response = $.parseJSON(response);
 
 						if(!response.success){
 							$("#titleError").html(response.titleError);
@@ -270,36 +223,30 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 							$("#deadlineDateError").html(response.deadlineDateError);
 							$("#deadlineTimeError").html(response.deadlineTimeError);
 							$("#attachmentsError").html(response.attachmentsError);
+							if(response.message != null){
+								$("#submitBtn").prepend("<div class='col-12 mb-3'><span class='error' id='errorMessage'>*Failed to create post</span></div>");
+							}
+						}else{
+							window.location.href = "classwork.php";
 						}
-						else{
-							alert(response.message);
-						}
-					},
-					error:function (xhr, desc, err)
-					{
-						console.log(xhr);
-						console.log(desc);
-						console.log(err);
 					}
-			}); //ajax call ends
-		}); //form.submit() ends
+				});
+			});
 
 			$("#select_type").change(function(){
 				var value_select = $(this).val();
 				var markup = "";
 
 				if(value_select == "assignment"){
-					markup = "<label for='deadline_date'>Deadline Date:</label>" +
-					"<input type='date' name='date' value='0000-00-00' class='form-control'>" +
+					markup = "<label for='deadline_date'>Deadline Date:<span class='error' id='deadlineDateError'></span></label>" +
+					"<input type='date' name='date' value='0000-00-00' class='form-control' required>" +
 					"<div class='form-group pmd-textfield pmd-textfield-floating-label mt-3'>" +
-					"<p id='deadlineDateError' style='color: red;'></p>" +
-					"<label class='control-label' for='timepicker'>Deadline Time:</label>" +
-					"<input type='time' class='form-control' id='timepicker' name='time'></div>" +
-					"<p id='deadlineTimeError' style='color: red;'></p>" ;
+					"<label class='control-label' for='timepicker'>Deadline Time:<span class='error' id='deadlineTimeError'></span></label>" +
+					"<input type='time' class='form-control' id='timepicker' name='time' required></div>";
 				}
 
 				$("#deadline_datetime").html(markup);
-				$("#submitBtn").html("<div class='col'><button type='submit' class='btn btn-primary' id='submit_post' style='width: 50%;'>Submit</button></div>")
+				$("#submitBtn").html("<div class='col-12'><button type='submit' class='btn btn-primary' id='submit_post' style='width: 50%;'>Submit</button></div>")
 			});
 
 			$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
