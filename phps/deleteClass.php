@@ -8,6 +8,7 @@ $id = $_POST["id"];
 $query = mysqli_query($conn, "UPDATE class SET status = 0 WHERE id = $id");
 
 if($query){
+	unset($_SESSION["class_id"]);
 	unset($_SESSION["classname"]);
 	unset($_SESSION["creator"]);
 	unset($_SESSION["description"]);
