@@ -19,7 +19,7 @@ if(mysqli_num_rows($query) > 0){
 	}
 }
 
-$query = mysqli_query($conn, "SELECT * FROM class_details WHERE users_id = $user_id AND class_id = $id");
+$query = mysqli_query($conn, "SELECT role, status FROM class_details WHERE users_id = $user_id AND class_id = $id");
 
 if(mysqli_num_rows($query) > 0){
 	while($row = $query->fetch_array()){

@@ -12,9 +12,9 @@ if(isset($_POST["code"])){
         $name = $row["name"];
 
         $query = mysqli_query($conn, "SELECT * FROM class_details WHERE class_id = $id_class AND users_id = $id");
-        $hasil = mysqli_fetch_array($query);
 
         if(mysqli_num_rows($query) > 0){
+            $hasil = mysqli_fetch_array($query);
             if ($hasil['status'] == 0) {
                 $query = mysqli_query($conn, "UPDATE class_details SET status = 1 WHERE users_id = $id");
                 if($query){
@@ -25,7 +25,7 @@ if(isset($_POST["code"])){
                 }
             }
             else{
-                echo "You already joined, $name!";
+                echo "You already joined $name!";
             }
         }else{
             $query = mysqli_query($conn, "INSERT INTO class_details VALUES (0, $id_class, $id, 3, 1)");

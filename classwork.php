@@ -201,7 +201,7 @@ if ($_SESSION["status"] == "inactive") {
 											<?php } if ($_SESSION["role"] == "creator") { ?>
 												<button class="btn btn-danger">Delete Class</button>
 											<?php } if ($_SESSION["role"] == "teacher" or $_SESSION["role"] == "student") ?>
-											<button class="btn btn-danger" id = "leaving">Leave Class</button>
+											<button class="btn btn-danger" id="leaving">Leave Class</button>
 										</div>
 									</div>
 								</div>
@@ -239,7 +239,7 @@ if ($_SESSION["status"] == "inactive") {
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
 		function refreshPost(){
@@ -381,15 +381,19 @@ if ($_SESSION["status"] == "inactive") {
 			var id = <?php echo $_SESSION["id"]; ?>;
 			var classid = <?php echo $_SESSION["class_id"]; ?>;
 			var check = confirm("Are you sure want to leave this class?");
-			if (check == true) {
+			if (check) {
 				$.ajax({
 					type: "POST",
 					url: "phps/leaveClass.php",
 					data: {
 						id:id, classid:classid
 					}, success: function(res){
-						alert(res);
-						window.location = "home.php";
+						if(res[0] == "S"){
+							window.location = "home.php";
+						}else{
+							var alert = "<div class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + res + "</strong></div>";
+							$("#alert").html(alert);
+						}
 					}
 				});
 			}

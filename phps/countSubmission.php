@@ -5,7 +5,7 @@
 	$idclass = $_POST["idclass"];
 	$idpost = $_POST["idpost"];
 
-	$query = mysqli_query($conn, "SELECT count(id) AS count FROM class_details WHERE class_id = $idclass AND role = 3");
+	$query = mysqli_query($conn, "SELECT count(id) AS count FROM class_details WHERE class_id = $idclass AND role = 3 AND status = 1");
 
 	if(mysqli_num_rows($query) > 0){
 		while($row = mysqli_fetch_assoc($query)){
@@ -19,6 +19,10 @@
 		while($row = mysqli_fetch_assoc($query)){
 			$submissions = $row["count"];
 		}
+	}
+
+	if($student < $submissions){
+		$student = $submissions;
 	}
 
 	$data = array("student" => $student, "submissions" => $submissions);
