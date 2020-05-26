@@ -1,4 +1,4 @@
-<?php  
+<?php
 session_start();
 
 if(!isset($_SESSION["username"])){
@@ -27,8 +27,8 @@ if ($_SESSION["status"] == "inactive") {
 			color: rgb(55, 100, 100);
 		}
 		.post{
-			border-radius: 1rem; 
-			background-color: rgba(255, 255, 255, 0.9); 
+			border-radius: 1rem;
+			background-color: rgba(255, 255, 255, 0.9);
 			border: 3px solid rgba(55, 100, 100);
 		}
 
@@ -119,7 +119,7 @@ if ($_SESSION["status"] == "inactive") {
 				<img src="assets/images/user-icon.png" style="width:30px; height:30px;">
 			</a>
 			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				<a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a> 
+				<a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a>
 				<a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePassword_modal">Change Password</a>
 				<a class="dropdown-item" href="#" data-toggle="modal" data-target="#changeNickname_modal">Change Nickname</a>
 				<a class="dropdown-item" href="logout.php" id="createClass_button">Log Out</a>
@@ -159,7 +159,7 @@ if ($_SESSION["status"] == "inactive") {
 				</div>
 			</div>
 		</div>
-		<?php 
+		<?php
 		require_once "phps/connect.php";
 		$classid = $_SESSION["class_id"];
 		$query = mysqli_query($conn, "SELECT * FROM users u JOIN class_details cd ON u.id = cd.users_id WHERE cd.class_id = $classid ORDER BY u.username ASC");
@@ -193,7 +193,7 @@ if ($_SESSION["status"] == "inactive") {
 						<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;">
 						<h5>'.$row["username"].'</h5>
 						<h6>'.$row["nickname"].'</h6>
-						<button type="button" class="btn btn-info" style="float: right; white-space: nowrap;" id = "editrole">Assign to Teacher</button>
+						<button type="button" class="btn btn-info editrole" style="float: right; white-space: nowrap;">Assign to Teacher</button>
 						</div>
 						</div>
 						</div>
@@ -201,8 +201,8 @@ if ($_SESSION["status"] == "inactive") {
 						</div>
 						</div>';
 					}
-					
-					
+
+
 					else if ($row['role'] == 2) {
 						echo '<div class="row">
 						<div class="col-sm-10 offset-sm-1">
@@ -213,7 +213,7 @@ if ($_SESSION["status"] == "inactive") {
 						<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;">
 						<h5>'.$row["username"].'</h5>
 						<h6>'.$row["nickname"].'</h6>
-						<button type="button" class="btn btn-info" style="float: right; white-space: nowrap;" id = "editrole">Assign to Student</button>
+						<button type="button" class="btn btn-info editrole" style="float: right; white-space: nowrap;">Assign to Student</button>
 						</div>
 						</div>
 						</div>
@@ -222,7 +222,7 @@ if ($_SESSION["status"] == "inactive") {
 						</div>';
 					}
 				}
-				
+
 			}
 			else{
 				echo '<div class="row">
@@ -242,8 +242,8 @@ if ($_SESSION["status"] == "inactive") {
 				</div>';
 			}
 		}
-		
-		?>		
+
+		?>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -317,8 +317,9 @@ if ($_SESSION["status"] == "inactive") {
 					}
 				});
 			});
-			$("#editrole").click(function(){
+			$(".editrole").click(function(){
 				var username = $(this).parent().find("h5").text();
+				console.log(username);
 				$.post("phps/editRole.php", {username:username},
 					function(data){
 						alert(data);
