@@ -214,7 +214,6 @@ if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
-<script src="http://malsup.github.com/jquery.form.js"></script>
 <script type="text/javascript">
 	function cutId(link){
 		list = link.split('-');
@@ -281,7 +280,7 @@ if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
 				clearTimeout(timer);
 				timer = setTimeout(function(){
 					refreshSubmission();
-				}, 500);
+				}, 10);
 			}
 		});
 	}

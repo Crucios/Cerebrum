@@ -11,12 +11,12 @@ if(isset($_POST["code"])){
         $id_class = $row["id"];
         $name = $row["name"];
 
-        $query = mysqli_query($conn, "SELECT * FROM class_details WHERE class_id = $id_class AND users_id = $id");
+        $query = mysqli_query($conn, "SELECT status FROM class_details WHERE class_id = $id_class AND users_id = $id");
 
         if(mysqli_num_rows($query) > 0){
             $hasil = mysqli_fetch_array($query);
             if ($hasil['status'] == 0) {
-                $query = mysqli_query($conn, "UPDATE class_details SET status = 1 WHERE users_id = $id");
+                $query = mysqli_query($conn, "UPDATE class_details SET status = 1 WHERE users_id = $id AND class_id = $id_class");
                 if($query){
                     echo "Successfully joined $name!";
                 }
