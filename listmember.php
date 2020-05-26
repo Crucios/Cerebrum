@@ -159,6 +159,14 @@ if ($_SESSION["status"] == "inactive") {
 				</div>
 			</div>
 		</div>
+
+		<div class="row" id="teacherCard">
+
+		</div>
+
+		<div class="row" id="studentCard">
+
+		</div>
 		<?php
 		require_once "phps/connect.php";
 		$classid = $_SESSION["class_id"];
@@ -223,7 +231,7 @@ if ($_SESSION["status"] == "inactive") {
 					}
 				}
 
-			}
+			} // If Creator
 			else{
 				echo '<div class="row">
 				<div class="col-sm-10 offset-sm-1">
@@ -251,6 +259,9 @@ if ($_SESSION["status"] == "inactive") {
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
+			function refreshData(){
+				
+			}
 
 			$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
 
