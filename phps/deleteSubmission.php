@@ -17,12 +17,21 @@ if(mysqli_num_rows($query) > 0){
 			if(unlink($filename)){
 				$data["success"] = true;
 				$data["message"] = "Successfully deleted ".$row["link"]."!";
+
+				$id_sub = $row["id_submissions"];
+
+				$query = mysqli_query($conn, "SELECT id FROM submissions_files WHERE id_submissions=$id_sub");
+
+				if(mysqli_num_rows($query) == 0){
+					$query = mysqli_query($conn, "DELETE FROM submissions WHERE id=$id_sub");
+				}
 			}else{
 				$data["message"] = "Failed to delete file!";
 			}
 		}else{
 			$data["message"] = "Failed to delete file!";
 		}
+
 		break;
 	}
 }else{

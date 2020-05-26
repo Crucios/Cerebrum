@@ -261,6 +261,7 @@ if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
 	}
 
 	function remove(id){
+		var timer;
 		$.ajax({
 			type: "POST",
 			data: { id:id },
@@ -277,10 +278,12 @@ if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
 
 				var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + response.message + "</strong></div>";
 				$("#alert").html(alert);
+				clearTimeout(timer);
+				timer = setTimeout(function(){
+					refreshSubmission();
+				}, 500);
 			}
 		});
-
-		refreshSubmission();
 	}
 
 	$(document).ready(function(){
