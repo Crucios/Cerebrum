@@ -7,7 +7,7 @@
 
 	$query = mysqli_query($conn, "SELECT id, score, `timestamp` FROM submissions WHERE id_post = $idpost AND id_users = $iduser");
 
-	$data = array("exist" => false, "score" => null, "files" => array(), "time" => null);
+	$data = array("exist" => false, "score" => null, "files" => array(), "id" => array(), "time" => null);
 
 	if(mysqli_num_rows($query) > 0){
 
@@ -26,6 +26,7 @@
 				$data["exist"] = true;
 				while($row2 = mysqli_fetch_assoc($result)){
 					array_push($data["files"], $row["id"]."_".$row2["id"]."-".$row2["link"]);
+					array_push($data["id"], $row2["id"]);
 				}
 			}
 

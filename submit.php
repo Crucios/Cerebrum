@@ -235,31 +235,55 @@ if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
 		}
 	}
 
-	$(document).ready(function(){
-		function refreshSubmission(){
-			var postid = <?php echo $_SESSION['post_id']; ?>;
-			var userid = <?php echo $_SESSION['id'] ?>;
-			$("#listSubmissions").empty();
-			$.ajax({
-				type: "POST",
-				data: { post:postid, user:userid },
-				dataType: "json",
-				url: "phps/selectSubmission.php",
-				success:function(response){
-					if(response.exist){
-						$("#time").html(response.time);
-						for(var i = 0; i < response.files.length; i++){
-							var filename = cutId(response.files[i]);
-							var submitcard = "<tr><td><a href='./assets/submitfiles/"+response.files[i]+"' download='"+filename+"'><div class='card files' style='width: 80%;'>"+filename+"</div></a></td><td align='center'><button type='button' class='btn btn-danger' style='width: 70%;'>Delete</button></td></tr>";
-							$("#listSubmissions").append(submitcard);
-						}
-					}else{
-						$("#time").html("-")
-						$("#listSubmissions").html("<tr><td colspan='2' style='color: red; font-weight: bold;'>You haven't made any submission for this assignment</td></tr>");
+	function refreshSubmission(){
+		var postid = <?php echo $_SESSION['post_id']; ?>;
+		var userid = <?php echo $_SESSION['id'] ?>;
+		$("#listSubmissions").empty();
+		$.ajax({
+			type: "POST",
+			data: { post:postid, user:userid },
+			dataType: "json",
+			url: "phps/selectSubmission.php",
+			success:function(response){
+				if(response.exist){
+					$("#time").html(response.time);
+					for(var i = 0; i < response.files.length; i++){
+						var filename = cutId(response.files[i]);
+						var submitcard = "<tr><td><a href='./assets/submitfiles/"+response.files[i]+"' download='"+filename+"'><div class='card files' style='width: 80%;'>"+filename+"</div></a></td><td align='center'><button type='button' class='btn btn-danger' onclick='remove("+response.id[i]+")' style='width: 70%;'>Delete</button></td></tr>";
+						$("#listSubmissions").append(submitcard);
 					}
+				}else{
+					$("#time").html("-")
+					$("#listSubmissions").html("<tr><td colspan='2' style='color: red; font-weight: bold;'>You haven't made any submission for this assignment</td></tr>");
 				}
-			});
-		}
+			}
+		});
+	}
+
+	function remove(id){
+		$.ajax({
+			type: "POST",
+			data: { id:id },
+			dataType: "json",
+			url: "phps/deleteSubmission.php",
+			success:function(response){
+				console.log(response);
+
+				if(response.success){
+					var alert = "success";
+				}else{
+					var alert = "danger";
+				}
+
+				var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + response.message + "</strong></div>";
+				$("#alert").html(alert);
+			}
+		});
+
+		refreshSubmission();
+	}
+
+	$(document).ready(function(){
 
 		refreshSubmission();
 
