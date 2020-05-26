@@ -11,7 +11,6 @@ if(!isset($_SESSION["class_id"])){
 if ($_SESSION["status"] == "inactive") {
 	header("Location: home.php");
 }
-
 ?>
 
 <!DOCTYPE html>

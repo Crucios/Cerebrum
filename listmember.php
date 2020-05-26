@@ -8,9 +8,11 @@ if(!isset($_SESSION["username"])){
 if(!isset($_SESSION["class_id"])){
 	header("Location: home.php");
 }
+
 if ($_SESSION["status"] == "inactive") {
 	header("Location: home.php");
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -159,6 +161,9 @@ if ($_SESSION["status"] == "inactive") {
 				</div>
 			</div>
 		</div>
+		<div class="row" id="creatorCard">
+
+		</div>
 
 		<div class="row" id="teacherCard">
 
@@ -167,91 +172,6 @@ if ($_SESSION["status"] == "inactive") {
 		<div class="row" id="studentCard">
 
 		</div>
-		<?php
-		require_once "phps/connect.php";
-		$classid = $_SESSION["class_id"];
-		$query = mysqli_query($conn, "SELECT * FROM users u JOIN class_details cd ON u.id = cd.users_id WHERE cd.class_id = $classid ORDER BY u.username ASC");
-		while($row = mysqli_fetch_array($query)){
-			if ($_SESSION['role'] == "creator") {
-				if ($_SESSION['username'] == $row["username"]) {
-					echo '<div class="row">
-					<div class="col-sm-10 offset-sm-1">
-					<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;">
-					<div class="card-body" id="titleDesc">
-					<div class="row">
-					<div class="col">
-					<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;">
-					<h5>'.$row["username"].'</h5>
-					<h6>'.$row["nickname"].'</h6>
-					</div>
-					</div>
-					</div>
-					</div>
-					</div>
-					</div>';
-				}
-				else{
-					if ($row['role'] == 3) {
-						echo '<div class="row">
-						<div class="col-sm-10 offset-sm-1">
-						<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;">
-						<div class="card-body" id="titleDesc">
-						<div class="row">
-						<div class="col">
-						<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;">
-						<h5>'.$row["username"].'</h5>
-						<h6>'.$row["nickname"].'</h6>
-						<button type="button" class="btn btn-info editrole" style="float: right; white-space: nowrap;">Assign to Teacher</button>
-						</div>
-						</div>
-						</div>
-						</div>
-						</div>
-						</div>';
-					}
-
-
-					else if ($row['role'] == 2) {
-						echo '<div class="row">
-						<div class="col-sm-10 offset-sm-1">
-						<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;">
-						<div class="card-body" id="titleDesc">
-						<div class="row">
-						<div class="col">
-						<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;">
-						<h5>'.$row["username"].'</h5>
-						<h6>'.$row["nickname"].'</h6>
-						<button type="button" class="btn btn-info editrole" style="float: right; white-space: nowrap;">Assign to Student</button>
-						</div>
-						</div>
-						</div>
-						</div>
-						</div>
-						</div>';
-					}
-				}
-
-			} // If Creator
-			else{
-				echo '<div class="row">
-				<div class="col-sm-10 offset-sm-1">
-				<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;">
-				<div class="card-body" id="titleDesc">
-				<div class="row">
-				<div class="col">
-				<img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;">
-				<h5>'.$row["username"].'</h5>
-				<h6>'.$row["nickname"].'</h6>
-				</div>
-				</div>
-				</div>
-				</div>
-				</div>
-				</div>';
-			}
-		}
-
-		?>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -259,8 +179,115 @@ if ($_SESSION["status"] == "inactive") {
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			function refreshData(){
-				
+			getCreator();
+			getTeacher();
+			getStudent();
+			function getTeacher(){
+				var classid = <?php echo $_SESSION['class_id']; ?>;
+				$("#teacherCard").empty();
+				$.ajax({
+					type: "POST",
+					data: { classid:classid },
+					url: "phps/getTeacher.php",
+					success:function(xml){
+						$(xml).find("member").each(function(){
+							var class_id = $(this).attr("class");
+							var username = $(this).find("username").text();
+							var nickname = $(this).find("nickname").text();
+							var role = $(this).find("role").text();
+							var status = $(this).find("status").text();
+							var rolenow = $(this).find("session").text();
+							var teachercard = '<div class="col-sm-10 offset-sm-1"><div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;"><div class="card-body" id="titleDesc"><div class="row"><div class="col"><img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;"><h5>'+username+'</h5><h6>'+nickname+'</h6><button type="button" class="btn btn-info editrole" style="float: right; white-space: nowrap;">Assign to Student</button></div></div></div></div></div></div>';
+							
+								
+
+
+							$("#teacherCard").append(teachercard);
+						});
+					}
+				});
+
+			}
+			function getCreator(){
+				var classid = <?php echo $_SESSION['class_id']; ?>;
+				$("#creatorCard").empty();
+				$.ajax({
+					type: "POST",
+					data: { classid:classid },
+					url: "phps/getCreator.php",
+					success:function(xml){
+						$(xml).find("member").each(function(){
+							var class_id = $(this).attr("class");
+							var username = $(this).find("username").text();
+							var nickname = $(this).find("nickname").text();
+							var role = $(this).find("role").text();
+							var status = $(this).find("status").text();
+							
+
+							var creatorcard = '<div class="col-sm-10 offset-sm-1"><div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;"><div class="card-body" id="titleDesc"><div class="row"><div class="col"><img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;"><h5>'+username+'</h5><h6>'+nickname+'</h6></div></div></div></div></div></div>';
+
+							$("#creatorCard").append(creatorcard);
+						});
+					}
+				});
+
+			}
+			function getMember(){
+				var classid = <?php echo $_SESSION['class_id']; ?>;
+
+				$("#teacherCard").empty();
+				$.ajax({
+					type: "POST",
+					data: { classid:classid },
+					url: "phps/getMember.php",
+					success:function(xml){
+						$(xml).find("member").each(function(){
+							var class_id = $(this).attr("class");
+							var username = $(this).find("username").text();
+							var nickname = $(this).find("nickname").text();
+							var role = $(this).find("role").text();
+							var status = $(this).find("status").text();
+							
+
+							var teachercard = '<div class="col-sm-10 offset-sm-1"><div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;"><div class="card-body" id="titleDesc"><div class="row"><div class="col"><img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;"><h5>'+username+'</h5><h6>'+nickname+'</h6></div></div></div></div></div></div>';
+
+							$("#teacherCard").append(teachercard);
+						});
+					}
+				});
+
+			}
+			function getStudent(){
+				var id = <?php echo $_SESSION['id']; ?>;
+				var classid = <?php echo $_SESSION['class_id']; ?>;
+				$("#studentCard").empty();
+				$.ajax({
+					type: "POST",
+					data: { classid:classid, id:id},
+					url: "phps/getStudent.php",
+					success:function(xml){
+						$(xml).find("member").each(function(){
+							var class_id = $(this).attr("class");
+							var username = $(this).find("username").text();
+							var nickname = $(this).find("nickname").text();
+							var role = $(this).find("role").text();
+							var status = $(this).find("status").text();
+							var rolenow = $(this).find("session").text();
+							alert(rolenow);
+
+							if (rolenow == "creator") {
+								var studentcard = '<div class="col-sm-10 offset-sm-1"><div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;"><div class="card-body" id="titleDesc"><div class="row"><div class="col"><img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;"><h5>'+username+'</h5><h6>'+nickname+'</h6></div></div></div></div></div></div>';
+							}
+							else{
+								var studentcard = '<div class="col-sm-10 offset-sm-1"><div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;"><div class="card-body" id="titleDesc"><div class="row"><div class="col"><img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;"><h5>'+username+'</h5><h6>'+nickname+'</h6><button type="button" class="btn btn-info editrole" style="float: right; white-space: nowrap;">Assign to Teacher</button></div></div></div></div></div></div>';
+							}
+							
+
+							$("#studentCard").append(studentcard);
+						});
+					}
+				});
+
 			}
 
 			$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
