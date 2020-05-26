@@ -48,9 +48,32 @@ if(!isset($_SESSION["username"])){
       color: rgb(60, 60, 60);
       text-decoration: none;
     }
+    tr{
+      background-color: rgb(230, 230, 230);
+    }
+    table, tr, td{
+      border: 2px solid rgb(60, 60, 60);
+    }
   </style>
 </head>
 <body>
+  <!-- Recover Class Modal -->
+  <div class="modal fade" id="recoverClass_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content" style="margin: 2rem;">
+        <div class="modal-header">
+          <h5 class="modal-title">Recover Deleted Class</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered table-striped" id="listRecover">
+            
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Join Class Modal -->
   <div class="modal fade" id="joinClass_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -158,6 +181,9 @@ if(!isset($_SESSION["username"])){
            <a class="dropdown-item" href="#" id="createClass_button" data-toggle="modal" data-target="#createClass_modal">Create Class</a>
          </div>
        </li>
+       <li class="nav-item" id="recoverMenu">
+          <a class="nav-link" href="#" data-toggle="modal" data-target="#recoverClass_modal">Recover Class</a>
+        </li>
      </ul>
    </div>
    <div class="nav-item dropdown">
@@ -193,9 +219,75 @@ if(!isset($_SESSION["username"])){
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+
+  function refreshClass(){
+    var id = <?php echo $_SESSION['id']; ?>;
+    $("#listClass").empty();
+    $.ajax({
+      type: "POST",
+      data: { id:id },
+      url: "phps/selectClass.php",
+      success:function(xml){
+        $(xml).find("class").each(function(){
+          var class_id = $(this).attr("id");
+          var name = $(this).find("name").text();
+          var creator = $(this).find("creator").text();
+          var description = $(this).find("description").text();
+          var code = $(this).find("code").text();
+
+          var classcard = "<a href='viewclass.php?id=" + class_id + "'><div class='col-md-4 col-sm-6' style='margin: 1rem 0;'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;<span class='name'>"+name+"</span></h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div></a>"
+
+          $("#listClass").append(classcard);
+        });
+      }
+    });
+  }
+
+  function refreshRecover(){
+    var id = <?php echo $_SESSION["id"]; ?>;
+    $("#listRecover").empty();
+    $.ajax({
+      type: "POST",
+      data: { id:id },
+      dataType: "json",
+      url: "phps/selectRecoverable.php",
+      success:function(res){
+        if(res.exist){
+          for(var i = 0; i < res.name.length; i++){
+            var row = "<tr><td style='width: 70%; vertical-align: middle; font-weight: bold;'>"+res.name[i]+"</td><td><button type='button' class='btn btn-primary' style='width: 100%;' onclick='recover(" + res.id[i] + ")' data-dismiss='modal'>Recover</button></td></tr>";
+            $("#listRecover").append(row);
+          }
+        }else{
+          $("#recoverMenu").hide();
+        }
+      }
+    });
+  }
+
+  function recover(id){
+    $.ajax({
+      type: "POST",
+      data: { id:id },
+      url: "phps/recoverClass.php",
+      success:function(result){
+        if(result[0] == "C"){
+          var alert = "success";
+        }else{
+          var alert = "danger";
+        }
+
+        var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
+        $("#alert").html(alert);
+        refreshClass();
+        refreshRecover();
+      }
+    });
+  }
+
  $(document).ready(function(){
 
   refreshClass();
+  refreshRecover();
   $("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
 
   $("#search").on("input", function(){
@@ -226,29 +318,6 @@ if(!isset($_SESSION["username"])){
       }
     }
   });
-
-  function refreshClass(){
-    var id = <?php echo $_SESSION['id']; ?>;
-    $("#listClass").empty();
-    $.ajax({
-      type: "POST",
-      data: { id:id },
-      url: "phps/selectClass.php",
-      success:function(xml){
-        $(xml).find("class").each(function(){
-          var class_id = $(this).attr("id");
-          var name = $(this).find("name").text();
-          var creator = $(this).find("creator").text();
-          var description = $(this).find("description").text();
-          var code = $(this).find("code").text();
-
-          var classcard = "<a href='viewclass.php?id=" + class_id + "'><div class='col-md-4 col-sm-6' style='margin: 1rem 0;'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;<span class='name'>"+name+"</span></h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div></a>"
-
-          $("#listClass").append(classcard);
-        });
-      }
-    });
-  }
 
   $("#createClass_confirm").click(function(){
     var name = $("#nameClass_text").val();
@@ -289,7 +358,7 @@ if(!isset($_SESSION["username"])){
 
       var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + result + "</strong></div>";
       $("#alert").html(alert);
-      $("#joinClass_text").html("");
+      $("#joinClass_text").val("");
 
       refreshClass();
     });
