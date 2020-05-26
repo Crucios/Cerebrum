@@ -258,7 +258,7 @@ if ($_SESSION["status"] == "inactive") {
 					<?php } ?>
 					<div class="row">
 						<div class="col" id="listPost">
-							
+
 						</div>
 					</div>
 				</div>
@@ -298,6 +298,7 @@ if ($_SESSION["status"] == "inactive") {
 					}
 				}
 			});
+
 		}
 
 		refreshPost();
@@ -410,7 +411,7 @@ if ($_SESSION["status"] == "inactive") {
 		$("#leaving").click(function(){
 			var id = <?php echo $_SESSION["id"]; ?>;
 			var classid = <?php echo $_SESSION["class_id"]; ?>;
-			
+
 			$.ajax({
 				type: "POST",
 				url: "phps/leaveClass.php",
@@ -425,12 +426,12 @@ if ($_SESSION["status"] == "inactive") {
 					}
 				}
 			});
-			
+
 		});
 
 		$("#deleteClass_confirm").click(function(){
 			var classid = <?php echo $_SESSION["class_id"]; ?>;
-			
+
 			$.ajax({
 				type: "POST",
 				url: "phps/deleteClass.php",
@@ -438,15 +439,16 @@ if ($_SESSION["status"] == "inactive") {
 					id:classid
 				}, success: function(res){
 					if(res == "S"){
-						window.location.href = "home.php"; 
+						window.location.href = "home.php";
 					}else{
 						var alert = "<div class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + res + "</strong></div>";
 						$("#alert").html(alert);
 					}
 				}
 			});
-			
+
 		});
+
 	});
 </script>
 </body>
