@@ -58,6 +58,21 @@ if ($_SESSION["status"] == "inactive") {
 </head>
 <body>
 
+	<!-- Confirmation Modal -->
+	<div class="modal fade" id="leaveClass_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content" style="margin: 1rem;">
+				<div class="modal-header" align="center">
+					<h5 class="modal-title">Are you sure you want to leave?</h5>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-footer" style="text-align: right;" align="center">
+					<button type="button" id="leaving" class="btn btn-danger" data-dismiss="modal" style="width: 90%; margin: 0 auto;">Yes, I want to leave this class</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Edit Description Modal -->
 	<div class="modal fade" id="editDesc_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
@@ -199,9 +214,9 @@ if ($_SESSION["status"] == "inactive") {
 											<?php if($_SESSION["role"] == "creator"){ ?>
 												<button class="btn btn-warning" data-toggle="modal" data-target="#editDesc_modal">Edit Description</button>
 											<?php } if ($_SESSION["role"] == "creator") { ?>
-												<button class="btn btn-danger">Delete Class</button>
+												<button class="btn btn-danger" id="deleteClass">Delete Class</button>
 											<?php } if ($_SESSION["role"] == "teacher" or $_SESSION["role"] == "student") ?>
-											<button class="btn btn-danger" id="leaving">Leave Class</button>
+											<button class="btn btn-danger" data-toggle="modal" data-target="#leaveClass_modal">Leave Class</button>
 										</div>
 									</div>
 								</div>
@@ -380,23 +395,21 @@ if ($_SESSION["status"] == "inactive") {
 		$("#leaving").click(function(){
 			var id = <?php echo $_SESSION["id"]; ?>;
 			var classid = <?php echo $_SESSION["class_id"]; ?>;
-			var check = confirm("Are you sure want to leave this class?");
-			if (check) {
-				$.ajax({
-					type: "POST",
-					url: "phps/leaveClass.php",
-					data: {
-						id:id, classid:classid
-					}, success: function(res){
-						if(res[0] == "S"){
-							window.location = "home.php";
-						}else{
-							var alert = "<div class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + res + "</strong></div>";
-							$("#alert").html(alert);
-						}
+			
+			$.ajax({
+				type: "POST",
+				url: "phps/leaveClass.php",
+				data: {
+					id:id, classid:classid
+				}, success: function(res){
+					if(res[0] == "S"){
+						window.location = "home.php";
+					}else{
+						var alert = "<div class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + res + "</strong></div>";
+						$("#alert").html(alert);
 					}
-				});
-			}
+				}
+			});
 			
 		});
 	});
