@@ -27,6 +27,8 @@ if(!isset($_SESSION["username"])){
       border: 4px solid rgba(55, 100, 100);
       border-radius: 0.5rem;
       height: 100%;
+      position: relative;
+      overflow: hidden;
     }
     .card-header{
       padding: 0.5rem 1rem 0rem 1rem;
@@ -192,7 +194,7 @@ if(!isset($_SESSION["username"])){
       <img src="assets/images/user-icon.png" style="width:30px; height:30px;">
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-     <a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a> 
+     <a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a>
      <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePassword_modal">Change Password</a>
      <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changeNickname_modal">Change Nickname</a>
      <a class="dropdown-item" href="logout.php" id="createClass_button">Log Out</a>
@@ -218,6 +220,8 @@ if(!isset($_SESSION["username"])){
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
 <script type="text/javascript">
 
   function refreshClass(){
@@ -238,6 +242,15 @@ if(!isset($_SESSION["username"])){
           var classcard = "<a href='viewclass.php?id=" + class_id + "'><div class='col-md-4 col-sm-6' style='margin: 1rem 0;'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;<span class='name'>"+name+"</span></h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div></a>"
 
           $("#listClass").append(classcard);
+
+          $('.cardAnimate').click(function(){
+            var lien = $(this).attr('href');
+            console.log(lien);
+            event.preventDefault();
+            $("#listClass").fadeOut(10000, function(){
+              window.location.href = lien;
+            });
+          });
         });
       }
     });
@@ -285,7 +298,6 @@ if(!isset($_SESSION["username"])){
   }
 
  $(document).ready(function(){
-
   refreshClass();
   refreshRecover();
   $("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
