@@ -53,6 +53,11 @@ if ($_SESSION["status"] == "inactive") {
 		#menu > button{
 			width: 80%;
 		}
+
+		#containerAnimate {
+    opacity: 0;
+		}
+
 	</style>
 </head>
 <body>
@@ -159,7 +164,7 @@ if ($_SESSION["status"] == "inactive") {
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="nav navbar-nav">
 				<li class="nav-item">
-					<a class="nav-link" href="home.php">Home</a>
+					<a class="nav-link classAnimate" href="home.php">Home</a>
 				</li>
 				<li class="nav-item active">
 					<a class="nav-link" href="#">Classwork</a>
@@ -183,7 +188,7 @@ if ($_SESSION["status"] == "inactive") {
 		</div>
 	</nav>
 
-	<div class="container-fluid" style="margin-top: 6rem;">
+	<div class="container-fluid" id="containerAnimate" style="margin-top: 6rem;">
 		<div class="row">
 			<div class="col-sm-10 offset-sm-1" id="alert">
 
@@ -300,6 +305,7 @@ if ($_SESSION["status"] == "inactive") {
 
 		}
 
+		$("#containerAnimate").delay(0).animate({"opacity": "1"}, 1500);
 		refreshPost();
 
 		$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
@@ -418,7 +424,9 @@ if ($_SESSION["status"] == "inactive") {
 					id:id, classid:classid
 				}, success: function(res){
 					if(res[0] == "S"){
-						window.location.href = "home.php";
+						$("#containerAnimate").delay(0).animate({"opacity": "0"}, 1500, function(){
+							window.location.href = "home.php";
+						});
 					}else{
 						var alert = "<div class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + res + "</strong></div>";
 						$("#alert").html(alert);
@@ -438,7 +446,9 @@ if ($_SESSION["status"] == "inactive") {
 					id:classid
 				}, success: function(res){
 					if(res == "S"){
-						window.location.href = "home.php";
+						$("#containerAnimate").delay(0).animate({"opacity": "0"}, 1500, function(){
+							window.location.href = "home.php";
+						});
 					}else{
 						var alert = "<div class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + res + "</strong></div>";
 						$("#alert").html(alert);
@@ -448,6 +458,13 @@ if ($_SESSION["status"] == "inactive") {
 
 		});
 
+		$(".classAnimate").click(function(){
+			var lien = $(this).attr('href');
+			event.preventDefault();
+			$("#containerAnimate").delay(0).animate({"opacity": "0"}, 1500, function(){
+				window.location.href = "home.php";
+			});
+		});
 	});
 </script>
 </body>
