@@ -15,4 +15,10 @@ else{
 	echo "Failed to leave $name!";
 }
 
+unset($_SESSION["classname"]);
+unset($_SESSION["creator"]);	
+unset($_SESSION["description"]);
+unset($_SESSION["code"]);
+unset($_SESSION["role"]);
+
 ?>
