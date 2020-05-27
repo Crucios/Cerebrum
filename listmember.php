@@ -25,19 +25,6 @@ if ($_SESSION["status"] == "inactive") {
 	<link rel="stylesheet" type="text/css" href="website.css">
 	<link rel="icon" href="assets/images/logo.png">
 	<style type="text/css">
-		h2, h5, h6, a > strong, a > span{
-			color: rgb(55, 100, 100);
-		}
-		.post{
-			border-radius: 1rem;
-			background-color: rgba(255, 255, 255, 0.9);
-			border: 3px solid rgba(55, 100, 100);
-		}
-
-		.btn{
-			margin-top: 0.5rem;
-			width: 200px;
-		}
 		#titleHeader{
 			padding: 1.5rem 2rem 0.5rem 2rem;
 			background-color: rgba(180, 225, 225, 0.7);
@@ -46,6 +33,30 @@ if ($_SESSION["status"] == "inactive") {
 		#titleDesc{
 			padding: 1rem 2rem 1rem 2rem;
 			background-color: rgba(255, 255, 255, 0.7);
+		}
+
+		#teacherCard{
+			background-color: rgba(200, 255, 255, 0.7); 
+			padding: 1rem 3rem; 
+			color: rgb(80, 80, 80);
+			border: 3px solid rgba(55, 100, 100);
+			border-radius: 1rem;
+		}
+
+		#studentCard{
+			background-color: rgba(160, 180, 255, 0.8); 
+      		padding: 1rem 3rem; 
+      		color: rgb(80, 80, 80);
+      		border: 3px solid rgba(55, 100, 100);
+      		border-radius: 1rem;
+		}
+
+		.member{
+			padding: 0.5rem 1rem;
+			border-radius: 0.5rem;
+			border: 3px solid rgba(130, 150, 150, 0.9);
+			margin-bottom: 0.5rem;
+			background-color: rgba(250, 250, 250, 0.6);
 		}
 	</style>
 </head>
@@ -161,16 +172,25 @@ if ($_SESSION["status"] == "inactive") {
 				</div>
 			</div>
 		</div>
-		<div class="row" id="creatorCard">
-
+		<div class="row mt-2">
+			<div class="col-sm-10 offset-sm-1">
+				<div class="card" id="teacherCard">
+					<h3>Teachers (<span id="teacherCount"></span>):</h3>
+					<div id="listTeacher">
+						
+					</div>
+				</div>
+			</div>
 		</div>
-
-		<div class="row" id="teacherCard">
-
-		</div>
-
-		<div class="row" id="studentCard">
-
+		<div class="row mt-2">
+			<div class="col-sm-10 offset-sm-1">
+				<div class="card" id="studentCard">
+					<h3>Students (<span id="studentCount"></span>):</h3>
+					<div id="listStudent">
+						
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -178,117 +198,76 @@ if ($_SESSION["status"] == "inactive") {
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script type="text/javascript">
+
+
+		function assignTo(id, role){
+			$.ajax({
+				url: 'phps/editRole.php',
+				type: 'POST',
+				datatype: 'json',
+				data: { id:id, role:role },
+				success: function(response){
+					
+					if(response == "New role assigned successfully!"){
+						var alert = "success";
+					}else{
+						var alert = "danger";
+					}
+
+					var alert = "<div class='alert alert-" + alert + " alert-dismissible'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>" + response + "</strong></div>";
+					$("#alert").html(alert);
+
+					refreshMember();
+				}
+			});
+		}
+
+		function refreshMember(){
+			var id = <?php echo $_SESSION["class_id"]; ?>;
+			var role = "<?php echo $_SESSION["role"]; ?>";
+			$("#listTeacher").html("<div class='card member'><div class='row'><div class='col-sm-8 pt-2'><h5><img src='assets/images/account.png' height='30' width='30' style='margin-right: 0.5rem'><?php echo $_SESSION['creator']; ?></h5></div></div></div>");
+			$("#listStudent").html("");
+
+			$.ajax({
+				type: "POST",
+				data: { id:id, role:role },
+				url: "phps/selectMember.php",
+				dataType: "json",
+				success:function(resp){
+					for(var i = 0; i < resp.teacher.length; i++){
+						var card = "<div class='card member'><div class='row'><div class='col-sm-8 pt-2'><h5><img src='assets/images/account.png' height='30' width='30' style='margin-right: 0.5rem'>"+resp.teacher[i]+"</h5></div>";
+
+						if(role == "creator"){
+							card += "<div class='col-sm-4'><button type='button' class='btn btn-primary' style='width: 100%; margin-top: 0.3rem;' onclick='assignTo("+resp.teacherId[i]+", 3)'>Assign to Student</button></div>";
+						}
+
+						card += "</div></div>";
+
+						$("#listTeacher").append(card);
+					}
+
+					$("#teacherCount").html(resp.teacher.length + 1);
+
+					for(var i = 0; i < resp.student.length; i++){
+						var card = "<div class='card member'><div class='row'><div class='col-sm-8 pt-2'><h5><img src='assets/images/account.png' height='30' width='30' style='margin-right: 0.5rem'>"+resp.student[i]+"</h5></div>";
+
+						if(role == "creator"){
+							card += "<div class='col-sm-4'><button type='button' class='btn btn-primary' style='width: 100%; margin-top: 0.3rem;' onclick='assignTo("+resp.studentId[i]+", 2)'>Assign to Teacher</button></div>";
+						}
+
+						card += "</div></div>";
+
+						$("#listStudent").append(card);
+					}
+
+					$("#studentCount").html(resp.student.length);
+				}
+			});
+		}
+
 		$(document).ready(function(){
-			getCreator();
-			getTeacher();
-			getStudent();
-			function getTeacher(){
-				var classid = <?php echo $_SESSION['class_id']; ?>;
-				$("#teacherCard").empty();
-				$.ajax({
-					type: "POST",
-					data: { classid:classid },
-					url: "phps/getTeacher.php",
-					success:function(xml){
-						$(xml).find("member").each(function(){
-							var class_id = $(this).attr("class");
-							var username = $(this).find("username").text();
-							var nickname = $(this).find("nickname").text();
-							var role = $(this).find("role").text();
-							var status = $(this).find("status").text();
-							var rolenow = $(this).find("session").text();
-							var teachercard = '<div class="col-sm-10 offset-sm-1"><div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;"><div class="card-body" id="titleDesc"><div class="row"><div class="col"><img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;"><h5>'+username+'</h5><h6>'+nickname+'</h6><button type="button" class="btn btn-info editrole" style="float: right; white-space: nowrap;">Assign to Student</button></div></div></div></div></div></div>';
-							
-								
 
-
-							$("#teacherCard").append(teachercard);
-						});
-					}
-				});
-
-			}
-			function getCreator(){
-				var classid = <?php echo $_SESSION['class_id']; ?>;
-				$("#creatorCard").empty();
-				$.ajax({
-					type: "POST",
-					data: { classid:classid },
-					url: "phps/getCreator.php",
-					success:function(xml){
-						$(xml).find("member").each(function(){
-							var class_id = $(this).attr("class");
-							var username = $(this).find("username").text();
-							var nickname = $(this).find("nickname").text();
-							var role = $(this).find("role").text();
-							var status = $(this).find("status").text();
-							
-
-							var creatorcard = '<div class="col-sm-10 offset-sm-1"><div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;"><div class="card-body" id="titleDesc"><div class="row"><div class="col"><img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;"><h5>'+username+'</h5><h6>'+nickname+'</h6></div></div></div></div></div></div>';
-
-							$("#creatorCard").append(creatorcard);
-						});
-					}
-				});
-
-			}
-			function getMember(){
-				var classid = <?php echo $_SESSION['class_id']; ?>;
-
-				$("#teacherCard").empty();
-				$.ajax({
-					type: "POST",
-					data: { classid:classid },
-					url: "phps/getMember.php",
-					success:function(xml){
-						$(xml).find("member").each(function(){
-							var class_id = $(this).attr("class");
-							var username = $(this).find("username").text();
-							var nickname = $(this).find("nickname").text();
-							var role = $(this).find("role").text();
-							var status = $(this).find("status").text();
-							
-
-							var teachercard = '<div class="col-sm-10 offset-sm-1"><div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;"><div class="card-body" id="titleDesc"><div class="row"><div class="col"><img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;"><h5>'+username+'</h5><h6>'+nickname+'</h6></div></div></div></div></div></div>';
-
-							$("#teacherCard").append(teachercard);
-						});
-					}
-				});
-
-			}
-			function getStudent(){
-				var id = <?php echo $_SESSION['id']; ?>;
-				var classid = <?php echo $_SESSION['class_id']; ?>;
-				$("#studentCard").empty();
-				$.ajax({
-					type: "POST",
-					data: { classid:classid, id:id},
-					url: "phps/getStudent.php",
-					success:function(xml){
-						$(xml).find("member").each(function(){
-							var class_id = $(this).attr("class");
-							var username = $(this).find("username").text();
-							var nickname = $(this).find("nickname").text();
-							var role = $(this).find("role").text();
-							var status = $(this).find("status").text();
-							var rolenow = $(this).find("session").text();
-							alert(rolenow);
-
-							if (rolenow == "creator") {
-								var studentcard = '<div class="col-sm-10 offset-sm-1"><div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;"><div class="card-body" id="titleDesc"><div class="row"><div class="col"><img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;"><h5>'+username+'</h5><h6>'+nickname+'</h6></div></div></div></div></div></div>';
-							}
-							else{
-								var studentcard = '<div class="col-sm-10 offset-sm-1"><div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100); margin-top: 10px;"><div class="card-body" id="titleDesc"><div class="row"><div class="col"><img src="assets/images/user-icon.png" style="width:50px; height:50px; float: left; margin-right: 10px;"><h5>'+username+'</h5><h6>'+nickname+'</h6><button type="button" class="btn btn-info editrole" style="float: right; white-space: nowrap;">Assign to Teacher</button></div></div></div></div></div></div>';
-							}
-							
-
-							$("#studentCard").append(studentcard);
-						});
-					}
-				});
-
-			}
+			refreshMember();
 
 			$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
 
@@ -355,16 +334,16 @@ if ($_SESSION["status"] == "inactive") {
 					}
 				});
 			});
-			$(".editrole").click(function(){
-				var username = $(this).parent().find("h5").text();
-				console.log(username);
-				$.post("phps/editRole.php", {username:username},
-					function(data){
-						alert(data);
-						location.reload();
-					}
-					);
-			});
+			// $(".editrole").click(function(){
+			// 	var username = $(this).parent().find("h5").text();
+			// 	console.log(username);
+			// 	$.post("phps/editRole.php", {username:username},
+			// 		function(data){
+			// 			alert(data);
+			// 			location.reload();
+			// 		}
+			// 		);
+			// });
 		});
 	</script>
 </body>
