@@ -56,6 +56,9 @@ if(!isset($_SESSION["username"])){
     table, tr, td{
       border: 2px solid rgb(60, 60, 60);
     }
+    #containerAnimate {
+      opacity: 0;
+		}
   </style>
 </head>
 <body>
@@ -69,7 +72,7 @@ if(!isset($_SESSION["username"])){
         </div>
         <div class="modal-body">
           <table class="table table-bordered table-striped" id="listRecover">
-            
+
           </table>
         </div>
       </div>
@@ -203,7 +206,7 @@ if(!isset($_SESSION["username"])){
 </div>
 </nav>
 
-<div class="container-fluid" style="margin-top: 5rem;">
+<div class="container-fluid" id="containerAnimate" style="margin-top: 5rem;">
   <div class="row">
     <div class="col-sm-10 offset-sm-1" id="alert">
 
@@ -239,7 +242,7 @@ if(!isset($_SESSION["username"])){
           var description = $(this).find("description").text();
           var code = $(this).find("code").text();
 
-          var classcard = "<a href='viewclass.php?id=" + class_id + "'><div class='col-md-4 col-sm-6' style='margin: 1rem 0;'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;<span class='name'>"+name+"</span></h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div></a>"
+          var classcard = "<a href='viewclass.php?id=" + class_id + "'class='cardAnimate'><div class='col-md-4 col-sm-6' style='margin: 1rem 0;'><div class='card'><div class='card-header'><h4><img src='assets/images/studying.png' width='25' height='25'>&nbsp;&nbsp;<span class='name'>"+name+"</span></h4><p>"+creator+"</p></div><div class='card-body'><a>"+description+"</a><p><strong>Class Code: </strong>"+code+"</p></div></div></div></a>"
 
           $("#listClass").append(classcard);
 
@@ -247,7 +250,7 @@ if(!isset($_SESSION["username"])){
             var lien = $(this).attr('href');
             console.log(lien);
             event.preventDefault();
-            $("#listClass").fadeOut(10000, function(){
+            $("#listClass").fadeOut(1500, function(){
               window.location.href = lien;
             });
           });
@@ -352,7 +355,6 @@ if(!isset($_SESSION["username"])){
       $("#descriptionClass_text").val("");
       refreshClass();
     });
-
   });
 
   $("#joinClass_confirm").click(function(){
@@ -439,6 +441,9 @@ if(!isset($_SESSION["username"])){
       }
     });
   });
+
+  $("#containerAnimate").delay(0).animate({"opacity": "1"}, 1500);
+  
 });
 </script>
 </body>
