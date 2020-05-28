@@ -71,6 +71,20 @@ if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
 	</script>
 </head>
 <body>
+	<!-- Delete Confirmation Modal -->
+	<div class="modal fade" id="deleteFile_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content" style="margin: 1rem;">
+				<div class="modal-header" align="center">
+					<h5 class="modal-title">Are you sure you want to delete <span id="filenameModal"></span>?</h5>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-footer" style="text-align: right;" align="center" id="buttonDelete">
+					
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- Change Password Modal -->
 	<div class="modal fade" id="changePassword_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -215,6 +229,8 @@ if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
 <script type="text/javascript">
+	var deletedId = 0;
+
 	function cutId(link){
 		list = link.split('-');
 		link = list[1];
@@ -248,7 +264,7 @@ if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
 					$("#time").html(response.time);
 					for(var i = 0; i < response.files.length; i++){
 						var filename = cutId(response.files[i]);
-						var submitcard = "<tr><td><a href='./assets/submitfiles/"+response.files[i]+"' download='"+filename+"'><div class='card files' style='width: 80%;'>"+filename+"</div></a></td><td align='center'><button type='button' class='btn btn-danger' onclick='remove("+response.id[i]+")' style='width: 70%;'>Delete</button></td></tr>";
+						var submitcard = "<tr><td><a href='./assets/submitfiles/"+response.files[i]+"' download='"+filename+"'><div class='card files' style='width: 80%;'>"+filename+"</div></a></td><td align='center'><button type='button' class='btn btn-danger' onclick='fillModal("+response.id[i]+", this.id)' id='"+filename+"' style='width: 70%;' data-toggle='modal' data-target='#deleteFile_modal'>Delete</button></td></tr>";
 						$("#listSubmissions").append(submitcard);
 					}
 				}else{
@@ -283,6 +299,11 @@ if($_SESSION["post_deadline"] < date('Y-m-d H:i:s', time())){
 				}, 10);
 			}
 		});
+	}
+
+	function fillModal(id, filename){
+		$("#filenameModal").html($(filename).selector);
+		$("#buttonDelete").html("<button type='button' onclick='remove("+id+")' class='btn btn-danger' data-dismiss='modal' style='width: 90%; margin: 0 auto;'>Delete</button>");
 	}
 
 	$(document).ready(function(){

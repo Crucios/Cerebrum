@@ -246,7 +246,7 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 				}
 
 				$("#deadline_datetime").html(markup);
-				$("#submitBtn").html("<div class='col-12'><button type='submit' class='btn btn-primary' id='submit_post' style='width: 50%;'>Submit</button></div>")
+				$("#submitBtn").html("<div class='col-12'><button type='submit' class='btn btn-primary' id='submit_post' style='width: 50%;'>Create Post</button></div>")
 			});
 
 			$("#changeNick_text").val("<?php echo $_SESSION["nickname"]; ?>");
