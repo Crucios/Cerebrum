@@ -9,15 +9,16 @@ if(isset($_POST["password"]) && $_POST["password"] != "" && isset($_POST["newPas
   $password = test_input($_POST["password"]);
   $changePass = test_input($_POST["newPass"]);
   $confirmPass = test_input($_POST["confirmPass"]);
-
+  $passEnc = md5($password);
   
-  $query = mysqli_query($conn, "SELECT * FROM users WHERE id = $id AND password = '$password'");
+  $query = mysqli_query($conn, "SELECT * FROM users WHERE id = $id AND password = '$passEnc'");
   if(mysqli_num_rows($query) > 0){
     if($changePass == $confirmPass){
       if(strlen($changePass) < 6){
         $output["errorNew"] = "*Password has to be at least 6 characters long";
         $output["message"] = "Failed to change password! Password has to be at least 6 characters long";
       }else{
+        $confirmPass = md5($confirmPass);
         $query = mysqli_query($conn, "UPDATE users SET password = '$confirmPass' WHERE id = $id");
         if($query){
           $output["success"] = true;

@@ -33,9 +33,9 @@ $name = $password = $err = "";
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 	$name = test_input($_POST["username"]);
-	$password = test_input($_POST["password"]);
+	$passEnc = md5(test_input($_POST["password"]));
 
-	$query = mysqli_query($conn, "SELECT * FROM users WHERE username = '$name' AND password = '$password'");
+	$query = mysqli_query($conn, "SELECT * FROM users WHERE username = '$name' AND password = '$passEnc'");
 
 	if(mysqli_num_rows($query) > 0){
 		while($result = mysqli_fetch_assoc($query)){

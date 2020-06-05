@@ -250,7 +250,7 @@ if(!isset($_SESSION["username"])){
             var lien = $(this).attr('href');
             console.log(lien);
             event.preventDefault();
-            $("#listClass").fadeOut(1500, function(){
+            $("#listClass").fadeOut(1000, function(){
               window.location.href = lien;
             });
           });

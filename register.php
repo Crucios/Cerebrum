@@ -82,6 +82,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	}
 
 	if($valid){
+		$password = md5($password);
+
 		$sql = "INSERT INTO users VALUES(0, '$name', '$password', '$email', '$birth', '$nick')";
 
 		if ($conn->query($sql) === TRUE) {
