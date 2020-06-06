@@ -9,27 +9,33 @@ if(isset($_POST["password"]) && $_POST["password"] != "" && isset($_POST["newPas
   $password = test_input($_POST["password"]);
   $changePass = test_input($_POST["newPass"]);
   $confirmPass = test_input($_POST["confirmPass"]);
-  $passEnc = md5($password);
   
-  $query = mysqli_query($conn, "SELECT * FROM users WHERE id = $id AND password = '$passEnc'");
+  $query = mysqli_query($conn, "SELECT password FROM users WHERE id = $id");
   if(mysqli_num_rows($query) > 0){
-    if($changePass == $confirmPass){
-      if(strlen($changePass) < 6){
-        $output["errorNew"] = "*Password has to be at least 6 characters long";
-        $output["message"] = "Failed to change password! Password has to be at least 6 characters long";
-      }else{
-        $confirmPass = md5($confirmPass);
-        $query = mysqli_query($conn, "UPDATE users SET password = '$confirmPass' WHERE id = $id");
-        if($query){
-          $output["success"] = true;
-          $output["message"] = "Password successfully changed!";
+    while($row = $query->fetch_assoc()){
+      if(password_verify($password, $row["password"])){
+        if($changePass == $confirmPass){
+          if(strlen($changePass) < 6){
+            $output["errorNew"] = "*Password has to be at least 6 characters long";
+            $output["message"] = "Failed to change password! Password has to be at least 6 characters long";
+          }else{
+            $query = mysqli_query($conn, "UPDATE users SET password = '".password_hash($confirmPass, PASSWORD_DEFAULT)."' WHERE id = $id");
+            if($query){
+              $output["success"] = true;
+              $output["message"] = "Password successfully changed!";
+            }else{
+              $output["message"] = "Failed to change password!";
+            }
+          }
         }else{
-          $output["message"] = "Failed to change password!";
+          $output["errConfirm"] = "*Password does not match";
+          $output["message"] = "Failed to change password! Password does not match!";
         }
+      }else{
+        $output["errorOld"] = "*Password incorrect";
+        $output["message"] = "Failed to change password! Old password incorrect!";
       }
-    }else{
-      $output["errConfirm"] = "*Password does not match";
-      $output["message"] = "Failed to change password! Password does not match!";
+      break;
     }
   }else{
     $output["errorOld"] = "*Password incorrect";

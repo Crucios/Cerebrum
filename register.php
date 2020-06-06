@@ -82,7 +82,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	}
 
 	if($valid){
-		$password = md5($password);
+		$password = password_hash($password, PASSWORD_DEFAULT);
 
 		$sql = "INSERT INTO users VALUES(0, '$name', '$password', '$email', '$birth', '$nick')";
 

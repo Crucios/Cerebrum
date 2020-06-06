@@ -33,18 +33,23 @@ $name = $password = $err = "";
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 	$name = test_input($_POST["username"]);
-	$passEnc = md5(test_input($_POST["password"]));
+	$password = test_input($_POST["password"]);
 
-	$query = mysqli_query($conn, "SELECT * FROM users WHERE username = '$name' AND password = '$passEnc'");
+	$query = mysqli_query($conn, "SELECT * FROM users WHERE username = '$name'");
 
 	if(mysqli_num_rows($query) > 0){
 		while($result = mysqli_fetch_assoc($query)){
-			session_start();
-			$_SESSION["username"] = $name;
-			$_SESSION["id"] = $result["id"];
-			$_SESSION["email"] = $result["email"];
-			$_SESSION["nickname"] = $result["nickname"];
-			header("Location: home.php");
+			if(password_verify($password, $result["password"])){
+				session_start();
+				$_SESSION["username"] = $name;
+				$_SESSION["id"] = $result["id"];
+				$_SESSION["email"] = $result["email"];
+				$_SESSION["nickname"] = $result["nickname"];
+				header("Location: home.php");
+			}else{
+				$err = "*Username/password incorrect";
+			}
+			break;
 		}
 	}else{
 		$err = "*Username/password incorrect";
@@ -78,7 +83,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 									<h3>Sign In</h3>
 									<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 										<input type="text" name="username" value="<?php echo $name; ?>" placeholder="Enter your username" class="form-control" style="width: 90%; margin-top: 1rem;">
-										<input type="password" name="password" value="<?php echo $password; ?>" placeholder="Enter your password" class="form-control" style="width: 90%; margin-top: 1rem;">
+										<input type="password" name="password" placeholder="Enter your password" class="form-control" style="width: 90%; margin-top: 1rem;">
 										<p style="margin-top: 0.5rem;"><span id="error"><?php echo $err; ?></span></p>
 										<button type="submit" class="btn btn-success" style="width: 88%;">Sign In</button>
 										<p style="margin-top: 0.5rem;">Don't have an account? <a href="register.php">Sign up here!</a></p>

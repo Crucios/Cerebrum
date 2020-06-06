@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 05, 2020 at 08:29 PM
+-- Generation Time: Jun 06, 2020 at 10:12 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.4
 
@@ -139,9 +139,7 @@ INSERT INTO `files` (`id`, `files`, `id_posts`) VALUES
 (13, '03 - Uninformed Search.pptx', 22),
 (14, '04 - Informed Search.pptx', 24),
 (15, 'revisi web.txt', 24),
-(16, 'Open Forum.pptx', 25),
-(17, 'search.png', 27),
-(18, 'Untitled Diagram.vpd', 27);
+(16, 'Open Forum.pptx', 25);
 
 -- --------------------------------------------------------
 
@@ -178,8 +176,7 @@ INSERT INTO `posts` (`id`, `title`, `content`, `timestamp`, `type`, `deadline`, 
 (23, 'Tugas Restoran', 'Buatlah sesuai contoh', '2020-05-25 21:37:50', 'assignment', '2020-05-31 23:59:00', 2, 1),
 (24, 'Tugas Libur Lebaran', 'Hiyahiyahiya', '2020-05-25 21:38:46', 'assignment', '2020-05-25 21:40:00', 2, 1),
 (25, 'Hayoloh Tugas 1', 'Buat Rangkuman', '2020-05-25 21:58:37', 'assignment', '2020-05-31 22:00:00', 9, 1),
-(26, 'Cerita Lebaran', 'Kumpulkan cerita lebaran kalian!', '2020-05-28 22:26:09', 'assignment', '2020-05-31 22:00:00', 10, 2),
-(27, 'NFA DFA', 'Kumpulkan boleh tulis tangan boleh ketik', '2020-05-28 22:27:52', 'assignment', '2020-06-26 23:59:00', 10, 2);
+(26, 'Cerita Lebaran', 'Kumpulkan cerita lebaran kalian!', '2020-05-28 22:26:09', 'assignment', '2020-05-31 22:00:00', 10, 2);
 
 -- --------------------------------------------------------
 
@@ -248,12 +245,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `email`, `birthdate`, `nickname`) VALUES
-(1, 'henry12', '32250170a0dca92d53ec9624f336ca24', 'c14180014@john.petra.ac.id', '2000-05-12', 'Henry Wicaksono'),
-(2, 'misaelrs', '0b4e7a0e5fe84ad35fb5f95b9ceeac79', 'c14180001@john.petra.ac.id', '2000-04-12', 'Misael Setio'),
-(3, 'gerstev', 'a141c47927929bc2d1fb6d336a256df4', 'c14180044@john.petra.ac.id', '1999-05-04', 'Gerry Steven'),
-(4, 'green7', 'a097897098930ad07bf6db97a8d10b83', 'aaa@gmail.com', '1999-12-25', 'Green Hunter'),
-(5, 'cr7', 'c5aa3124b1adad080927ce4d144c6b33', 'c14180013@gmail.com', '1985-02-05', 'Cristiano Ronaldo'),
-(6, 'leomessi', '7189f7b76cb1610e499a1a5f046b7861', 'bbb@gmail.com', '1988-06-21', 'Lionel Messi');
+(1, 'henry12', '$2y$10$HFmpUNYMNZwNTsSXGO7tm.ht6h.lPJkbaL71121iyviM8uX0kwUqe', 'c14180014@john.petra.ac.id', '2000-05-12', 'Henry Wicaksono'),
+(2, 'misaelrs', '$2y$10$QDt5zwozQq3QP4qz73uMiuwed6.uF5MHUk.JAeuaDSZNPC81YGoda', 'c14180001@john.petra.ac.id', '2000-04-12', 'Misael Setio'),
+(3, 'gerstev', '$2y$10$LlXMce204otL12dXMLBk0.dzFqmAzdFZRwQAKUobK7jSIqZJCxim.', 'c14180044@john.petra.ac.id', '1999-05-04', 'Gerry Steven'),
+(4, 'green7', '$2y$10$JQMRS7VVZJTCQf873VaLBOUMe4o7fbkMa1102xlHdbxLAzgcR04Tm', 'aaa@gmail.com', '1999-12-25', 'Green Hunter'),
+(5, 'cr7', '$2y$10$wH6kwc8la9tgYDKUzafHOuThT06Ust7XoN9q5V0JKZ5/.xVvxl5GK', 'c14180013@gmail.com', '1985-02-05', 'Cristiano Ronaldo'),
+(6, 'leomessi', '$2y$10$G0D1SeDalnLOgHC5riL0NeITez5j5KHAmWMOsTTkzkiol9EOCmmMu', 'bbb@gmail.com', '1988-06-21', 'Lionel Messi'),
+(7, 'pikachu', '$2y$10$koCS05cfn8SdJbnhi3.ABunvTnTpp63boI2mc8zxTueQLLsAyBTLm', 'ccc@gmail.com', '1999-11-11', 'Pikachu Setio');
 
 --
 -- Indexes for dumped tables
@@ -357,7 +355,7 @@ ALTER TABLE `submissions_files`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
