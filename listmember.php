@@ -36,16 +36,16 @@ if ($_SESSION["status"] == "inactive") {
 		}
 
 		#teacherCard{
-			background-color: rgba(200, 255, 255, 0.7); 
-			padding: 1rem 3rem; 
+			background-color: rgba(200, 255, 255, 0.7);
+			padding: 1rem 3rem;
 			color: rgb(80, 80, 80);
 			border: 3px solid rgba(55, 100, 100);
 			border-radius: 1rem;
 		}
 
 		#studentCard{
-			background-color: rgba(160, 180, 255, 0.8); 
-      		padding: 1rem 3rem; 
+			background-color: rgba(160, 180, 255, 0.8);
+      		padding: 1rem 3rem;
       		color: rgb(80, 80, 80);
       		border: 3px solid rgba(55, 100, 100);
       		border-radius: 1rem;
@@ -57,6 +57,10 @@ if ($_SESSION["status"] == "inactive") {
 			border: 3px solid rgba(130, 150, 150, 0.9);
 			margin-bottom: 0.5rem;
 			background-color: rgba(250, 250, 250, 0.6);
+		}
+
+		#containerAnimate {
+    opacity: 0;
 		}
 	</style>
 </head>
@@ -116,7 +120,7 @@ if ($_SESSION["status"] == "inactive") {
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="nav navbar-nav">
 				<li class="nav-item">
-					<a class="nav-link" href="home.php">Home</a>
+					<a class="nav-link classAnimate" href="home.php">Home</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="classwork.php">Classwork</a>
@@ -140,7 +144,7 @@ if ($_SESSION["status"] == "inactive") {
 		</div>
 	</nav>
 
-	<div class="container-fluid" style="margin-top: 6rem;">
+	<div class="container-fluid" id="containerAnimate" style="margin-top: 6rem;">
 		<div class="row">
 			<div class="col-sm-10 offset-sm-1" id="alert">
 
@@ -177,7 +181,7 @@ if ($_SESSION["status"] == "inactive") {
 				<div class="card" id="teacherCard">
 					<h3>Teachers (<span id="teacherCount"></span>):</h3>
 					<div id="listTeacher">
-						
+
 					</div>
 				</div>
 			</div>
@@ -187,7 +191,7 @@ if ($_SESSION["status"] == "inactive") {
 				<div class="card" id="studentCard">
 					<h3>Students (<span id="studentCount"></span>):</h3>
 					<div id="listStudent">
-						
+
 					</div>
 				</div>
 			</div>
@@ -207,7 +211,7 @@ if ($_SESSION["status"] == "inactive") {
 				datatype: 'json',
 				data: { id:id, role:role },
 				success: function(response){
-					
+
 					if(response == "New role assigned successfully!"){
 						var alert = "success";
 					}else{
@@ -344,6 +348,16 @@ if ($_SESSION["status"] == "inactive") {
 			// 		}
 			// 		);
 			// });
+
+			$(".classAnimate").click(function(){
+				var lien = $(this).attr('href');
+				event.preventDefault();
+				$("#containerAnimate").delay(0).animate({"opacity": "0"}, 1500, function(){
+					window.location.href = "home.php";
+				});
+			});
+
+			$("#containerAnimate").delay(0).animate({"opacity": "1"}, 1500);
 		});
 	</script>
 </body>

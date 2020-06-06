@@ -78,6 +78,11 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 			border-radius: 50%;
 			background: #ccc;
 		}
+
+		#containerAnimate {
+    opacity: 0;
+		}
+		
 	</style>
 	<script>
 
@@ -139,7 +144,7 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="nav navbar-nav">
 				<li class="nav-item">
-					<a class="nav-link" href="home.php">Home</a>
+					<a class="nav-link classAnimate" href="home.php">Home</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="classwork.php">Classwork</a>
@@ -163,7 +168,7 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 		</div>
 	</nav>
 
-	<div class="container-fluid" style="margin-top: 6rem;">
+	<div class="container-fluid" id="containerAnimate" style="margin-top: 6rem;">
 		<div class="col-sm-10 offset-sm-1">
 			<div class="card" style="border-radius: 1rem; background-color: rgba(180, 225, 225, 0.9); border: 4px solid rgba(55, 100, 100);">
 				<div class="card-header" id="titleHeader">
@@ -360,6 +365,17 @@ if($_SESSION["role"] == "student" || !isset($_SESSION["role"])){
 				}
 			});
 		});
+
+		$(".classAnimate").click(function(){
+			var lien = $(this).attr('href');
+			event.preventDefault();
+			$("#containerAnimate").delay(0).animate({"opacity": "0"}, 1500, function(){
+				window.location.href = "home.php";
+			});
+		});
+
+		$("#containerAnimate").delay(0).animate({"opacity": "1"}, 1500);
+
 	});
 </script>
 </body>

@@ -24,32 +24,32 @@ date_default_timezone_set('Asia/Bangkok');
   <link rel="icon" href="assets/images/logo.png">
   <style type="text/css">
     #main{
-      background-color: rgba(180, 255, 255, 0.8); 
-      padding: 1.5rem 3rem; 
+      background-color: rgba(180, 255, 255, 0.8);
+      padding: 1.5rem 3rem;
       color: rgb(80, 80, 80);
       border: 3px solid rgba(55, 100, 100);
       border-radius: 1rem;
     }
 
     #content{
-      background-color: rgba(255, 255, 255, 0.7); 
-      padding: 1rem 3rem; 
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 1rem 3rem;
       color: rgb(80, 80, 80);
       border: 3px solid rgba(55, 100, 100);
       border-radius: 1rem;
     }
 
     #submit{
-      background-color: rgba(180, 205, 180, 0.8); 
-      padding: 1rem 3rem; 
+      background-color: rgba(180, 205, 180, 0.8);
+      padding: 1rem 3rem;
       color: rgb(80, 80, 80);
       border: 3px solid rgba(55, 100, 100);
       border-radius: 1rem;
     }
 
     #nosubmit{
-      background-color: rgba(255, 200, 200, 0.7); 
-      padding: 1rem 4rem; 
+      background-color: rgba(255, 200, 200, 0.7);
+      padding: 1rem 4rem;
       color: rgb(80, 80, 80);
       border: 3px solid rgba(55, 100, 100);
       border-radius: 1rem;
@@ -84,7 +84,7 @@ date_default_timezone_set('Asia/Bangkok');
     .files:hover{
       background-color:rgba(165, 165, 165, 0.8);
       color: darkblue;
-      box-shadow: 0rem 0rem; 
+      box-shadow: 0rem 0rem;
     }
 
     a:hover{
@@ -96,10 +96,14 @@ date_default_timezone_set('Asia/Bangkok');
       margin-left: 1rem;
       display: none;
     }
+
+    #containerAnimate {
+    opacity: 0;
+		}
   </style>
 </head>
 <body>
- 
+
   <!-- Change Password Modal -->
   <div class="modal fade" id="changePassword_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -154,7 +158,7 @@ date_default_timezone_set('Asia/Bangkok');
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="nav navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="home.php">Home</a>
+          <a class="nav-link classAnimate" href="home.php">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="postdetail.php">Post</a>
@@ -173,7 +177,7 @@ date_default_timezone_set('Asia/Bangkok');
       <img src="assets/images/user-icon.png" style="width:30px; height:30px;">
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-     <a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a> 
+     <a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a>
      <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePassword_modal">Change Password</a>
      <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changeNickname_modal">Change Nickname</a>
      <a class="dropdown-item" href="logout.php" id="createClass_button">Log Out</a>
@@ -182,7 +186,7 @@ date_default_timezone_set('Asia/Bangkok');
 </div>
 </nav>
 
-<div class="container-fluid" style="margin-top: 5rem;">
+<div class="container-fluid" id="containerAnimate" style="margin-top: 5rem;">
   <div class="row">
     <div class="col-sm-10 offset-sm-1" id="alert">
 
@@ -210,13 +214,13 @@ date_default_timezone_set('Asia/Bangkok');
       <div class="card mt-3" id="submit">
         <h3>Submissions: </h3>
         <div class="row" id="listSubmissions">
-          
+
         </div>
       </div>
       <div class="card mt-3" id="nosubmit">
         <h3>No Submission Yet: </h3>
         <div class="row" id="listNoSubmit">
-          
+
         </div>
       </div>
     </div>
@@ -420,6 +424,16 @@ function changeGrade(id){
       }
     });
   });
+
+  $(".classAnimate").click(function(){
+    var lien = $(this).attr('href');
+    event.preventDefault();
+    $("#containerAnimate").delay(0).animate({"opacity": "0"}, 1500, function(){
+      window.location.href = "home.php";
+    });
+  });
+
+  $("#containerAnimate").delay(0).animate({"opacity": "1"}, 1500);
 });
 </script>
 </body>

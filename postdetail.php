@@ -24,32 +24,32 @@ date_default_timezone_set('Asia/Bangkok');
   <link rel="icon" href="assets/images/logo.png">
   <style type="text/css">
     #main{
-      background-color: rgba(180, 255, 255, 0.8); 
-      padding: 1.5rem 3rem; 
+      background-color: rgba(180, 255, 255, 0.8);
+      padding: 1.5rem 3rem;
       color: rgb(80, 80, 80);
       border: 3px solid rgba(55, 100, 100);
       border-radius: 1rem;
     }
 
     #content{
-      background-color: rgba(255, 255, 255, 0.7); 
-      padding: 1rem 3rem; 
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 1rem 3rem;
       color: rgb(80, 80, 80);
       border: 3px solid rgba(55, 100, 100);
       border-radius: 1rem;
     }
 
     #submissions{
-      background-color: rgba(205, 180, 255, 0.8); 
-      padding: 1rem 3rem; 
+      background-color: rgba(205, 180, 255, 0.8);
+      padding: 1rem 3rem;
       color: rgb(80, 80, 80);
       border: 3px solid rgba(55, 100, 100);
       border-radius: 1rem;
     }
 
     #comments{
-      background-color: rgba(180, 205, 180, 0.8); 
-      padding: 1rem 3rem; 
+      background-color: rgba(180, 205, 180, 0.8);
+      padding: 1rem 3rem;
       color: rgb(80, 80, 80);
       border: 3px solid rgba(55, 100, 100);
       border-radius: 1rem;
@@ -68,7 +68,7 @@ date_default_timezone_set('Asia/Bangkok');
     .files:hover{
       background-color:rgba(165, 165, 165, 0.8);
       color: darkblue;
-      box-shadow: 0rem 0rem; 
+      box-shadow: 0rem 0rem;
     }
 
     a:hover{
@@ -83,10 +83,14 @@ date_default_timezone_set('Asia/Bangkok');
     #studentCount, #submitCount{
       font-weight: bold;
     }
+
+    #containerAnimate {
+    opacity: 0;
+		}
   </style>
 </head>
 <body>
- 
+
   <!-- Change Password Modal -->
   <div class="modal fade" id="changePassword_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -141,7 +145,7 @@ date_default_timezone_set('Asia/Bangkok');
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="nav navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="home.php">Home</a>
+          <a class="nav-link classAnimate" href="home.php">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="classwork.php">Classwork</a>
@@ -157,7 +161,7 @@ date_default_timezone_set('Asia/Bangkok');
       <img src="assets/images/user-icon.png" style="width:30px; height:30px;">
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-     <a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a> 
+     <a class="dropdown-item disabled"><img src="assets/images/account.png" height="15" width="15" style="margin-right: 0.5rem;"><?php echo $_SESSION["username"]; ?></a>
      <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePassword_modal">Change Password</a>
      <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changeNickname_modal">Change Nickname</a>
      <a class="dropdown-item" href="logout.php" id="createClass_button">Log Out</a>
@@ -166,7 +170,7 @@ date_default_timezone_set('Asia/Bangkok');
 </div>
 </nav>
 
-<div class="container-fluid" style="margin-top: 5rem;">
+<div class="container-fluid" id="containerAnimate" style="margin-top: 5rem;">
   <div class="row">
     <div class="col-sm-10 offset-sm-1" id="alert">
 
@@ -193,7 +197,7 @@ date_default_timezone_set('Asia/Bangkok');
         <?php if($_SESSION["role"] == "student"){ ?>
         <h3>Your Submissions:</h3>
         <div class="row" id="listSubmissions">
-          
+
         </div>
         <?php if (date('Y-m-d H:i:s', time()) > $_SESSION["post_deadline"]) { ?>
         <div class="row-mt-3">
@@ -204,7 +208,7 @@ date_default_timezone_set('Asia/Bangkok');
           <div class="col-md-4 col-sm-6">
             <button type="button" class="btn btn-primary" id="submit">Edit Submissions</button>
           </div>
-        </div>         
+        </div>
         <?php } ?>
         <h5><strong>Deadline: <?php echo date('F d, Y - H:i:s', strtotime($_SESSION["post_deadline"])); ?></strong></h5>
         <h4><strong>Grade: </strong><span id="score"></span></h4>
@@ -215,7 +219,7 @@ date_default_timezone_set('Asia/Bangkok');
           <div class="col-md-4 col-sm-6">
             <button type="button" class="btn btn-primary" id="grade">View and Grade Submissions</button>
           </div>
-        </div> 
+        </div>
         <h5><strong>Deadline: <?php echo date('F d, Y - H:i:s', strtotime($_SESSION["post_deadline"])); ?></strong></h5>
         <?php } ?>
       </div>
@@ -227,7 +231,7 @@ date_default_timezone_set('Asia/Bangkok');
         </span>
           <a id="error" style="color: red;"></a>
         <div id="listComments">
-          
+
         </div>
       </div>
     </div>
@@ -349,7 +353,7 @@ date_default_timezone_set('Asia/Bangkok');
     var id = "<?php echo $_SESSION["id"] ?>";
     var post = "<?php echo $_SESSION["post_id"] ?>"
     var message = $("#comment_text").val();
-    
+
     $.ajax({
       type: "POST",
       url: "phps/addComment.php",
@@ -430,6 +434,16 @@ date_default_timezone_set('Asia/Bangkok');
       }
     });
   });
+
+  $(".classAnimate").click(function(){
+    var lien = $(this).attr('href');
+    event.preventDefault();
+    $("#containerAnimate").delay(0).animate({"opacity": "0"}, 1500, function(){
+      window.location.href = "home.php";
+    });
+  });
+
+  $("#containerAnimate").delay(0).animate({"opacity": "1"}, 1500);
 });
 </script>
 </body>
